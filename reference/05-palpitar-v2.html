@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palpitar — Bolão Copa 2026</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  .flag-lg { width: 32px; height: 22px; object-fit: cover; border-radius: 3px; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.08); }
+  .flag-sm { width: 16px; height: 11px; object-fit: cover; border-radius: 2px; display: inline-block; vertical-align: -2px; border: 0.5px solid rgba(0,0,0,0.08); }
+</style>
+</head>
+<body class="bg-slate-200">
+<div class="max-w-md mx-auto bg-slate-50 min-h-screen shadow-xl pb-24">
+
+  <!-- Top header -->
+  <header class="bg-[#2323E8] px-4 pt-3 pb-4 sticky top-0 z-10">
+    <div class="flex justify-between items-center mb-3">
+      <a href="#dashboard" class="text-white text-sm font-medium flex items-center gap-1">← Início</a>
+      <div class="bg-[#FFD400] text-[#15158a] px-2.5 py-1 rounded-md text-[11px] font-bold">Baterias Joinville</div>
+    </div>
+    <div class="flex justify-between items-end">
+      <div>
+        <h1 class="text-white text-2xl font-extrabold leading-tight">Meus palpites</h1>
+        <p class="text-white text-xs opacity-80 mt-0.5">Edite até 1h antes de cada jogo</p>
+      </div>
+      <div class="text-right">
+        <p class="text-[#FFD400] text-2xl font-extrabold leading-none">87</p>
+        <p class="text-white text-[11px] opacity-80 mt-0.5">pts · 23º lugar</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progresso -->
+  <div class="px-4 pt-3 pb-2">
+    <div class="flex justify-between text-xs text-slate-600 mb-1.5">
+      <span class="font-semibold">52 de 104 jogos palpitados</span>
+      <span>50%</span>
+    </div>
+    <div class="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+      <div class="h-full bg-[#2323E8] rounded-full" style="width:50%"></div>
+    </div>
+  </div>
+
+  <!-- Filtros: fases -->
+  <div class="px-4 pt-3 sticky top-[88px] bg-slate-50 z-[5]">
+    <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2 -mx-1 px-1">
+      <button class="shrink-0 bg-[#2323E8] text-white text-sm font-semibold px-3.5 py-1.5 rounded-full">Todos</button>
+      <button class="shrink-0 bg-white text-slate-700 text-sm font-medium px-3.5 py-1.5 rounded-full border border-slate-200">Grupos</button>
+      <button class="shrink-0 bg-white text-slate-700 text-sm font-medium px-3.5 py-1.5 rounded-full border border-slate-200">Oitavas</button>
+      <button class="shrink-0 bg-white text-slate-700 text-sm font-medium px-3.5 py-1.5 rounded-full border border-slate-200">Quartas</button>
+      <button class="shrink-0 bg-white text-slate-700 text-sm font-medium px-3.5 py-1.5 rounded-full border border-slate-200">Semi</button>
+      <button class="shrink-0 bg-white text-slate-700 text-sm font-medium px-3.5 py-1.5 rounded-full border border-slate-200">Final</button>
+    </div>
+    <div class="flex gap-2 pb-3">
+      <button class="bg-[#FFD400] text-[#15158a] text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5"><img src="https://flagcdn.com/br.svg" alt="" class="flag-sm" style="margin:0">Só Brasil</button>
+      <button class="bg-white text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200">Pendentes</button>
+      <button class="bg-white text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200">Encerrados</button>
+    </div>
+  </div>
+
+  <!-- Section header: próximos -->
+  <div class="px-4 pt-2 pb-2">
+    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Próximos jogos</p>
+  </div>
+
+  <!-- CARD 1: Brasil futuro, prazo apertado (warning) -->
+  <div class="px-4 pb-3">
+    <div class="bg-white border border-amber-300 rounded-xl overflow-hidden">
+      <div class="bg-amber-50 px-3.5 py-1.5 flex justify-between items-center">
+        <p class="text-[11px] font-bold text-amber-800 flex items-center gap-1">⚠ Trava em 23 min</p>
+        <p class="text-[11px] font-bold text-[#15158a] bg-[#FFD400] px-2 py-0.5 rounded-full flex items-center gap-1"><img src="https://flagcdn.com/br.svg" alt="" class="flag-sm" style="margin:0">2x pontos</p>
+      </div>
+      <div class="px-3.5 py-3">
+        <p class="text-[11px] text-slate-500 mb-2">Grupo F · Hoje, 20h · Arrowhead Stadium</p>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/br.svg" alt="Brasil" class="flag-lg">
+              <span class="font-semibold text-slate-900">Brasil</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button class="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center active:bg-slate-200">−</button>
+              <span class="w-8 text-center font-extrabold text-xl text-slate-900">2</span>
+              <button class="w-9 h-9 rounded-lg bg-[#2323E8] text-white font-bold text-lg flex items-center justify-center active:opacity-80">+</button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/rs.svg" alt="Sérvia" class="flag-lg">
+              <span class="font-semibold text-slate-900">Sérvia</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button class="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center active:bg-slate-200">−</button>
+              <span class="w-8 text-center font-extrabold text-xl text-slate-900">0</span>
+              <button class="w-9 h-9 rounded-lg bg-[#2323E8] text-white font-bold text-lg flex items-center justify-center active:opacity-80">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-3.5 py-2 border-t border-slate-100 flex justify-between items-center">
+        <p class="text-[11px] text-amber-800 font-semibold">Palpita agora ou perde a chance</p>
+        <p class="text-[11px] text-emerald-700 font-semibold">✓ Salvo</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2: Brasil futuro, prazo confortável -->
+  <div class="px-4 pb-3">
+    <div class="bg-white border border-[#FFD400] rounded-xl overflow-hidden">
+      <div class="bg-[#FFFBE6] px-3.5 py-1.5 flex justify-between items-center">
+        <p class="text-[11px] font-bold text-[#15158a]">Trava em 2h 47min</p>
+        <p class="text-[11px] font-bold text-[#15158a] bg-[#FFD400] px-2 py-0.5 rounded-full flex items-center gap-1"><img src="https://flagcdn.com/br.svg" alt="" class="flag-sm" style="margin:0">2x pontos</p>
+      </div>
+      <div class="px-3.5 py-3">
+        <p class="text-[11px] text-slate-500 mb-2">Grupo F · Hoje, 22h45 · SoFi Stadium</p>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/br.svg" alt="Brasil" class="flag-lg">
+              <span class="font-semibold text-slate-900">Brasil</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button class="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center active:bg-slate-200">−</button>
+              <span class="w-8 text-center font-extrabold text-xl text-slate-900">3</span>
+              <button class="w-9 h-9 rounded-lg bg-[#2323E8] text-white font-bold text-lg flex items-center justify-center active:opacity-80">+</button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/cm.svg" alt="Camarões" class="flag-lg">
+              <span class="font-semibold text-slate-900">Camarões</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button class="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center active:bg-slate-200">−</button>
+              <span class="w-8 text-center font-extrabold text-xl text-slate-900">1</span>
+              <button class="w-9 h-9 rounded-lg bg-[#2323E8] text-white font-bold text-lg flex items-center justify-center active:opacity-80">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-3.5 py-2 border-t border-slate-100 flex justify-end items-center">
+        <p class="text-[11px] text-emerald-700 font-semibold">✓ Salvo</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: Jogo normal editável -->
+  <div class="px-4 pb-3">
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div class="px-3.5 py-3">
+        <p class="text-[11px] text-slate-500 mb-2">Grupo D · Hoje, 16h · Lumen Field</p>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/fr.svg" alt="França" class="flag-lg">
+              <span class="font-semibold text-slate-900">França</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button class="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center active:bg-slate-200">−</button>
+              <span class="w-8 text-center font-extrabold text-xl text-slate-900">2</span>
+              <button class="w-9 h-9 rounded-lg bg-[#2323E8] text-white font-bold text-lg flex items-center justify-center active:opacity-80">+</button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/dk.svg" alt="Dinamarca" class="flag-lg">
+              <span class="font-semibold text-slate-900">Dinamarca</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button class="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center active:bg-slate-200">−</button>
+              <span class="w-8 text-center font-extrabold text-xl text-slate-900">1</span>
+              <button class="w-9 h-9 rounded-lg bg-[#2323E8] text-white font-bold text-lg flex items-center justify-center active:opacity-80">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-3.5 py-2 border-t border-slate-100 flex justify-between items-center">
+        <p class="text-[11px] text-slate-600">Trava em 4h 12min</p>
+        <p class="text-[11px] text-emerald-700 font-semibold">✓ Salvo</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4: Travado em andamento -->
+  <div class="px-4 pb-3">
+    <div class="bg-slate-100 border border-slate-200 rounded-xl overflow-hidden">
+      <div class="bg-slate-200/60 px-3.5 py-1.5 flex justify-between items-center">
+        <p class="text-[11px] font-bold text-slate-600 flex items-center gap-1">🔒 Trancado · Em andamento</p>
+        <p class="text-[11px] font-bold text-red-600 flex items-center gap-1">● AO VIVO</p>
+      </div>
+      <div class="px-3.5 py-3">
+        <p class="text-[11px] text-slate-500 mb-2">Grupo A · Agora · Estádio Azteca</p>
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/es.svg" alt="Espanha" class="flag-lg">
+              <span class="font-semibold text-slate-900">Espanha</span>
+            </div>
+            <div class="text-right">
+              <p class="text-[10px] text-slate-500">você</p>
+              <p class="font-bold text-slate-900 text-lg leading-none">2</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/mx.svg" alt="México" class="flag-lg">
+              <span class="font-semibold text-slate-900">México</span>
+            </div>
+            <div class="text-right">
+              <p class="text-[10px] text-slate-500">você</p>
+              <p class="font-bold text-slate-900 text-lg leading-none">1</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-3.5 py-2 border-t border-slate-200">
+        <p class="text-[11px] text-slate-600">Aguardando resultado oficial</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section header: encerrados -->
+  <div class="px-4 pt-4 pb-2">
+    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Encerrados</p>
+  </div>
+
+  <!-- CARD 5: Brasil encerrado placar exato -->
+  <div class="px-4 pb-3">
+    <div class="bg-white border border-emerald-300 rounded-xl overflow-hidden">
+      <div class="bg-emerald-50 px-3.5 py-1.5 flex justify-between items-center">
+        <p class="text-[11px] font-bold text-emerald-800">✅ Placar exato</p>
+        <p class="text-[11px] font-extrabold text-emerald-800">+12 pts</p>
+      </div>
+      <div class="px-3.5 py-3">
+        <p class="text-[11px] text-slate-500 mb-2 flex items-center gap-1">Grupo F · 13 jun · <img src="https://flagcdn.com/br.svg" alt="" class="flag-sm" style="margin:0"> Jogo do Brasil</p>
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/br.svg" alt="Brasil" class="flag-lg">
+              <span class="font-semibold text-slate-900">Brasil</span>
+            </div>
+            <p class="font-extrabold text-slate-900 text-xl">1</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/ch.svg" alt="Suíça" class="flag-lg">
+              <span class="font-semibold text-slate-900">Suíça</span>
+            </div>
+            <p class="font-extrabold text-slate-900 text-xl">0</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-3.5 py-2 border-t border-slate-100">
+        <p class="text-[11px] text-slate-600">Seu palpite: <span class="font-semibold text-slate-900">1x0</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6: Normal encerrado, só vencedor -->
+  <div class="px-4 pb-3">
+    <div class="bg-white border border-blue-200 rounded-xl overflow-hidden">
+      <div class="bg-blue-50 px-3.5 py-1.5 flex justify-between items-center">
+        <p class="text-[11px] font-bold text-blue-800">✓ Acertou o vencedor</p>
+        <p class="text-[11px] font-extrabold text-blue-800">+3 pts</p>
+      </div>
+      <div class="px-3.5 py-3">
+        <p class="text-[11px] text-slate-500 mb-2">Grupo E · 12 jun</p>
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/de.svg" alt="Alemanha" class="flag-lg">
+              <span class="font-semibold text-slate-900">Alemanha</span>
+            </div>
+            <p class="font-extrabold text-slate-900 text-xl">3</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/kr.svg" alt="Coreia do Sul" class="flag-lg">
+              <span class="font-semibold text-slate-900">Coreia do Sul</span>
+            </div>
+            <p class="font-extrabold text-slate-900 text-xl">2</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-3.5 py-2 border-t border-slate-100">
+        <p class="text-[11px] text-slate-600">Seu palpite: <span class="font-semibold text-slate-900">2x1</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 7: Normal encerrado, errou -->
+  <div class="px-4 pb-3">
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div class="bg-slate-100 px-3.5 py-1.5 flex justify-between items-center">
+        <p class="text-[11px] font-bold text-slate-600">✗ Não pontuou</p>
+        <p class="text-[11px] font-bold text-slate-500">0 pts</p>
+      </div>
+      <div class="px-3.5 py-3">
+        <p class="text-[11px] text-slate-500 mb-2">Grupo B · 11 jun</p>
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/nl.svg" alt="Holanda" class="flag-lg">
+              <span class="font-semibold text-slate-900">Holanda</span>
+            </div>
+            <p class="font-extrabold text-slate-900 text-xl">1</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/ec.svg" alt="Equador" class="flag-lg">
+              <span class="font-semibold text-slate-900">Equador</span>
+            </div>
+            <p class="font-extrabold text-slate-900 text-xl">1</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-3.5 py-2 border-t border-slate-100">
+        <p class="text-[11px] text-slate-600">Seu palpite: <span class="font-semibold text-slate-900">2x0</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 8: Encerrado sem palpite -->
+  <div class="px-4 pb-3">
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden opacity-90">
+      <div class="bg-slate-100 px-3.5 py-1.5 flex justify-between items-center">
+        <p class="text-[11px] font-bold text-slate-600">— Você não palpitou</p>
+        <p class="text-[11px] font-bold text-slate-500">0 pts</p>
+      </div>
+      <div class="px-3.5 py-3">
+        <p class="text-[11px] text-slate-500 mb-2">Grupo H · 11 jun</p>
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/pt.svg" alt="Portugal" class="flag-lg">
+              <span class="font-semibold text-slate-900">Portugal</span>
+            </div>
+            <p class="font-extrabold text-slate-900 text-xl">2</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <img src="https://flagcdn.com/gh.svg" alt="Gana" class="flag-lg">
+              <span class="font-semibold text-slate-900">Gana</span>
+            </div>
+            <p class="font-extrabold text-slate-900 text-xl">0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center pt-3 pb-1">
+    <p class="text-xs text-slate-500">Mostrando 8 de 104 · <a href="#" class="text-[#2323E8] font-semibold">Ver mais →</a></p>
+  </div>
+
+</div>
+
+<!-- Bottom nav fixa -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 max-w-md mx-auto">
+  <div class="grid grid-cols-5">
+    <a href="#dashboard" class="flex flex-col items-center py-2.5 text-slate-500">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="text-[10px] mt-0.5 font-medium">Início</span>
+    </a>
+    <a href="#palpitar" class="flex flex-col items-center py-2.5 text-[#2323E8]">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
+      <span class="text-[10px] mt-0.5 font-bold">Palpitar</span>
+    </a>
+    <a href="#rankings" class="flex flex-col items-center py-2.5 text-slate-500">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+      <span class="text-[10px] mt-0.5 font-medium">Rankings</span>
+    </a>
+    <a href="#ligas" class="flex flex-col items-center py-2.5 text-slate-500">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="text-[10px] mt-0.5 font-medium">Ligas</span>
+    </a>
+    <a href="#perfil" class="flex flex-col items-center py-2.5 text-slate-500">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="text-[10px] mt-0.5 font-medium">Perfil</span>
+    </a>
+  </div>
+</nav>
+
+</body>
+</html>
