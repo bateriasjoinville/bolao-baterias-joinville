@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 export default function Home() {
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-6 px-4 py-12">
@@ -13,18 +15,29 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="grid w-full grid-cols-2 gap-2 text-center text-[10px] font-bold uppercase tracking-wider">
-        <div className="rounded-lg bg-brand-blue px-3 py-4 text-white">
-          Azul #2323E8
-        </div>
-        <div className="rounded-lg bg-brand-yellow px-3 py-4 text-brand-blue-dark">
-          Amarelo #FFD400
-        </div>
+      <div className="flex w-full flex-col gap-2">
+        <Button
+          size="lg"
+          className="bg-brand-yellow text-brand-blue-dark hover:bg-brand-yellow-hover"
+        >
+          Quero participar grátis →
+        </Button>
+        <Button
+          size="lg"
+          className="bg-brand-blue text-white hover:bg-brand-blue-hover"
+        >
+          CTA secundária (azul)
+        </Button>
+        <Button size="lg" variant="outline">
+          Botão outline shadcn (slate)
+        </Button>
+        <Button size="lg" variant="secondary">
+          Botão secondary shadcn
+        </Button>
       </div>
 
       <p className="text-center text-xs text-slate-500">
-        Smoke test do Bloco 2 — Tailwind theme + Inter. Vai ser substituído pela
-        Home real.
+        Smoke test do Bloco 3 — shadcn + paleta da marca convivendo.
       </p>
     </main>
   );
