@@ -57,6 +57,12 @@ o app precisa:
 
 Detalhes em `lib/session.ts` e `middleware.ts` (Bloco 4.5).
 
+## Estratégia de assinatura do JWT custom
+
+- **HS256 com `SUPABASE_JWT_SECRET` (legacy "Previously used")** — o painel **JWT Signing Keys** do projeto já migrou pra ES256 como key atual, mas a private key ES256 **não é extraível** (só Supabase Auth pode assinar com ela). A legacy HS256 ficou em modo **verify-only**: PostgREST aceita JWT custom assinado com o legacy secret quando o token vem com `alg: HS256` e sem header `kid` (fallback documentado pelo Supabase).
+- **Por que não third-party auth com JWKS próprio agora:** custo de operação alto (par de chaves, endpoint `/.well-known/jwks.json`, cadastro no dashboard, gerenciamento de `kid`) pra uma janela de produto de ~38 dias úteis (cadastro de leads + Copa 11/jun a 19/jul/2026).
+- **Ponto de migração:** se o projeto for prolongado pós-Copa e o Supabase anunciar EOL do HS256 legacy, migrar pra third-party auth — gerar par EC P-256, expor JWKS em `/api/jwks` (Vercel route handler), cadastrar como provider no dashboard. As policies RLS (`auth.jwt() ->> 'participant_id'`) **não mudam**, só o lado de quem assina.
+
 ## Decisões registradas no schema
 
 - **Brasil tem `selecoes.id = 1`** — referenciado no seed e no badge "2x pontos" do front
