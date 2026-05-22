@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "flags:download": "node scripts/download-flags.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",
