@@ -6,6 +6,7 @@
 supabase/
   migrations/
     0001_initial_schema.sql   # schema inicial: 8 tabelas + indexes + RLS + policies
+    0002_seed.sql             # ALTERs em matches + seed 48 seleções + 104 jogos
 ```
 
 Versionamento manual por enquanto (sem Supabase CLI). Quando fizer sentido,
@@ -23,6 +24,45 @@ instalamos a CLI e migramos pra `supabase db push`.
 > Idempotência: o script **não** é idempotente — rodar 2x dá erro de "relation already exists".
 > Pra rodar em banco que já tem o schema, primeiro dropar tudo (`drop schema public cascade; create schema public;`),
 > ou ajustar pra `create table if not exists` antes de aplicar.
+
+## Migration 0002 — Seed selecoes + matches
+
+Aplica em sequência (precisa do 0001 já rodado):
+
+1. **SQL Editor → New query**
+2. Colar o conteúdo de `0002_seed.sql`
+3. **Run**
+4. Confirmar que retornou sem erro
+
+### O que o 0002 faz
+
+- **ALTERs em `matches`**
+  - Adiciona valor `'r32'` ao `CHECK` da coluna `fase` (32-avos, fase nova da Copa de 48 times)
+  - Torna `selecao_a_id` e `selecao_b_id` nullable (jogos eliminatórios ainda não têm time definido)
+  - Cria colunas `placeholder_a` e `placeholder_b` (text) pra notação de chaveamento: `1A`, `2C`, `3_ABCDF` (no r32) e `V73`, `P101` (oitavas em diante)
+  - Adiciona CHECK XOR: cada lado tem exatamente um dos dois preenchidos (`selecao_*_id` OU `placeholder_*`, nunca ambos nem nenhum)
+- **Seed `selecoes`** — 48 linhas. Brasil id=1 fixo. Restantes 2..48 alfabéticas. `codigo_iso` no formato flagcdn.com (`br`, `us`, `gb-eng`, `gb-sct`, etc).
+- **Seed `matches`** — 104 linhas. Fase de grupos (72) com `selecao_*_id` preenchido + r32/oitavas/quartas/semifinais/terceiro/final (32) com placeholders. Brasil joga em 7 (vs Marrocos), 29 (vs Haiti), 49 (vs Escócia) — `is_brasil = true`.
+
+### Validações esperadas pós-apply
+
+Rodar no SQL Editor depois de aplicar:
+
+```sql
+select count(*) from selecoes;                          -- esperado: 48
+select count(*) from matches;                           -- esperado: 104
+select count(*) from matches where is_brasil = true;    -- esperado: 3
+```
+
+E pra conferir a Brasil é id=1:
+
+```sql
+select id, nome, codigo_iso from selecoes where id = 1; -- Brasil, br
+```
+
+### Idempotência
+
+Igual ao 0001 — **não é idempotente**. A transação `BEGIN/COMMIT` rola tudo de volta se houver qualquer erro no meio (incluindo PK duplicada se já tiver dados). Pra reaplicar do zero: dropar schema, reaplicar 0001, depois 0002.
 
 ## Pré-requisitos pro app rodar contra esse schema
 

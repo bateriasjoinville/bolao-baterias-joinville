@@ -1,0 +1,1518 @@
+[
+  {
+    "id": 1,
+    "phase": "group",
+    "datetime_brt": "2026-06-11 16:00",
+    "venue": "Cidade do México",
+    "group": "A",
+    "team_a": "México",
+    "team_b": "África do Sul",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 2,
+    "phase": "group",
+    "datetime_brt": "2026-06-11 23:00",
+    "venue": "Guadalajara",
+    "group": "A",
+    "team_a": "Coreia do Sul",
+    "team_b": "Tchéquia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 3,
+    "phase": "group",
+    "datetime_brt": "2026-06-12 16:00",
+    "venue": "Toronto",
+    "group": "B",
+    "team_a": "Canadá",
+    "team_b": "Bósnia-Herzegovina",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 4,
+    "phase": "group",
+    "datetime_brt": "2026-06-12 22:00",
+    "venue": "Los Angeles",
+    "group": "D",
+    "team_a": "Estados Unidos",
+    "team_b": "Paraguai",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 5,
+    "phase": "group",
+    "datetime_brt": "2026-06-13 22:00",
+    "venue": "Boston",
+    "group": "C",
+    "team_a": "Haiti",
+    "team_b": "Escócia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 6,
+    "phase": "group",
+    "datetime_brt": "2026-06-14 01:00",
+    "venue": "Vancouver",
+    "group": "D",
+    "team_a": "Austrália",
+    "team_b": "Turquia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 7,
+    "phase": "group",
+    "datetime_brt": "2026-06-13 19:00",
+    "venue": "Nova York",
+    "group": "C",
+    "team_a": "Brasil",
+    "team_b": "Marrocos",
+    "is_brazil_game": true,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 8,
+    "phase": "group",
+    "datetime_brt": "2026-06-13 16:00",
+    "venue": "Santa Clara",
+    "group": "B",
+    "team_a": "Catar",
+    "team_b": "Suíça",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 9,
+    "phase": "group",
+    "datetime_brt": "2026-06-14 20:00",
+    "venue": "Filadélfia",
+    "group": "E",
+    "team_a": "Costa do Marfim",
+    "team_b": "Equador",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 10,
+    "phase": "group",
+    "datetime_brt": "2026-06-14 14:00",
+    "venue": "Houston",
+    "group": "E",
+    "team_a": "Alemanha",
+    "team_b": "Curaçao",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 11,
+    "phase": "group",
+    "datetime_brt": "2026-06-14 17:00",
+    "venue": "Dallas",
+    "group": "F",
+    "team_a": "Países Baixos",
+    "team_b": "Japão",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 12,
+    "phase": "group",
+    "datetime_brt": "2026-06-14 23:00",
+    "venue": "Monterrey",
+    "group": "F",
+    "team_a": "Suécia",
+    "team_b": "Tunísia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 13,
+    "phase": "group",
+    "datetime_brt": "2026-06-15 19:00",
+    "venue": "Miami",
+    "group": "H",
+    "team_a": "Arábia Saudita",
+    "team_b": "Uruguai",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 14,
+    "phase": "group",
+    "datetime_brt": "2026-06-15 13:00",
+    "venue": "Atlanta",
+    "group": "H",
+    "team_a": "Espanha",
+    "team_b": "Cabo Verde",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 15,
+    "phase": "group",
+    "datetime_brt": "2026-06-15 22:00",
+    "venue": "Los Angeles",
+    "group": "G",
+    "team_a": "Irã",
+    "team_b": "Nova Zelândia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 16,
+    "phase": "group",
+    "datetime_brt": "2026-06-15 16:00",
+    "venue": "Seattle",
+    "group": "G",
+    "team_a": "Bélgica",
+    "team_b": "Egito",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 17,
+    "phase": "group",
+    "datetime_brt": "2026-06-16 16:00",
+    "venue": "Nova York",
+    "group": "I",
+    "team_a": "França",
+    "team_b": "Senegal",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 18,
+    "phase": "group",
+    "datetime_brt": "2026-06-16 19:00",
+    "venue": "Boston",
+    "group": "I",
+    "team_a": "Iraque",
+    "team_b": "Noruega",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 19,
+    "phase": "group",
+    "datetime_brt": "2026-06-16 22:00",
+    "venue": "Kansas City",
+    "group": "J",
+    "team_a": "Argentina",
+    "team_b": "Argélia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 20,
+    "phase": "group",
+    "datetime_brt": "2026-06-17 01:00",
+    "venue": "Santa Clara",
+    "group": "J",
+    "team_a": "Áustria",
+    "team_b": "Jordânia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 21,
+    "phase": "group",
+    "datetime_brt": "2026-06-17 20:00",
+    "venue": "Toronto",
+    "group": "L",
+    "team_a": "Gana",
+    "team_b": "Panamá",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 22,
+    "phase": "group",
+    "datetime_brt": "2026-06-17 17:00",
+    "venue": "Dallas",
+    "group": "L",
+    "team_a": "Inglaterra",
+    "team_b": "Croácia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 23,
+    "phase": "group",
+    "datetime_brt": "2026-06-17 14:00",
+    "venue": "Houston",
+    "group": "K",
+    "team_a": "Portugal",
+    "team_b": "RD Congo",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 24,
+    "phase": "group",
+    "datetime_brt": "2026-06-17 23:00",
+    "venue": "Cidade do México",
+    "group": "K",
+    "team_a": "Uzbequistão",
+    "team_b": "Colômbia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 25,
+    "phase": "group",
+    "datetime_brt": "2026-06-18 13:00",
+    "venue": "Atlanta",
+    "group": "A",
+    "team_a": "Tchéquia",
+    "team_b": "África do Sul",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 26,
+    "phase": "group",
+    "datetime_brt": "2026-06-18 16:00",
+    "venue": "Los Angeles",
+    "group": "B",
+    "team_a": "Suíça",
+    "team_b": "Bósnia-Herzegovina",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 27,
+    "phase": "group",
+    "datetime_brt": "2026-06-18 19:00",
+    "venue": "Vancouver",
+    "group": "B",
+    "team_a": "Canadá",
+    "team_b": "Catar",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 28,
+    "phase": "group",
+    "datetime_brt": "2026-06-18 22:00",
+    "venue": "Guadalajara",
+    "group": "A",
+    "team_a": "México",
+    "team_b": "Coreia do Sul",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 29,
+    "phase": "group",
+    "datetime_brt": "2026-06-19 21:30",
+    "venue": "Filadélfia",
+    "group": "C",
+    "team_a": "Brasil",
+    "team_b": "Haiti",
+    "is_brazil_game": true,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 30,
+    "phase": "group",
+    "datetime_brt": "2026-06-19 19:00",
+    "venue": "Boston",
+    "group": "C",
+    "team_a": "Escócia",
+    "team_b": "Marrocos",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 31,
+    "phase": "group",
+    "datetime_brt": "2026-06-20 00:00",
+    "venue": "Santa Clara",
+    "group": "D",
+    "team_a": "Turquia",
+    "team_b": "Paraguai",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 32,
+    "phase": "group",
+    "datetime_brt": "2026-06-19 16:00",
+    "venue": "Seattle",
+    "group": "D",
+    "team_a": "Estados Unidos",
+    "team_b": "Austrália",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 33,
+    "phase": "group",
+    "datetime_brt": "2026-06-20 17:00",
+    "venue": "Toronto",
+    "group": "E",
+    "team_a": "Alemanha",
+    "team_b": "Costa do Marfim",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 34,
+    "phase": "group",
+    "datetime_brt": "2026-06-20 21:00",
+    "venue": "Kansas City",
+    "group": "E",
+    "team_a": "Equador",
+    "team_b": "Curaçao",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 35,
+    "phase": "group",
+    "datetime_brt": "2026-06-20 14:00",
+    "venue": "Houston",
+    "group": "F",
+    "team_a": "Países Baixos",
+    "team_b": "Suécia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 36,
+    "phase": "group",
+    "datetime_brt": "2026-06-21 01:00",
+    "venue": "Monterrey",
+    "group": "F",
+    "team_a": "Tunísia",
+    "team_b": "Japão",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 37,
+    "phase": "group",
+    "datetime_brt": "2026-06-21 19:00",
+    "venue": "Miami",
+    "group": "H",
+    "team_a": "Uruguai",
+    "team_b": "Cabo Verde",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 38,
+    "phase": "group",
+    "datetime_brt": "2026-06-21 13:00",
+    "venue": "Atlanta",
+    "group": "H",
+    "team_a": "Espanha",
+    "team_b": "Arábia Saudita",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 39,
+    "phase": "group",
+    "datetime_brt": "2026-06-21 16:00",
+    "venue": "Los Angeles",
+    "group": "G",
+    "team_a": "Bélgica",
+    "team_b": "Irã",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 40,
+    "phase": "group",
+    "datetime_brt": "2026-06-21 22:00",
+    "venue": "Vancouver",
+    "group": "G",
+    "team_a": "Nova Zelândia",
+    "team_b": "Egito",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 41,
+    "phase": "group",
+    "datetime_brt": "2026-06-22 21:00",
+    "venue": "Nova York",
+    "group": "I",
+    "team_a": "Noruega",
+    "team_b": "Senegal",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 42,
+    "phase": "group",
+    "datetime_brt": "2026-06-22 18:00",
+    "venue": "Filadélfia",
+    "group": "I",
+    "team_a": "França",
+    "team_b": "Iraque",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 43,
+    "phase": "group",
+    "datetime_brt": "2026-06-22 14:00",
+    "venue": "Dallas",
+    "group": "J",
+    "team_a": "Argentina",
+    "team_b": "Áustria",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 44,
+    "phase": "group",
+    "datetime_brt": "2026-06-23 00:00",
+    "venue": "Santa Clara",
+    "group": "J",
+    "team_a": "Jordânia",
+    "team_b": "Argélia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 45,
+    "phase": "group",
+    "datetime_brt": "2026-06-23 17:00",
+    "venue": "Boston",
+    "group": "L",
+    "team_a": "Inglaterra",
+    "team_b": "Gana",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 46,
+    "phase": "group",
+    "datetime_brt": "2026-06-23 20:00",
+    "venue": "Toronto",
+    "group": "L",
+    "team_a": "Panamá",
+    "team_b": "Croácia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 47,
+    "phase": "group",
+    "datetime_brt": "2026-06-23 14:00",
+    "venue": "Houston",
+    "group": "K",
+    "team_a": "Portugal",
+    "team_b": "Uzbequistão",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 48,
+    "phase": "group",
+    "datetime_brt": "2026-06-23 23:00",
+    "venue": "Guadalajara",
+    "group": "K",
+    "team_a": "Colômbia",
+    "team_b": "RD Congo",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "globo",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": true
+  },
+  {
+    "id": 49,
+    "phase": "group",
+    "datetime_brt": "2026-06-24 19:00",
+    "venue": "Miami",
+    "group": "C",
+    "team_a": "Escócia",
+    "team_b": "Brasil",
+    "is_brazil_game": true,
+    "broadcasts": [
+      "sbt",
+      "nsports",
+      "globo",
+      "getv",
+      "sportv",
+      "cazetv",
+      "globoplay"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 50,
+    "phase": "group",
+    "datetime_brt": "2026-06-24 19:00",
+    "venue": "Atlanta",
+    "group": "C",
+    "team_a": "Marrocos",
+    "team_b": "Haiti",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 51,
+    "phase": "group",
+    "datetime_brt": "2026-06-24 16:00",
+    "venue": "Vancouver",
+    "group": "B",
+    "team_a": "Suíça",
+    "team_b": "Canadá",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 52,
+    "phase": "group",
+    "datetime_brt": "2026-06-24 16:00",
+    "venue": "Seattle",
+    "group": "B",
+    "team_a": "Bósnia-Herzegovina",
+    "team_b": "Catar",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 53,
+    "phase": "group",
+    "datetime_brt": "2026-06-24 22:00",
+    "venue": "Cidade do México",
+    "group": "A",
+    "team_a": "Tchéquia",
+    "team_b": "México",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 54,
+    "phase": "group",
+    "datetime_brt": "2026-06-24 22:00",
+    "venue": "Monterrey",
+    "group": "A",
+    "team_a": "África do Sul",
+    "team_b": "Coreia do Sul",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 55,
+    "phase": "group",
+    "datetime_brt": "2026-06-25 17:00",
+    "venue": "Filadélfia",
+    "group": "E",
+    "team_a": "Curaçao",
+    "team_b": "Costa do Marfim",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 56,
+    "phase": "group",
+    "datetime_brt": "2026-06-25 17:00",
+    "venue": "Nova York",
+    "group": "E",
+    "team_a": "Equador",
+    "team_b": "Alemanha",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 57,
+    "phase": "group",
+    "datetime_brt": "2026-06-25 20:00",
+    "venue": "Dallas",
+    "group": "F",
+    "team_a": "Japão",
+    "team_b": "Suécia",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 58,
+    "phase": "group",
+    "datetime_brt": "2026-06-25 20:00",
+    "venue": "Kansas City",
+    "group": "F",
+    "team_a": "Tunísia",
+    "team_b": "Países Baixos",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 59,
+    "phase": "group",
+    "datetime_brt": "2026-06-25 23:00",
+    "venue": "Los Angeles",
+    "group": "D",
+    "team_a": "Turquia",
+    "team_b": "Estados Unidos",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 60,
+    "phase": "group",
+    "datetime_brt": "2026-06-25 23:00",
+    "venue": "Santa Clara",
+    "group": "D",
+    "team_a": "Paraguai",
+    "team_b": "Austrália",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 61,
+    "phase": "group",
+    "datetime_brt": "2026-06-26 16:00",
+    "venue": "Boston",
+    "group": "I",
+    "team_a": "Noruega",
+    "team_b": "França",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 62,
+    "phase": "group",
+    "datetime_brt": "2026-06-26 16:00",
+    "venue": "Toronto",
+    "group": "I",
+    "team_a": "Senegal",
+    "team_b": "Iraque",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 63,
+    "phase": "group",
+    "datetime_brt": "2026-06-27 00:00",
+    "venue": "Seattle",
+    "group": "G",
+    "team_a": "Egito",
+    "team_b": "Irã",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 64,
+    "phase": "group",
+    "datetime_brt": "2026-06-27 00:00",
+    "venue": "Vancouver",
+    "group": "G",
+    "team_a": "Nova Zelândia",
+    "team_b": "Bélgica",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 65,
+    "phase": "group",
+    "datetime_brt": "2026-06-26 21:00",
+    "venue": "Houston",
+    "group": "H",
+    "team_a": "Cabo Verde",
+    "team_b": "Arábia Saudita",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 66,
+    "phase": "group",
+    "datetime_brt": "2026-06-26 21:00",
+    "venue": "Guadalajara",
+    "group": "H",
+    "team_a": "Uruguai",
+    "team_b": "Espanha",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 67,
+    "phase": "group",
+    "datetime_brt": "2026-06-27 18:00",
+    "venue": "Nova York",
+    "group": "L",
+    "team_a": "Panamá",
+    "team_b": "Inglaterra",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 68,
+    "phase": "group",
+    "datetime_brt": "2026-06-27 18:00",
+    "venue": "Filadélfia",
+    "group": "L",
+    "team_a": "Croácia",
+    "team_b": "Gana",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 69,
+    "phase": "group",
+    "datetime_brt": "2026-06-27 23:00",
+    "venue": "Kansas City",
+    "group": "J",
+    "team_a": "Argélia",
+    "team_b": "Áustria",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 70,
+    "phase": "group",
+    "datetime_brt": "2026-06-27 23:00",
+    "venue": "Dallas",
+    "group": "J",
+    "team_a": "Jordânia",
+    "team_b": "Argentina",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 71,
+    "phase": "group",
+    "datetime_brt": "2026-06-27 20:30",
+    "venue": "Miami",
+    "group": "K",
+    "team_a": "Colômbia",
+    "team_b": "Portugal",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 72,
+    "phase": "group",
+    "datetime_brt": "2026-06-27 20:30",
+    "venue": "Atlanta",
+    "group": "K",
+    "team_a": "RD Congo",
+    "team_b": "Uzbequistão",
+    "is_brazil_game": false,
+    "broadcasts": [
+      "cazetv"
+    ],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 73,
+    "phase": "r32",
+    "datetime_brt": "2026-06-28 16:00",
+    "venue": "Los Angeles",
+    "group": null,
+    "team_a": "2A",
+    "team_b": "2B",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 74,
+    "phase": "r32",
+    "datetime_brt": "2026-06-29 17:30",
+    "venue": "Boston",
+    "group": null,
+    "team_a": "1E",
+    "team_b": "3_ABCDF",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 75,
+    "phase": "r32",
+    "datetime_brt": "2026-06-29 22:00",
+    "venue": "Monterrey",
+    "group": null,
+    "team_a": "1F",
+    "team_b": "2C",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 76,
+    "phase": "r32",
+    "datetime_brt": "2026-06-29 14:00",
+    "venue": "Houston",
+    "group": null,
+    "team_a": "1C",
+    "team_b": "2F",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 77,
+    "phase": "r32",
+    "datetime_brt": "2026-06-30 18:00",
+    "venue": "Nova York",
+    "group": null,
+    "team_a": "1I",
+    "team_b": "3_CDFGH",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 78,
+    "phase": "r32",
+    "datetime_brt": "2026-06-30 14:00",
+    "venue": "Dallas",
+    "group": null,
+    "team_a": "2E",
+    "team_b": "2I",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 79,
+    "phase": "r32",
+    "datetime_brt": "2026-06-30 22:00",
+    "venue": "Cidade do México",
+    "group": null,
+    "team_a": "1A",
+    "team_b": "3_CEFHI",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 80,
+    "phase": "r32",
+    "datetime_brt": "2026-07-01 13:00",
+    "venue": "Atlanta",
+    "group": null,
+    "team_a": "1L",
+    "team_b": "3_EHIJK",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 81,
+    "phase": "r32",
+    "datetime_brt": "2026-07-01 21:00",
+    "venue": "Santa Clara",
+    "group": null,
+    "team_a": "1D",
+    "team_b": "3_BEFIJ",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 82,
+    "phase": "r32",
+    "datetime_brt": "2026-07-01 17:00",
+    "venue": "Seattle",
+    "group": null,
+    "team_a": "1G",
+    "team_b": "3_AEHIJ",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 83,
+    "phase": "r32",
+    "datetime_brt": "2026-07-02 20:00",
+    "venue": "Toronto",
+    "group": null,
+    "team_a": "2K",
+    "team_b": "2L",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 84,
+    "phase": "r32",
+    "datetime_brt": "2026-07-02 16:00",
+    "venue": "Los Angeles",
+    "group": null,
+    "team_a": "1H",
+    "team_b": "2J",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 85,
+    "phase": "r32",
+    "datetime_brt": "2026-07-02 00:00",
+    "venue": "Vancouver",
+    "group": null,
+    "team_a": "1B",
+    "team_b": "3_EFGIJ",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 86,
+    "phase": "r32",
+    "datetime_brt": "2026-07-03 17:00",
+    "venue": "Miami",
+    "group": null,
+    "team_a": "1J",
+    "team_b": "2H",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 87,
+    "phase": "r32",
+    "datetime_brt": "2026-07-03 22:30",
+    "venue": "Kansas City",
+    "group": null,
+    "team_a": "1K",
+    "team_b": "3_DEIJL",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 88,
+    "phase": "r32",
+    "datetime_brt": "2026-07-03 15:00",
+    "venue": "Dallas",
+    "group": null,
+    "team_a": "2D",
+    "team_b": "2G",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 89,
+    "phase": "r16",
+    "datetime_brt": "2026-07-04 18:00",
+    "venue": "Filadélfia",
+    "group": null,
+    "team_a": "V74",
+    "team_b": "V77",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 90,
+    "phase": "r16",
+    "datetime_brt": "2026-07-04 14:00",
+    "venue": "Houston",
+    "group": null,
+    "team_a": "V73",
+    "team_b": "V75",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 91,
+    "phase": "r16",
+    "datetime_brt": "2026-07-05 17:00",
+    "venue": "Nova York",
+    "group": null,
+    "team_a": "V76",
+    "team_b": "V78",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 92,
+    "phase": "r16",
+    "datetime_brt": "2026-07-05 21:00",
+    "venue": "Cidade do México",
+    "group": null,
+    "team_a": "V79",
+    "team_b": "V80",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 93,
+    "phase": "r16",
+    "datetime_brt": "2026-07-06 15:00",
+    "venue": "Dallas",
+    "group": null,
+    "team_a": "V83",
+    "team_b": "V84",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 94,
+    "phase": "r16",
+    "datetime_brt": "2026-07-06 20:00",
+    "venue": "Seattle",
+    "group": null,
+    "team_a": "V81",
+    "team_b": "V82",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 95,
+    "phase": "r16",
+    "datetime_brt": "2026-07-07 13:00",
+    "venue": "Atlanta",
+    "group": null,
+    "team_a": "V86",
+    "team_b": "V88",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 96,
+    "phase": "r16",
+    "datetime_brt": "2026-07-07 17:00",
+    "venue": "Vancouver",
+    "group": null,
+    "team_a": "V85",
+    "team_b": "V87",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 97,
+    "phase": "qf",
+    "datetime_brt": "2026-07-09 17:00",
+    "venue": "Boston",
+    "group": null,
+    "team_a": "V89",
+    "team_b": "V90",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 98,
+    "phase": "qf",
+    "datetime_brt": "2026-07-10 16:00",
+    "venue": "Los Angeles",
+    "group": null,
+    "team_a": "V93",
+    "team_b": "V94",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 99,
+    "phase": "qf",
+    "datetime_brt": "2026-07-12 18:00",
+    "venue": "Miami",
+    "group": null,
+    "team_a": "V91",
+    "team_b": "V92",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 100,
+    "phase": "qf",
+    "datetime_brt": "2026-07-12 21:00",
+    "venue": "Kansas City",
+    "group": null,
+    "team_a": "V95",
+    "team_b": "V96",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 101,
+    "phase": "sf",
+    "datetime_brt": "2026-07-14 16:00",
+    "venue": "Dallas",
+    "group": null,
+    "team_a": "V97",
+    "team_b": "V98",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 102,
+    "phase": "sf",
+    "datetime_brt": "2026-07-15 16:00",
+    "venue": "Atlanta",
+    "group": null,
+    "team_a": "V99",
+    "team_b": "V100",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 103,
+    "phase": "third_place",
+    "datetime_brt": "2026-07-18 18:00",
+    "venue": "Miami",
+    "group": null,
+    "team_a": "P101",
+    "team_b": "P102",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  },
+  {
+    "id": 104,
+    "phase": "final",
+    "datetime_brt": "2026-07-19 16:00",
+    "venue": "Nova York",
+    "group": null,
+    "team_a": "V101",
+    "team_b": "V102",
+    "is_brazil_game": false,
+    "broadcasts": [],
+    "broadcasts_confirmed": false
+  }
+]
