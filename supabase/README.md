@@ -7,6 +7,7 @@ supabase/
   migrations/
     0001_initial_schema.sql   # schema inicial: 8 tabelas + indexes + RLS + policies
     0002_seed.sql             # ALTERs em matches + seed 48 seleções + 104 jogos
+    0003_broadcasters.sql     # tabelas broadcasters + match_broadcasters + seed
 ```
 
 Versionamento manual por enquanto (sem Supabase CLI). Quando fizer sentido,
@@ -63,6 +64,32 @@ select id, nome, codigo_iso from selecoes where id = 1; -- Brasil, br
 ### Idempotência
 
 Igual ao 0001 — **não é idempotente**. A transação `BEGIN/COMMIT` rola tudo de volta se houver qualquer erro no meio (incluindo PK duplicada se já tiver dados). Pra reaplicar do zero: dropar schema, reaplicar 0001, depois 0002.
+
+## Migration 0003 — broadcasters + match_broadcasters
+
+Precisa do 0001 e 0002 já aplicados.
+
+1. **SQL Editor → New query**
+2. Colar `0003_broadcasters.sql`
+3. **Run**
+
+### O que o 0003 faz
+
+- **ALTER em `matches`**: adiciona coluna `broadcasts_confirmed boolean not null default false`. Marca jogos 1-48 como `true` (lista FIFA confirmada da 1ª e 2ª rodada).
+- **Cria tabela `broadcasters`** (master data, 7 linhas). PK = slug text. Colunas pt-br: `nome`, `tipo`, `gratuito`, `ordem`. Mantém `slug` e `external_url`.
+- **Cria tabela `match_broadcasters`** (N:N entre matches e broadcasters). PK composta `(match_id, broadcaster_slug)`. ON DELETE CASCADE no match, ON DELETE RESTRICT no broadcaster.
+- **RLS pública pra SELECT** em ambas as tabelas. INSERT/UPDATE/DELETE só via service_role.
+- **Seed 196 entries** em `match_broadcasters` (jogos 1-72 da fase de grupos). Eliminatórios 73-104 ficam sem entry até FIFA divulgar.
+
+### Validações esperadas pós-apply
+
+```sql
+select count(*) from broadcasters;                              -- 7
+select count(*) from match_broadcasters;                        -- 196
+select count(*) from matches where broadcasts_confirmed = true; -- 48
+select count(*) from match_broadcasters where match_id = 7;     -- 7 (Brasil x Marrocos, pacote completo)
+select count(*) from match_broadcasters where broadcaster_slug = 'cazetv'; -- 72 (CazéTV cobre todos os grupos)
+```
 
 ## Pré-requisitos pro app rodar contra esse schema
 
