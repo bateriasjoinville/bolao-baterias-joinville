@@ -1,4 +1,5 @@
 import { DashboardHeader } from "@/components/dashboard/header";
+import { getDashboardData } from "@/lib/dashboard/queries";
 import { createAuthedServerClient } from "@/lib/supabase/server";
 
 export const metadata = {
@@ -7,17 +8,12 @@ export const metadata = {
 
 export default async function DashboardPage() {
   const supabase = await createAuthedServerClient();
-  const { data: participant } = await supabase
-    .from("participants")
-    .select("nome")
-    .single();
-
-  const primeiroNome = participant?.nome?.split(/\s+/)[0] ?? "participante";
+  const data = await getDashboardData(supabase);
 
   return (
     <div className="min-h-screen bg-slate-200">
       <main className="mx-auto min-h-screen max-w-md bg-white shadow-xl">
-        <DashboardHeader primeiroNome={primeiroNome} />
+        <DashboardHeader nome={data.nome} />
         <section className="px-4 py-10 text-center">
           <p className="mb-3 text-4xl">🎯</p>
           <h2 className="mb-2 text-xl font-bold text-slate-900">
