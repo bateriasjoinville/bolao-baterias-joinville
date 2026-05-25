@@ -1,9 +1,11 @@
 import { z } from "zod";
 
-import { stripDigits } from "@/lib/format";
 import { BAIRROS_OPCOES } from "@/lib/validation/bairros";
-import { isValidCPF } from "@/lib/validation/cpf";
-import { DDDS_VALIDOS } from "@/lib/validation/ddd";
+import {
+  cpfSchema,
+  turnstileTokenSchema,
+  whatsappSchema,
+} from "@/lib/validation/contato";
 
 const nomeSchema = z
   .string()
@@ -13,35 +15,6 @@ const nomeSchema = z
   .refine(
     (v) => v.split(/\s+/).filter(Boolean).length >= 2,
     "Informe nome e sobrenome",
-  );
-
-const cpfSchema = z
-  .string()
-  .min(1, "Informe o CPF")
-  .transform(stripDigits)
-  .pipe(
-    z
-      .string()
-      .length(11, "CPF precisa ter 11 dígitos")
-      .refine(isValidCPF, "CPF inválido"),
-  );
-
-const whatsappSchema = z
-  .string()
-  .min(1, "Informe o WhatsApp")
-  .transform(stripDigits)
-  .pipe(
-    z
-      .string()
-      .regex(/^\d{10,11}$/, "WhatsApp precisa ter 10 ou 11 dígitos")
-      .refine(
-        (v) => DDDS_VALIDOS.has(v.slice(0, 2)),
-        "DDD inválido",
-      )
-      .refine(
-        (v) => v.length === 10 || v[2] === "9",
-        "Celular precisa começar com 9 depois do DDD",
-      ),
   );
 
 const idadeSchema = z.coerce
@@ -65,10 +38,6 @@ const instagramSchema = z
   .optional();
 
 const aceiteSchema = z.literal(true, { message: "Aceite obrigatório" });
-
-const turnstileTokenSchema = z
-  .string()
-  .min(1, "Falha no captcha. Recarrega a página.");
 
 export const cadastroSchema = z.object({
   nome: nomeSchema,

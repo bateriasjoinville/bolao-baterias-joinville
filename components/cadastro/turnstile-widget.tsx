@@ -18,7 +18,7 @@ export function TurnstileWidget({
     <Turnstile
       ref={instanceRef}
       siteKey={siteKey}
-      options={{ size: "invisible", theme: "light" }}
+      options={{ size: "invisible", execution: "execute", theme: "light" }}
       onSuccess={onToken}
     />
   );
