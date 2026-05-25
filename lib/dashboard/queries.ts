@@ -4,32 +4,33 @@ import { type SupabaseClient } from "@supabase/supabase-js";
 
 import { type Database } from "@/lib/supabase/database.types";
 
-export type SelecaoMin = {
-  id: number;
-  nome: string;
-  codigo_iso: string;
-};
+type SelecaoTable = Database["public"]["Tables"]["selecoes"]["Row"];
+type MatchTable = Database["public"]["Tables"]["matches"]["Row"];
+type PredictionTable = Database["public"]["Tables"]["predictions"]["Row"];
 
-export type MatchRow = {
-  id: number;
-  fase: string;
-  grupo: string | null;
-  kickoff_at: string;
-  estadio: string;
-  is_brasil: boolean;
-  placar_a: number | null;
-  placar_b: number | null;
-  placeholder_a: string | null;
-  placeholder_b: string | null;
+export type SelecaoMin = Pick<SelecaoTable, "id" | "nome" | "codigo_iso">;
+
+export type MatchRow = Pick<
+  MatchTable,
+  | "id"
+  | "fase"
+  | "grupo"
+  | "kickoff_at"
+  | "estadio"
+  | "is_brasil"
+  | "placar_a"
+  | "placar_b"
+  | "placeholder_a"
+  | "placeholder_b"
+> & {
   selecao_a: SelecaoMin | null;
   selecao_b: SelecaoMin | null;
 };
 
-export type PredictionMin = {
-  match_id: number;
-  placar_a: number;
-  placar_b: number;
-};
+export type PredictionMin = Pick<
+  PredictionTable,
+  "match_id" | "placar_a" | "placar_b"
+>;
 
 export type DashboardData = {
   nome: string;
@@ -37,6 +38,7 @@ export type DashboardData = {
   proximoGeral: MatchRow | null;
   proximos5: MatchRow[];
   predictions: PredictionMin[];
+  totalMatches: number;
 };
 
 const MATCH_SELECT = `
@@ -65,6 +67,7 @@ export async function getDashboardData(
     proximoGeralRes,
     proximos5Res,
     predictionsRes,
+    totalMatchesRes,
   ] = await Promise.all([
     supabase.from("participants").select("nome").single(),
     supabase
@@ -91,6 +94,9 @@ export async function getDashboardData(
     supabase
       .from("predictions")
       .select("match_id, placar_a, placar_b"),
+    supabase
+      .from("matches")
+      .select("id", { count: "exact", head: true }),
   ]);
 
   return {
@@ -99,6 +105,7 @@ export async function getDashboardData(
     proximoGeral: (proximoGeralRes.data as MatchRow | null) ?? null,
     proximos5: (proximos5Res.data as MatchRow[] | null) ?? [],
     predictions: (predictionsRes.data ?? []) as PredictionMin[],
+    totalMatches: totalMatchesRes.count ?? 0,
   };
 }
 

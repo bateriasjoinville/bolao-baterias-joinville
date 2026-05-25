@@ -58,3 +58,9 @@ export function formatMatchTime(date: Date | string): string {
 export function formatMatchDateTime(date: Date | string): string {
   return `${formatMatchDate(date)} · ${formatMatchTime(date)}`;
 }
+
+// TODO: data de abertura da janela de palpites é decisão de negócio pendente.
+// Regra real: palpite editável até 1h antes de cada jogo.
+export function palpitesAbertos(): boolean {
+  return false;
+}

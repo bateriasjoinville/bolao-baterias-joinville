@@ -1,5 +1,17 @@
+import { CountdownCard } from "@/components/dashboard/countdown-card";
+import { DashboardFooter } from "@/components/dashboard/footer";
 import { DashboardHeader } from "@/components/dashboard/header";
-import { getDashboardData } from "@/lib/dashboard/queries";
+import { LigasPlaceholder } from "@/components/dashboard/ligas-placeholder";
+import { PredictionsProgress } from "@/components/dashboard/predictions-progress";
+import { ProximoBrasilCard } from "@/components/dashboard/proximo-brasil-card";
+import { ProximoJogoCard } from "@/components/dashboard/proximo-jogo-card";
+import { ProximosJogosList } from "@/components/dashboard/proximos-jogos-list";
+import {
+  diasParaCopa,
+  isPreCopa,
+  palpitesAbertos,
+} from "@/lib/dashboard/format";
+import { findPrediction, getDashboardData } from "@/lib/dashboard/queries";
 import { createAuthedServerClient } from "@/lib/supabase/server";
 
 export const metadata = {
@@ -9,34 +21,51 @@ export const metadata = {
 export default async function DashboardPage() {
   const supabase = await createAuthedServerClient();
   const data = await getDashboardData(supabase);
+  const preCopa = isPreCopa();
+  const dias = diasParaCopa();
+  const aberto = palpitesAbertos();
+  const mostrarProximoJogo =
+    data.proximoGeral != null &&
+    data.proximoGeral.id !== data.proximoBrasil?.id;
 
   return (
     <div className="min-h-screen bg-slate-200">
-      <main className="mx-auto min-h-screen max-w-md bg-white shadow-xl">
+      <main className="mx-auto flex min-h-screen max-w-md flex-col bg-white shadow-xl">
         <DashboardHeader nome={data.nome} />
-        <section className="px-4 py-10 text-center">
-          <p className="mb-3 text-4xl">🎯</p>
-          <h2 className="mb-2 text-xl font-bold text-slate-900">
-            Bolão confirmado
-          </h2>
-          <p className="mx-auto max-w-xs text-sm leading-snug text-slate-600">
-            Você palpita quando a janela abrir, 10 dias antes do 1º jogo, em
-            11 de junho.
-          </p>
-        </section>
-        <footer className="mt-auto bg-slate-50 px-4 py-5 text-center text-[11px] leading-relaxed text-slate-500">
-          <p>Baterias Joinville · Rua Dona Francisca, 4523</p>
-          <p>WhatsApp (47) 99680-1100</p>
-          <p className="mt-1">
-            <a href="/regulamento" className="underline">
-              Regulamento
-            </a>{" "}
-            ·{" "}
-            <a href="/privacidade" className="underline">
-              Privacidade
-            </a>
-          </p>
-        </footer>
+
+        {preCopa && <CountdownCard dias={dias} />}
+
+        {data.proximoBrasil && (
+          <ProximoBrasilCard
+            match={data.proximoBrasil}
+            prediction={findPrediction(data.predictions, data.proximoBrasil.id)}
+          />
+        )}
+
+        {mostrarProximoJogo && data.proximoGeral && (
+          <ProximoJogoCard
+            match={data.proximoGeral}
+            prediction={findPrediction(data.predictions, data.proximoGeral.id)}
+          />
+        )}
+
+        <PredictionsProgress
+          feitos={data.predictions.length}
+          total={data.totalMatches}
+          aberto={aberto}
+        />
+
+        <ProximosJogosList
+          matches={data.proximos5}
+          predictions={data.predictions}
+          aberto={aberto}
+        />
+
+        <LigasPlaceholder />
+
+        <div className="h-10" />
+
+        <DashboardFooter />
       </main>
     </div>
   );

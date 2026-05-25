@@ -7,8 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
@@ -60,6 +58,33 @@ export type Database = {
           id?: string
           ip_address?: unknown
           payload?: Json | null
+        }
+        Relationships: []
+      }
+      broadcasters: {
+        Row: {
+          external_url: string | null
+          gratuito: boolean
+          nome: string
+          ordem: number
+          slug: string
+          tipo: string
+        }
+        Insert: {
+          external_url?: string | null
+          gratuito: boolean
+          nome: string
+          ordem: number
+          slug: string
+          tipo: string
+        }
+        Update: {
+          external_url?: string | null
+          gratuito?: boolean
+          nome?: string
+          ordem?: number
+          slug?: string
+          tipo?: string
         }
         Relationships: []
       }
@@ -161,8 +186,39 @@ export type Database = {
           },
         ]
       }
+      match_broadcasters: {
+        Row: {
+          broadcaster_slug: string
+          match_id: number
+        }
+        Insert: {
+          broadcaster_slug: string
+          match_id: number
+        }
+        Update: {
+          broadcaster_slug?: string
+          match_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_broadcasters_broadcaster_slug_fkey"
+            columns: ["broadcaster_slug"]
+            isOneToOne: false
+            referencedRelation: "broadcasters"
+            referencedColumns: ["slug"]
+          },
+          {
+            foreignKeyName: "match_broadcasters_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       matches: {
         Row: {
+          broadcasts_confirmed: boolean
           estadio: string
           fase: string
           grupo: string | null
@@ -171,11 +227,14 @@ export type Database = {
           kickoff_at: string
           placar_a: number | null
           placar_b: number | null
-          selecao_a_id: number
-          selecao_b_id: number
+          placeholder_a: string | null
+          placeholder_b: string | null
+          selecao_a_id: number | null
+          selecao_b_id: number | null
           updated_at: string
         }
         Insert: {
+          broadcasts_confirmed?: boolean
           estadio: string
           fase: string
           grupo?: string | null
@@ -184,11 +243,14 @@ export type Database = {
           kickoff_at: string
           placar_a?: number | null
           placar_b?: number | null
-          selecao_a_id: number
-          selecao_b_id: number
+          placeholder_a?: string | null
+          placeholder_b?: string | null
+          selecao_a_id?: number | null
+          selecao_b_id?: number | null
           updated_at?: string
         }
         Update: {
+          broadcasts_confirmed?: boolean
           estadio?: string
           fase?: string
           grupo?: string | null
@@ -197,8 +259,10 @@ export type Database = {
           kickoff_at?: string
           placar_a?: number | null
           placar_b?: number | null
-          selecao_a_id?: number
-          selecao_b_id?: number
+          placeholder_a?: string | null
+          placeholder_b?: string | null
+          selecao_a_id?: number | null
+          selecao_b_id?: number | null
           updated_at?: string
         }
         Relationships: [
