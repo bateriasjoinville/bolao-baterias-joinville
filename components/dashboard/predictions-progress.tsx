@@ -45,15 +45,19 @@ export function PredictionsProgress({
             Palpitar agora
           </Link>
         ) : (
-          <button
-            type="button"
-            disabled
-            className="block w-full cursor-not-allowed rounded-md bg-slate-200 py-2.5 text-center text-sm font-semibold text-slate-500"
+          <Link
+            href="/palpitar"
+            className="block rounded-md border border-slate-300 bg-white py-2.5 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
           >
-            Em breve
-          </button>
+            Ver jogos →
+          </Link>
         )}
       </div>
+      {!aberto && (
+        <p className="mt-2 text-center text-[11px] text-slate-500">
+          Palpites abrem em breve
+        </p>
+      )}
     </section>
   );
 }

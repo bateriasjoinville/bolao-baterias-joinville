@@ -61,6 +61,8 @@ export function formatMatchDateTime(date: Date | string): string {
 
 // TODO: data de abertura da janela de palpites é decisão de negócio pendente.
 // Regra real: palpite editável até 1h antes de cada jogo.
+// Override de dev: NEXT_PUBLIC_PALPITES_FORCE_OPEN=true libera palpites localmente.
 export function palpitesAbertos(): boolean {
+  if (process.env.NEXT_PUBLIC_PALPITES_FORCE_OPEN === "true") return true;
   return false;
 }
