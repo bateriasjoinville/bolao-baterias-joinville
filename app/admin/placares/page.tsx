@@ -1,4 +1,5 @@
 import { PlacarRow } from "@/components/admin/placar-row";
+import { RecalcButton } from "@/components/admin/recalc-button";
 import { requireAdmin } from "@/lib/admin/session";
 import { getAdminMatches } from "@/lib/admin/queries";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
@@ -31,14 +32,17 @@ export default async function AdminPlacaresPage() {
                 {finalizados} de {matches.length} jogos finalizados
               </p>
             </div>
-            <form action="/admin/sair" method="post">
-              <button
-                type="submit"
-                className="rounded-lg border border-white/40 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
-              >
-                Sair
-              </button>
-            </form>
+            <div className="flex items-start gap-2">
+              <RecalcButton />
+              <form action="/admin/sair" method="post">
+                <button
+                  type="submit"
+                  className="rounded-lg border border-white/40 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
+                >
+                  Sair
+                </button>
+              </form>
+            </div>
           </div>
         </header>
 

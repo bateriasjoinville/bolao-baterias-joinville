@@ -285,6 +285,7 @@ export type Database = {
       participant_scores: {
         Row: {
           diff_gols_total: number
+          display_name: string
           palpites_validos: number
           participant_id: string
           placares_exatos: number
@@ -294,6 +295,7 @@ export type Database = {
         }
         Insert: {
           diff_gols_total?: number
+          display_name?: string
           palpites_validos?: number
           participant_id: string
           placares_exatos?: number
@@ -303,6 +305,7 @@ export type Database = {
         }
         Update: {
           diff_gols_total?: number
+          display_name?: string
           palpites_validos?: number
           participant_id?: string
           placares_exatos?: number
@@ -428,6 +431,7 @@ export type Database = {
       weekly_scores: {
         Row: {
           diff_gols_total: number
+          display_name: string
           palpites_validos: number
           participant_id: string
           placares_exatos: number
@@ -438,6 +442,7 @@ export type Database = {
         }
         Insert: {
           diff_gols_total?: number
+          display_name?: string
           palpites_validos?: number
           participant_id: string
           placares_exatos?: number
@@ -448,6 +453,7 @@ export type Database = {
         }
         Update: {
           diff_gols_total?: number
+          display_name?: string
           palpites_validos?: number
           participant_id?: string
           placares_exatos?: number

@@ -5,7 +5,10 @@ import { z } from "zod";
 
 import { requireAdmin } from "@/lib/admin/session";
 import { PLACAR_MAX, PLACAR_MIN } from "@/lib/validation/palpite";
-import { recalculateAllPoints } from "@/lib/scoring/recalculate";
+import {
+  recalculateAllPoints,
+  type RecalculateResult,
+} from "@/lib/scoring/recalculate";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 const placarSchema = z.number().int().min(PLACAR_MIN).max(PLACAR_MAX);
@@ -57,6 +60,25 @@ export async function salvarPlacar(
 
   revalidatePath("/admin/placares");
   revalidatePath("/dashboard");
+  revalidatePath("/ranking");
 
   return { ok: true, recalculated };
+}
+
+export type RecalcularTudoResult =
+  | { ok: true; recalculated: RecalculateResult }
+  | { ok: false; error: string };
+
+export async function recalcularTudo(): Promise<RecalcularTudoResult> {
+  await requireAdmin();
+  try {
+    const admin = getSupabaseAdmin();
+    const recalculated = await recalculateAllPoints(admin);
+    revalidatePath("/admin/placares");
+    revalidatePath("/dashboard");
+    revalidatePath("/ranking");
+    return { ok: true, recalculated };
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : String(err) };
+  }
 }

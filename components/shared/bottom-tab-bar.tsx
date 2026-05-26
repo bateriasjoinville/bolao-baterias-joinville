@@ -1,6 +1,6 @@
 "use client";
 
-import { House, Trophy } from "lucide-react";
+import { House, Target, Trophy } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,7 +12,8 @@ type TabDef = {
 
 const TABS: TabDef[] = [
   { label: "Início", href: "/dashboard", Icon: House },
-  { label: "Palpitar", href: "/palpitar", Icon: Trophy },
+  { label: "Palpitar", href: "/palpitar", Icon: Target },
+  { label: "Ranking", href: "/ranking", Icon: Trophy },
 ];
 
 export function BottomTabBar() {

@@ -3,6 +3,7 @@ import "server-only";
 import { type SupabaseClient } from "@supabase/supabase-js";
 
 import { calculatePoints } from "@/lib/scoring/calculate";
+import { toDisplayName } from "@/lib/scoring/display-name";
 import { weekOfMatch } from "@/lib/scoring/weeks";
 import { type Database } from "@/lib/supabase/database.types";
 
@@ -84,8 +85,28 @@ export async function recalculateAllPoints(
     }
   }
 
+  const participantIds = Array.from(
+    new Set<string>([
+      ...totals.keys(),
+      ...Array.from(weekly.keys()).map((k) => k.split("|")[0] ?? ""),
+    ]),
+  ).filter((id) => id.length > 0);
+
+  const displayNames = new Map<string, string>();
+  if (participantIds.length > 0) {
+    const { data: namesData, error: namesErr } = await admin
+      .from("participants")
+      .select("id, nome")
+      .in("id", participantIds);
+    if (namesErr) throw namesErr;
+    for (const p of namesData ?? []) {
+      displayNames.set(p.id, toDisplayName(p.nome));
+    }
+  }
+
   const participantRows = Array.from(totals.entries()).map(([id, a]) => ({
     participant_id: id,
+    display_name: displayNames.get(id) ?? "Participante",
     pontos_total: a.pontos,
     placares_exatos: a.exatos,
     vencedores_acertados: a.vencedores,
@@ -95,8 +116,10 @@ export async function recalculateAllPoints(
 
   const weeklyRows = Array.from(weekly.entries()).map(([key, a]) => {
     const [id, sStr] = key.split("|");
+    const participantId = id ?? "";
     return {
-      participant_id: id ?? "",
+      participant_id: participantId,
+      display_name: displayNames.get(participantId) ?? "Participante",
       semana: Number(sStr),
       pontos: a.pontos,
       placares_exatos: a.exatos,
