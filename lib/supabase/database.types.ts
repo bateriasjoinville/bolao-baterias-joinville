@@ -282,6 +282,44 @@ export type Database = {
           },
         ]
       }
+      participant_scores: {
+        Row: {
+          diff_gols_total: number
+          palpites_validos: number
+          participant_id: string
+          placares_exatos: number
+          pontos_total: number
+          updated_at: string
+          vencedores_acertados: number
+        }
+        Insert: {
+          diff_gols_total?: number
+          palpites_validos?: number
+          participant_id: string
+          placares_exatos?: number
+          pontos_total?: number
+          updated_at?: string
+          vencedores_acertados?: number
+        }
+        Update: {
+          diff_gols_total?: number
+          palpites_validos?: number
+          participant_id?: string
+          placares_exatos?: number
+          pontos_total?: number
+          updated_at?: string
+          vencedores_acertados?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "participant_scores_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: true
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       participants: {
         Row: {
           aceite_comunicacoes: boolean
@@ -386,6 +424,47 @@ export type Database = {
           nome?: string
         }
         Relationships: []
+      }
+      weekly_scores: {
+        Row: {
+          diff_gols_total: number
+          palpites_validos: number
+          participant_id: string
+          placares_exatos: number
+          pontos: number
+          semana: number
+          updated_at: string
+          vencedores_acertados: number
+        }
+        Insert: {
+          diff_gols_total?: number
+          palpites_validos?: number
+          participant_id: string
+          placares_exatos?: number
+          pontos?: number
+          semana: number
+          updated_at?: string
+          vencedores_acertados?: number
+        }
+        Update: {
+          diff_gols_total?: number
+          palpites_validos?: number
+          participant_id?: string
+          placares_exatos?: number
+          pontos?: number
+          semana?: number
+          updated_at?: string
+          vencedores_acertados?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "weekly_scores_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

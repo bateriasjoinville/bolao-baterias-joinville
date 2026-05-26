@@ -8,6 +8,8 @@ const envSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20),
   SUPABASE_JWT_SECRET: z.string().min(32),
   SESSION_SECRET: z.string().min(32),
+  ADMIN_SESSION_SECRET: z.string().min(32),
+  ADMIN_TOKEN: z.string().min(16),
 });
 
 const parsed = envSchema.safeParse({
@@ -16,6 +18,8 @@ const parsed = envSchema.safeParse({
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
   SUPABASE_JWT_SECRET: process.env.SUPABASE_JWT_SECRET,
   SESSION_SECRET: process.env.SESSION_SECRET,
+  ADMIN_SESSION_SECRET: process.env.ADMIN_SESSION_SECRET,
+  ADMIN_TOKEN: process.env.ADMIN_TOKEN,
 });
 
 if (!parsed.success) {
