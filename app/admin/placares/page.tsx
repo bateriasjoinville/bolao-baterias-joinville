@@ -1,5 +1,8 @@
+import Link from "next/link";
+
 import { PlacarRow } from "@/components/admin/placar-row";
 import { RecalcButton } from "@/components/admin/recalc-button";
+import { countPendentes } from "@/lib/admin/help-requests";
 import { requireAdmin } from "@/lib/admin/session";
 import { getAdminMatches } from "@/lib/admin/queries";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
@@ -15,7 +18,10 @@ export default async function AdminPlacaresPage() {
   await requireAdmin();
 
   const admin = getSupabaseAdmin();
-  const matches = await getAdminMatches(admin);
+  const [matches, pedidosPendentes] = await Promise.all([
+    getAdminMatches(admin),
+    countPendentes(admin),
+  ]);
 
   const finalizados = matches.filter(
     (m) => m.placar_a != null && m.placar_b != null,
@@ -31,6 +37,20 @@ export default async function AdminPlacaresPage() {
               <p className="text-xs opacity-90">
                 {finalizados} de {matches.length} jogos finalizados
               </p>
+              {pedidosPendentes > 0 ? (
+                <Link
+                  href="/admin/pedidos-ajuda"
+                  className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-brand-yellow px-2.5 py-0.5 text-[11px] font-bold text-brand-blue-dark hover:bg-brand-yellow-hover"
+                >
+                  <span
+                    aria-hidden
+                    className="h-1.5 w-1.5 rounded-full bg-red-600"
+                  />
+                  {pedidosPendentes} pedido
+                  {pedidosPendentes === 1 ? "" : "s"} pendente
+                  {pedidosPendentes === 1 ? "" : "s"} →
+                </Link>
+              ) : null}
             </div>
             <div className="flex items-start gap-2">
               <RecalcButton />

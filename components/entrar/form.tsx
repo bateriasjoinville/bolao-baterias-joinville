@@ -181,6 +181,15 @@ export function LoginForm({ turnstileSiteKey, cpfInicial }: LoginFormProps) {
 
       <SubmitButton />
 
+      <p className="pt-1 text-center text-sm">
+        <a
+          href="/esqueci-os-dados"
+          className="font-semibold text-brand-blue underline"
+        >
+          Esqueci os dados →
+        </a>
+      </p>
+
       <p className="pt-1 text-center text-xs text-slate-500">
         Ainda não tem cadastro?{" "}
         <a
