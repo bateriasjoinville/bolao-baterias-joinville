@@ -2,7 +2,7 @@ export function Hero() {
   return (
     <section className="bg-brand-blue px-4 pt-3 pb-8 text-white">
       <p className="mb-2 flex items-center gap-1.5 text-xs opacity-80">
-        <span>⚽</span> +R$ 5.000 em prêmios · 11 jun a 19 jul
+        <span>⚽</span> 104 jogos · 11 jun a 19 jul · 100% grátis
       </p>
       <h1 className="mb-2 text-3xl leading-[1.05] font-extrabold tracking-tight">
         Bolão da Copa 2026
@@ -13,12 +13,14 @@ export function Hero() {
 
       <div className="mb-4 rounded-xl bg-brand-yellow p-4 text-brand-blue-dark">
         <p className="mb-1 text-[10px] font-bold tracking-wider uppercase opacity-70">
-          Prêmio principal
+          Brinde cortesia
         </p>
         <p className="text-[22px] leading-tight font-extrabold">
-          R$ 1.000 + Bateria Moura
+          1 Bateria Moura 60Ah
         </p>
-        <p className="mt-1 text-xs opacity-70">Pro 1º lugar do ranking geral</p>
+        <p className="mt-1 text-xs opacity-70">
+          Pro 1º colocado do ranking geral
+        </p>
       </div>
 
       <a
