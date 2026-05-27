@@ -53,3 +53,74 @@ export async function marcarResolvido(
   revalidatePath("/admin/placares");
   return { ok: true };
 }
+
+const COLS = "id, nome, cpf, whatsapp, bairro, created_at";
+
+function escapeIlike(value: string): string {
+  return value.replace(/[%_]/g, "\\$&");
+}
+
+export async function buscarCadastros(
+  input: z.input<typeof buscarCadastrosSchema>,
+): Promise<BuscarCadastrosResult> {
+  await requireAdmin();
+
+  const parsed = buscarCadastrosSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: "ID inválido." };
+  }
+
+  const admin = getSupabaseAdmin();
+
+  const { data: pedido, error: pedErr } = await admin
+    .from("help_requests")
+    .select("nome, cpf_parcial, whatsapp_parcial")
+    .eq("id", parsed.data.helpRequestId)
+    .single();
+
+  if (pedErr || !pedido) {
+    return { ok: false, error: "Pedido não encontrado." };
+  }
+
+  const acumulado = new Map<string, CadastroEncontrado>();
+
+  const nomeEsc = escapeIlike(pedido.nome.trim());
+  if (nomeEsc.length >= 2) {
+    const r1 = await admin
+      .from("participants")
+      .select(COLS)
+      .ilike("nome", `%${nomeEsc}%`)
+      .limit(20);
+    if (r1.error) return { ok: false, error: r1.error.message };
+    for (const p of r1.data ?? []) acumulado.set(p.id, p);
+  }
+
+  if (pedido.cpf_parcial && acumulado.size < 20) {
+    const cpfEsc = escapeIlike(pedido.cpf_parcial);
+    const r2 = await admin
+      .from("participants")
+      .select(COLS)
+      .ilike("cpf", `%${cpfEsc}`)
+      .limit(20);
+    if (r2.error) return { ok: false, error: r2.error.message };
+    for (const p of r2.data ?? []) acumulado.set(p.id, p);
+  }
+
+  if (pedido.whatsapp_parcial && acumulado.size < 20) {
+    const wppEsc = escapeIlike(pedido.whatsapp_parcial);
+    const ddd = wppEsc.slice(0, 2);
+    const ult = wppEsc.slice(2);
+    const r3 = await admin
+      .from("participants")
+      .select(COLS)
+      .ilike("whatsapp", `${ddd}%${ult}`)
+      .limit(20);
+    if (r3.error) return { ok: false, error: r3.error.message };
+    for (const p of r3.data ?? []) acumulado.set(p.id, p);
+  }
+
+  return {
+    ok: true,
+    resultados: Array.from(acumulado.values()).slice(0, 20),
+  };
+}
