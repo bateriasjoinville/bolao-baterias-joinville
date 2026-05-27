@@ -37,6 +37,7 @@ export function LoginForm({ turnstileSiteKey, cpfInicial }: LoginFormProps) {
     state.values?.cpf ?? cpfInicialFormatado,
   );
   const [whatsapp, setWhatsapp] = useState(state.values?.whatsapp ?? "");
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!state.errors) return;
@@ -59,20 +60,32 @@ export function LoginForm({ turnstileSiteKey, cpfInicial }: LoginFormProps) {
     el?.focus();
   }, [cpfInicialFormatado, state.errors]);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     if (!turnstileSiteKey) return;
-    const token = tokenInputRef.current?.value;
-    if (token) return;
+
+    const existingToken = tokenInputRef.current?.value;
+    if (existingToken) return;
+
     e.preventDefault();
-    turnstileRef.current?.execute();
+    setCaptchaError(null);
+
+    const widget = turnstileRef.current;
+    if (!widget) {
+      setCaptchaError("Captcha indisponível. Recarrega a página.");
+      return;
+    }
+
     const form = e.currentTarget;
-    const wait = setInterval(() => {
-      if (tokenInputRef.current?.value) {
-        clearInterval(wait);
-        form.requestSubmit();
-      }
-    }, 100);
-    setTimeout(() => clearInterval(wait), 10000);
+
+    try {
+      widget.execute();
+      const token = await widget.getResponsePromise(10000);
+      if (tokenInputRef.current) tokenInputRef.current.value = token;
+      form.requestSubmit();
+    } catch {
+      setCaptchaError("Captcha demorou. Toca de novo no botão.");
+      widget.reset();
+    }
   };
 
   const manterConectadoDefault = state.values?.manter_conectado ?? true;
@@ -86,8 +99,20 @@ export function LoginForm({ turnstileSiteKey, cpfInicial }: LoginFormProps) {
       className="space-y-4 px-4 py-5"
     >
       {state.formError ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <div
+          role="alert"
+          className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
+        >
           {state.formError}
+        </div>
+      ) : null}
+
+      {captchaError ? (
+        <div
+          role="alert"
+          className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
+        >
+          {captchaError}
         </div>
       ) : null}
 
