@@ -22,16 +22,20 @@ const FIELD_ORDER = ["cpf", "whatsapp"] as const;
 
 type LoginFormProps = {
   turnstileSiteKey: string | null;
+  cpfInicial?: string | null;
 };
 
-export function LoginForm({ turnstileSiteKey }: LoginFormProps) {
+export function LoginForm({ turnstileSiteKey, cpfInicial }: LoginFormProps) {
   const [state, formAction] = useActionState(entrar, INITIAL_STATE);
 
   const formRef = useRef<HTMLFormElement>(null);
   const turnstileRef = useRef<TurnstileInstance | null>(null);
   const tokenInputRef = useRef<HTMLInputElement>(null);
 
-  const [cpf, setCpf] = useState(state.values?.cpf ?? "");
+  const cpfInicialFormatado = cpfInicial ? formatCPF(cpfInicial) : "";
+  const [cpf, setCpf] = useState(
+    state.values?.cpf ?? cpfInicialFormatado,
+  );
   const [whatsapp, setWhatsapp] = useState(state.values?.whatsapp ?? "");
 
   useEffect(() => {
@@ -46,6 +50,14 @@ export function LoginForm({ turnstileSiteKey }: LoginFormProps) {
       }
     }
   }, [state]);
+
+  useEffect(() => {
+    if (!cpfInicialFormatado || state.errors) return;
+    const el = formRef.current?.querySelector<HTMLElement>(
+      `[name="whatsapp"]`,
+    );
+    el?.focus();
+  }, [cpfInicialFormatado, state.errors]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     if (!turnstileSiteKey) return;

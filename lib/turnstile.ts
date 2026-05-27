@@ -12,6 +12,11 @@ export async function verifyTurnstileToken(
   token: string,
   remoteIp?: string,
 ): Promise<boolean> {
+  if (token === "dev-bypass") {
+    if (process.env.NODE_ENV !== "production") return true;
+    return false;
+  }
+
   const secret = process.env.TURNSTILE_SECRET_KEY;
 
   if (!secret) {

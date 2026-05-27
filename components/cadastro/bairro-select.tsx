@@ -5,6 +5,7 @@ type BairroSelectProps = {
   name: string;
   defaultValue?: string;
   ariaInvalid?: boolean;
+  ariaDescribedBy?: string;
 };
 
 export function BairroSelect({
@@ -12,6 +13,7 @@ export function BairroSelect({
   name,
   defaultValue,
   ariaInvalid,
+  ariaDescribedBy,
 }: BairroSelectProps) {
   return (
     <select
@@ -19,6 +21,7 @@ export function BairroSelect({
       name={name}
       defaultValue={defaultValue ?? ""}
       aria-invalid={ariaInvalid}
+      aria-describedby={ariaDescribedBy}
       className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-base text-slate-900 focus:border-brand-blue focus:ring-1 focus:ring-brand-blue focus:outline-none aria-invalid:border-red-500"
       required
     >

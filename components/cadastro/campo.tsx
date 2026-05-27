@@ -18,7 +18,13 @@ export function Campo({ label, htmlFor, error, children }: CampoProps) {
       </label>
       {children}
       {error ? (
-        <p className="mt-1 text-xs font-medium text-red-600">{error}</p>
+        <p
+          id={`erro-${htmlFor}`}
+          role="alert"
+          className="mt-1 text-xs font-medium text-red-600"
+        >
+          {error}
+        </p>
       ) : null}
     </div>
   );

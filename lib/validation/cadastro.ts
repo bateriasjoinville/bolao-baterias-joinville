@@ -7,7 +7,7 @@ import {
   whatsappSchema,
 } from "@/lib/validation/contato";
 
-const nomeSchema = z
+export const nomeSchema = z
   .string()
   .trim()
   .min(3, "Informe seu nome")
@@ -17,15 +17,17 @@ const nomeSchema = z
     "Informe nome e sobrenome",
   );
 
-const idadeSchema = z.coerce
+export const idadeSchema = z.coerce
   .number({ message: "Informe sua idade" })
   .int("Idade inválida")
   .min(18, "Cadastro só pra maiores de 18")
   .max(120, "Idade inválida");
 
-const bairroSchema = z.enum(BAIRROS_OPCOES, { message: "Escolha um bairro" });
+export const bairroSchema = z.enum(BAIRROS_OPCOES, {
+  message: "Escolha um bairro",
+});
 
-const instagramSchema = z
+export const instagramSchema = z
   .string()
   .trim()
   .transform((v) => v.replace(/^@+/, ""))
@@ -37,7 +39,9 @@ const instagramSchema = z
   )
   .optional();
 
-const aceiteSchema = z.literal(true, { message: "Aceite obrigatório" });
+const aceiteObrigatorioSchema = z.literal(true, {
+  message: "Aceite obrigatório",
+});
 
 export const cadastroSchema = z.object({
   nome: nomeSchema,
@@ -46,8 +50,8 @@ export const cadastroSchema = z.object({
   idade: idadeSchema,
   bairro: bairroSchema,
   instagram: instagramSchema,
-  aceite_regulamento: aceiteSchema,
-  aceite_comunicacoes: aceiteSchema,
+  aceite_regulamento: aceiteObrigatorioSchema,
+  aceite_comunicacoes: z.boolean(),
   turnstileToken: turnstileTokenSchema,
 });
 

@@ -14,6 +14,7 @@ import {
 export type CadastroState = {
   errors?: CadastroFieldErrors;
   formError?: string;
+  cpfDuplicadoDigits?: string;
   values?: {
     nome?: string;
     cpf?: string;
@@ -110,9 +111,7 @@ export async function criarParticipante(
   if (error) {
     if (error.code === "23505") {
       return {
-        errors: {
-          cpf: "Esse CPF já está cadastrado. Entrar?",
-        },
+        cpfDuplicadoDigits: parsed.data.cpf,
         values,
       };
     }

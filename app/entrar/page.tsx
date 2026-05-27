@@ -9,9 +9,16 @@ export const metadata = {
   description: "Entrar no Bolão da Copa 2026 com CPF e WhatsApp.",
 };
 
-export default async function EntrarPage() {
+type EntrarPageProps = {
+  searchParams: Promise<{ cpf?: string }>;
+};
+
+export default async function EntrarPage({ searchParams }: EntrarPageProps) {
   const session = await getSession();
   if (session.participantId) redirect("/dashboard");
+
+  const params = await searchParams;
+  const cpfInicial = params.cpf ?? null;
 
   const turnstileSiteKey =
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? null;
@@ -26,7 +33,10 @@ export default async function EntrarPage() {
             Sem senha. Só CPF e WhatsApp.
           </p>
         </section>
-        <LoginForm turnstileSiteKey={turnstileSiteKey} />
+        <LoginForm
+          turnstileSiteKey={turnstileSiteKey}
+          cpfInicial={cpfInicial}
+        />
         <footer className="bg-slate-50 px-4 py-5 text-center text-[11px] leading-relaxed text-slate-500">
           <p>Baterias Joinville · Rua Dona Francisca, 4523</p>
           <p>WhatsApp (47) 99680-1100</p>
