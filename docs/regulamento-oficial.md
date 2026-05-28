@@ -1,7 +1,7 @@
 # Regulamento do Bolão da Copa do Mundo 2026
 ## Baterias Joinville
 
-Versão 1.0 — Publicado em [DATA DA PUBLICAÇÃO]
+Versão 1.1 — Publicado em [DATA DA PUBLICAÇÃO]
 
 ---
 
@@ -9,7 +9,7 @@ Versão 1.0 — Publicado em [DATA DA PUBLICAÇÃO]
 
 A **Baterias Joinville**, inscrita sob CNPJ [INSERIR CNPJ], localizada à Rua Dona Francisca, 4523, Santo Antônio, Joinville/SC, promove o **Bolão da Copa do Mundo FIFA 2026** ("Bolão"), atividade promocional **GRATUITA** e sem fins lucrativos, destinada a fortalecer o relacionamento com seus clientes e potenciais clientes na região de Joinville/SC.
 
-O Bolão NÃO se caracteriza como jogo de azar, sorteio ou modalidade lotérica, conforme legislação vigente, por se tratar de atividade gratuita baseada em conhecimento esportivo e prognóstico.
+O Bolão NÃO se caracteriza como jogo de azar, sorteio ou modalidade lotérica, conforme legislação vigente, por se tratar de atividade gratuita baseada em conhecimento esportivo e prognóstico. O brinde cortesia descrito na seção 5 não constitui prêmio em dinheiro, distribuição gratuita por sorteio, nem contraprestação financeira.
 
 ## 2. Quem pode participar
 
@@ -58,24 +58,17 @@ A pontuação dobrada se aplica a **todos os jogos da Seleção Brasileira**, em
 
 ### 4.3 Rankings
 - **Ranking Geral:** acumula pontos durante toda a Copa (104 jogos)
-- **Ranking Semanal:** reseta toda segunda-feira às 00h00, totalizando 5 semanas
+- **Ranking Semanal:** reseta toda segunda-feira às 00h00, totalizando 5 semanas, para acompanhamento e reconhecimento público dos participantes mais engajados na semana (sem brinde associado)
 
-## 5. Premiação
+## 5. Brinde cortesia
 
-### 5.1 Ranking Geral — Top 20 (premiação principal)
-- **1º lugar:** R$ 1.000,00 (mil reais) em dinheiro + 1 Bateria Moura 60Ah
-- **2º lugar:** R$ 500,00 (quinhentos reais) em dinheiro
-- **3º lugar:** R$ 250,00 (duzentos e cinquenta reais) em dinheiro
-- **4º ao 20º lugar:** 17 prêmios complementares a serem divulgados antes do início da Copa
+A Baterias Joinville oferece um **brinde cortesia** ao participante que alcançar a 1ª posição do Ranking Geral ao final dos 104 jogos da Copa do Mundo FIFA 2026:
 
-### 5.2 Ranking Semanal
-- **1º colocado de cada semana:** R$ 100,00 (cem reais) em dinheiro
-- Total: 5 semanas × R$ 100 = R$ 500,00
+**1 (uma) Bateria Moura 60Ah**
 
-### 5.3 Vale-checkup diário
-- A cada jogo em que o participante acertar o **placar exato**, ele se torna elegível ao Vale-Checkup de Bateria e Alternador, oferecido gratuitamente na loja
-- **Limite: 1 (um) vale-checkup por participante em toda a Copa**, independentemente de quantos placares exatos acertar
-- Validade do resgate: até 60 (sessenta) dias após o fim da Copa (até 17/09/2026)
+O brinde é uma cortesia da loja como reconhecimento ao participante mais engajado e não constitui prêmio, sorteio ou modalidade lotérica. Não há contraprestação financeira, sorteio ou álea — o brinde é entregue ao participante que demonstrar melhor conhecimento esportivo ao longo da competição.
+
+**Não há brindes para outras posições.** Os participantes do 2º ao 20º lugar do Ranking Geral, bem como os líderes do Ranking Semanal, são reconhecidos publicamente no painel de classificação, sem brinde associado.
 
 ## 6. Critérios de desempate
 
@@ -92,20 +85,18 @@ Os participantes podem criar **ligas privadas** para competir contra amigos, ger
 
 As mini-ligas:
 - Têm finalidade **exclusivamente recreativa**
-- **NÃO conferem prêmios adicionais** da Baterias Joinville
+- **NÃO conferem brinde adicional** da Baterias Joinville
 - Limite: 5 ligas por participante (como criador ou membro)
 
-## 8. Resgate de prêmios
+## 8. Retirada do brinde
 
-Para receber qualquer prêmio, o ganhador deverá:
+Para receber o brinde cortesia, o participante 1º colocado deverá comparecer pessoalmente à loja física da Baterias Joinville (Rua Dona Francisca, 4523, Santo Antônio, Joinville/SC), de segunda a sexta, das 8h às 18h, apresentando:
 
-- Apresentar **documento oficial com foto** (RG, CNH ou similar) confirmando idade igual ou superior a 18 anos
-- Apresentar **comprovante de residência em Joinville** (conta de luz, água, gás, internet, ou similar), com data de emissão de até **90 (noventa) dias**
-- Confirmar identidade do cadastro (CPF e WhatsApp informados no cadastro)
+- **Documento oficial com foto** (RG, CNH ou similar) confirmando idade igual ou superior a 18 anos
+- **Comprovante de residência em Joinville** (conta de luz, água, gás, internet, ou similar), com data de emissão de até 90 (noventa) dias
+- Confirmação de identidade do cadastro (CPF e WhatsApp informados)
 
-**Forma de pagamento:**
-- Prêmios em dinheiro: PIX para o CPF cadastrado, em até **7 (sete) dias úteis** após a validação
-- Prêmios físicos: retirada na loja física (Rua Dona Francisca, 4523, Santo Antônio, Joinville/SC), de segunda a sexta, das 8h às 18h
+Prazo para retirada: até **60 (sessenta) dias** após o término da Copa (até 17/09/2026). Após esse prazo, o brinde não fica mais disponível.
 
 ## 9. Privacidade e proteção de dados (LGPD)
 
@@ -124,13 +115,13 @@ Adicionalmente, são coletados:
 
 ### Finalidades do tratamento
 - Operação do Bolão e validação de unicidade dos participantes (1 cadastro por CPF)
-- Comunicação sobre o Bolão (ranking, resultados, premiação) via WhatsApp
-- Pagamento de prêmios via PIX (uso do CPF)
+- Comunicação sobre o Bolão (ranking, resultados) via WhatsApp
+- Identificação do participante para retirada do brinde cortesia
 - Comunicações promocionais sobre produtos e serviços da Baterias Joinville, **mediante aceite explícito** do participante
 
 ### Bases legais
 - Consentimento do titular dos dados
-- Execução de obrigações pré-contratuais (entrega da premiação)
+- Execução de obrigações pré-contratuais (entrega do brinde cortesia)
 - Legítimo interesse (prevenção de fraude no Bolão)
 
 ### Direitos do titular
@@ -147,13 +138,14 @@ Os dados serão mantidos por até **12 (doze) meses** após o término da Copa (
 
 ## 10. Desclassificação
 
-Será desclassificado, sem direito a prêmio, o participante que:
+Será desclassificado, sem direito ao brinde, o participante que:
 
 - Cadastrar dados falsos ou de terceiros
 - Tentar realizar múltiplos cadastros (mesmo CPF, mesmo WhatsApp, ou identificação por outros meios)
-- Não comprovar residência em Joinville/SC no momento do resgate
+- Não comprovar residência em Joinville/SC no momento da retirada do brinde
 - Não tiver 18 (dezoito) anos completos na data do cadastro
 - Praticar qualquer ato fraudulento ou abusivo
+- Tentar manipular o resultado do bolão (uso de bots, contas falsas, conluio entre participantes)
 - Violar os termos deste regulamento
 
 ## 11. Casos omissos
@@ -163,7 +155,7 @@ Os casos omissos neste regulamento serão decididos pela organização do Bolão
 ## 12. Disposições finais
 
 - A Baterias Joinville se reserva o direito de **interromper, suspender ou modificar** o Bolão por motivos de força maior, alteração no calendário da Copa pela FIFA, ou por necessidade operacional, comunicando previamente aos participantes via WhatsApp e/ou pelo site
-- Em caso de cancelamento total do Bolão por força maior, os prêmios não serão devidos
+- Em caso de cancelamento total do Bolão por força maior, o brinde cortesia não será devido
 - Este regulamento entra em vigor na data de publicação e tem validade até 31/08/2026
 
 ---

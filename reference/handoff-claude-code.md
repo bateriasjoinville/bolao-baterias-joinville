@@ -1,5 +1,7 @@
 # Handoff pro Claude Code — Bolão Copa 2026
 
+> **ATUALIZAÇÃO 27/mai/2026:** estratégia de premiação simplificada para 1 brinde cortesia (Bateria Moura 60Ah ao 1º colocado). Trechos deste handoff que mencionam prêmios em dinheiro (R$ 1.000/500/250, complementares, ranking semanal R$ 100, vale-checkup) refletem versão inicial v1.0 do produto. Versão atual v1.1 documentada no `regulamento-oficial.md`.
+
 Tudo que foi decidido/validado no projeto Claude.ai durante prototipação. Use junto com `briefing-bolao.md`, `regulamento-oficial.md`, `bairros-joinville.md` e `Copa2026TabelaCompleta.xlsx` do projeto.
 
 Protótipos visuais finais (referência exata de design):

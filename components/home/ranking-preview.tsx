@@ -2,7 +2,7 @@ export function RankingPreview() {
   return (
     <section className="px-4 pb-6">
       <h2 className="mb-3 text-xl font-bold text-slate-900">
-        Quem tá ganhando
+        Quem tá na frente
       </h2>
       <div className="rounded-xl border border-slate-200 bg-white px-5 py-7 text-center">
         <p className="mb-2 text-2xl">🏆</p>

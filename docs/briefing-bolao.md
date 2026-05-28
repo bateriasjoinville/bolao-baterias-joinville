@@ -1,5 +1,7 @@
 # Bolão da Copa do Mundo 2026 — Baterias Joinville
 
+> **ATUALIZAÇÃO 27/mai/2026:** estratégia de premiação simplificada para 1 brinde cortesia (Bateria Moura 60Ah ao 1º colocado). Seções 5.x deste briefing refletem versão inicial v1.0 do produto. Versão atual v1.1 documentada no `regulamento-oficial.md`.
+
 ## Resumo executivo
 Bolão GRATUITO da Copa 2026 (11/jun a 19/jul/2026), aberto a moradores de Joinville+Pirabeiraba maiores de 18 anos. Objetivo de negócio: captação de leads qualificados com opt-in LGPD + relacionamento + reforço de marca durante 38 dias.
 

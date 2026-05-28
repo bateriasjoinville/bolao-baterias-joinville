@@ -8,7 +8,7 @@ const PASSOS = [
     descricao: "Até 1h antes de cada jogo. Edita quantas vezes quiser.",
   },
   {
-    titulo: "Acerta mais, ganha mais",
+    titulo: "Acerta mais, sobe no ranking",
     descricao: "Placar exato vale 6. Jogo do Brasil vale o dobro.",
   },
 ];
