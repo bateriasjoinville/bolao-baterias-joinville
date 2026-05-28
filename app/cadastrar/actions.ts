@@ -122,5 +122,5 @@ export async function criarParticipante(
   }
 
   await createSession(data.id);
-  redirect("/dashboard");
+  redirect("/confirmar-whatsapp");
 }

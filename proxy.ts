@@ -2,7 +2,13 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const SESSION_COOKIE = "bolao_session";
 
-const PROTECTED_PREFIXES = ["/dashboard", "/palpitar", "/perfil", "/ligas"];
+const PROTECTED_PREFIXES = [
+  "/dashboard",
+  "/palpitar",
+  "/perfil",
+  "/ligas",
+  "/confirmar-whatsapp",
+];
 const AUTH_PREFIXES = ["/entrar", "/cadastrar"];
 
 export function proxy(req: NextRequest) {
