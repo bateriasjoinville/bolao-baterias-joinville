@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { microcopyAberturaPalpites } from "@/lib/dashboard/format";
+
 type PredictionsProgressProps = {
   feitos: number;
   total: number;
@@ -55,7 +57,7 @@ export function PredictionsProgress({
       </div>
       {!aberto && (
         <p className="mt-2 text-center text-[11px] text-slate-500">
-          Palpites abrem em breve
+          {microcopyAberturaPalpites() ?? "Palpites abrem em breve"}
         </p>
       )}
     </section>
