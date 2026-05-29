@@ -59,10 +59,10 @@ export function formatMatchDateTime(date: Date | string): string {
   return `${formatMatchDate(date)} · ${formatMatchTime(date)}`;
 }
 
-const PALPITES_OPEN_ISO = "2026-05-31T00:00:00-03:00";
+const PALPITES_OPEN_ISO = "2026-05-29T00:00:00-03:00";
 export const PALPITES_OPEN_AT = new Date(PALPITES_OPEN_ISO);
 
-// Janela global da captação de palpites. Abre 31/mai 00:00 BRT pro soft launch.
+// Janela global da captação de palpites. Abre 29/mai 00:00 BRT.
 // Regra match-specific de "até 1h antes do jogo" é aplicada separadamente
 // na lógica de cada match. Override de dev via NEXT_PUBLIC_PALPITES_FORCE_OPEN.
 export function palpitesAbertos(now: Date = new Date()): boolean {
