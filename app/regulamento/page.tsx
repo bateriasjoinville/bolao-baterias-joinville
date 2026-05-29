@@ -28,7 +28,7 @@ export default function RegulamentoPage() {
             Baterias Joinville
           </p>
           <p className="mt-3 text-xs text-slate-500">
-            Versão 1.1 — Publicado em [DATA DA PUBLICAÇÃO]
+            Versão 1.2 — Publicado em [DATA DA PUBLICAÇÃO]
           </p>
 
           <hr className="my-6 border-slate-200" />
@@ -212,23 +212,38 @@ export default function RegulamentoPage() {
             </ol>
           </Section>
 
-          <Section title="7. Mini-ligas">
+          <Section title="7. Ligas privadas">
             <p>
-              Os participantes podem criar <strong>ligas privadas</strong> para
-              competir contra amigos, gerando um link de convite para outros
-              participantes.
+              Os participantes podem criar ligas privadas para competir contra
+              amigos. Cada liga gera um <strong>código de convite</strong> que
+              o organizador compartilha com quem quiser convidar.
             </p>
-            <p className="mt-4">As mini-ligas:</p>
+            <p className="mt-4">O funcionamento das ligas:</p>
             <Bullets>
               <li>
-                Têm finalidade <strong>exclusivamente recreativa</strong>
+                Para entrar em uma liga, o participante usa o código de convite
+                e <strong>solicita entrada</strong>; o organizador da liga
+                aprova ou recusa cada pedido.
               </li>
               <li>
+                O ranking interno da liga utiliza a mesma pontuação do Ranking
+                Geral, considerando apenas os jogos da Copa.
+              </li>
+              <li>
+                As ligas têm finalidade{" "}
+                <strong>exclusivamente recreativa</strong> e{" "}
                 <strong>NÃO conferem brinde adicional</strong> da Baterias
-                Joinville
+                Joinville.
               </li>
               <li>
-                Limite: 5 ligas por participante (como criador ou membro)
+                Cada participante pode criar até <strong>10 ligas</strong> e
+                participar de até <strong>20 ligas</strong> (somando as que
+                criou e aquelas de que é membro).
+              </li>
+              <li>
+                O organizador pode aprovar, recusar ou remover membros, bem
+                como apagar a liga. Qualquer membro pode sair de uma liga a
+                qualquer momento.
               </li>
             </Bullets>
           </Section>
@@ -280,7 +295,7 @@ export default function RegulamentoPage() {
             <Bullets>
               <li>Palpites realizados durante a Copa</li>
               <li>Pontuação obtida</li>
-              <li>Mini-ligas criadas ou participadas</li>
+              <li>Ligas criadas ou participadas</li>
             </Bullets>
 
             <Sub title="Finalidades do tratamento">

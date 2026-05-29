@@ -1,7 +1,7 @@
 # Regulamento do Bolão da Copa do Mundo 2026
 ## Baterias Joinville
 
-Versão 1.1 — Publicado em [DATA DA PUBLICAÇÃO]
+Versão 1.2 — Publicado em [DATA DA PUBLICAÇÃO]
 
 ---
 
@@ -79,14 +79,16 @@ Em caso de empate em qualquer posição do Ranking Geral, aplicar-se-ão, nesta 
 3. Menor diferença média de gols nos palpites
 4. Ordem cronológica de cadastro (cadastrado primeiro leva)
 
-## 7. Mini-ligas
+## 7. Ligas privadas
 
-Os participantes podem criar **ligas privadas** para competir contra amigos, gerando um link de convite para outros participantes.
+Os participantes podem criar ligas privadas para competir contra amigos. Cada liga gera um **código de convite** que o organizador compartilha com quem quiser convidar.
 
-As mini-ligas:
-- Têm finalidade **exclusivamente recreativa**
-- **NÃO conferem brinde adicional** da Baterias Joinville
-- Limite: 5 ligas por participante (como criador ou membro)
+O funcionamento das ligas:
+- Para entrar em uma liga, o participante usa o código de convite e **solicita entrada**; o organizador da liga aprova ou recusa cada pedido.
+- O ranking interno da liga utiliza a mesma pontuação do Ranking Geral, considerando apenas os jogos da Copa.
+- As ligas têm finalidade **exclusivamente recreativa** e **NÃO conferem brinde adicional** da Baterias Joinville.
+- Cada participante pode criar até **10 ligas** e participar de até **20 ligas** (somando as que criou e aquelas de que é membro).
+- O organizador pode aprovar, recusar ou remover membros, bem como apagar a liga. Qualquer membro pode sair de uma liga a qualquer momento.
 
 ## 8. Retirada do brinde
 
@@ -111,7 +113,7 @@ A Baterias Joinville coleta os seguintes dados pessoais durante o cadastro:
 Adicionalmente, são coletados:
 - Palpites realizados durante a Copa
 - Pontuação obtida
-- Mini-ligas criadas ou participadas
+- Ligas criadas ou participadas
 
 ### Finalidades do tratamento
 - Operação do Bolão e validação de unicidade dos participantes (1 cadastro por CPF)

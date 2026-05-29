@@ -55,7 +55,7 @@ export default function PrivacidadePage() {
           <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-700">
             <li>Palpites realizados durante a Copa</li>
             <li>Pontuação obtida</li>
-            <li>Mini-ligas criadas ou participadas</li>
+            <li>Ligas criadas ou participadas</li>
           </ul>
 
           <h2 className="mt-8 text-lg font-bold text-slate-900">
