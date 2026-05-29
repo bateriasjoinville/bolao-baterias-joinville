@@ -126,16 +126,19 @@ export type Database = {
           joined_at: string
           league_id: string
           participant_id: string
+          status: string
         }
         Insert: {
           joined_at?: string
           league_id: string
           participant_id: string
+          status?: string
         }
         Update: {
           joined_at?: string
           league_id?: string
           participant_id?: string
+          status?: string
         }
         Relationships: [
           {
@@ -158,6 +161,7 @@ export type Database = {
         Row: {
           codigo_convite: string
           created_at: string
+          descricao: string | null
           id: string
           nome: string
           owner_id: string
@@ -165,6 +169,7 @@ export type Database = {
         Insert: {
           codigo_convite: string
           created_at?: string
+          descricao?: string | null
           id?: string
           nome: string
           owner_id: string
@@ -172,6 +177,7 @@ export type Database = {
         Update: {
           codigo_convite?: string
           created_at?: string
+          descricao?: string | null
           id?: string
           nome?: string
           owner_id?: string

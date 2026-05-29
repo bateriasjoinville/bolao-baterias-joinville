@@ -1,6 +1,6 @@
 import { CountdownCard } from "@/components/dashboard/countdown-card";
 import { DashboardHeader } from "@/components/dashboard/header";
-import { LigasPlaceholder } from "@/components/dashboard/ligas-placeholder";
+import { LigasResumo } from "@/components/dashboard/ligas-resumo";
 import { PredictionsProgress } from "@/components/dashboard/predictions-progress";
 import { ProximoBrasilCard } from "@/components/dashboard/proximo-brasil-card";
 import { ProximoJogoCard } from "@/components/dashboard/proximo-jogo-card";
@@ -12,10 +12,17 @@ import {
   palpitesAbertos,
 } from "@/lib/dashboard/format";
 import { findPrediction, getDashboardData } from "@/lib/dashboard/queries";
+import {
+  aggregateLigaStats,
+  getMinhasLigas,
+  type LigaResumo,
+  type LigaStats,
+} from "@/lib/leagues/queries";
 import { findMyEntry } from "@/lib/ranking/me";
 import { getRankingGeral } from "@/lib/ranking/queries";
 import { assignRanks, rankKey } from "@/lib/ranking/rank";
 import { getSession } from "@/lib/session";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { createAuthedServerClient } from "@/lib/supabase/server";
 
 export const metadata = {
@@ -27,10 +34,27 @@ export default async function DashboardPage() {
   const session = await getSession();
   const myId = session.participantId;
 
-  const [data, rankingEntries] = await Promise.all([
+  // Admin (service role) pra listagem das ligas: RLS de league_members é
+  // estrita pra non-owners (só self), o que esconderia ligas pendentes do user.
+  // Como já temos myId via session, autorização aqui é trivial.
+  const admin = getSupabaseAdmin();
+  const ligasPromise: Promise<LigaResumo[]> = myId
+    ? getMinhasLigas(admin, myId)
+    : Promise.resolve([]);
+
+  const [data, rankingEntries, ligas] = await Promise.all([
     getDashboardData(supabase),
     getRankingGeral(supabase),
+    ligasPromise,
   ]);
+
+  const ownedIds = ligas
+    .filter((l) => l.meuPapel === "owner")
+    .map((l) => l.id);
+  const ligaStats =
+    ownedIds.length > 0
+      ? await aggregateLigaStats(admin, ownedIds)
+      : new Map<string, LigaStats>();
 
   const ranked = assignRanks(rankingEntries, rankKey);
   const myEntry = myId ? findMyEntry(ranked, myId) : null;
@@ -77,7 +101,7 @@ export default async function DashboardPage() {
         aberto={aberto}
       />
 
-      <LigasPlaceholder />
+      <LigasResumo ligas={ligas} stats={ligaStats} />
     </>
   );
 }
