@@ -35,6 +35,20 @@ export const uuidSchema = z.string().uuid("ID inválido.");
 export const criarLigaInputSchema = z.object({
   nome: nomeLigaSchema,
   descricao: descricaoLigaSchema,
+  isPublica: z.boolean(),
 });
 
 export type CriarLigaInput = z.infer<typeof criarLigaInputSchema>;
+
+export const TERMO_BUSCA_MIN = 2;
+export const TERMO_BUSCA_MAX = 60;
+
+export const termoBuscaSchema = z
+  .string()
+  .transform((v) => v.trim())
+  .pipe(
+    z
+      .string()
+      .min(TERMO_BUSCA_MIN, `Digite pelo menos ${TERMO_BUSCA_MIN} letras.`)
+      .max(TERMO_BUSCA_MAX, "Busca muito longa."),
+  );

@@ -85,6 +85,29 @@ export function CriarLigaForm() {
         )}
       </div>
 
+      <div>
+        <p className="mb-1.5 block text-sm font-semibold text-slate-900">
+          Quem pode entrar
+        </p>
+        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-300 px-3.5 py-3 has-[:checked]:border-brand-blue has-[:checked]:bg-brand-blue/5">
+          <input
+            type="checkbox"
+            name="isPublica"
+            defaultChecked={state.values?.isPublica ?? false}
+            className="mt-0.5 h-5 w-5 shrink-0 rounded border-slate-300 text-brand-blue focus:ring-brand-blue"
+          />
+          <span>
+            <span className="block text-sm font-semibold text-slate-900">
+              Liga pública (entra sem aprovação)
+            </span>
+            <span className="mt-0.5 block text-xs text-slate-500">
+              Qualquer participante entra direto. Desmarcado = privada: você
+              aprova cada pedido de entrada.
+            </span>
+          </span>
+        </label>
+      </div>
+
       <SubmitButton />
     </form>
   );

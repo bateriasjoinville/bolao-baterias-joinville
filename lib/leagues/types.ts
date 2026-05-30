@@ -7,6 +7,16 @@ export type MembroStatus = (typeof MEMBRO_STATUS)[keyof typeof MEMBRO_STATUS];
 
 export type MeuPapel = "owner" | MembroStatus;
 
+export type LigaBuscaResultado = {
+  id: string;
+  nome: string;
+  descricao: string | null;
+  isPublica: boolean;
+  ownerNome: string;
+  countAprovados: number;
+  meuPapel: MeuPapel | null;
+};
+
 export const LIMITE_LIGAS_CRIADAS = 10;
 export const LIMITE_LIGAS_PARTICIPANDO = 20;
 

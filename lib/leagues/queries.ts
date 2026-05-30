@@ -6,9 +6,12 @@ import { type Database } from "@/lib/supabase/database.types";
 
 import {
   MEMBRO_STATUS,
+  type LigaBuscaResultado,
   type MembroStatus,
   type MeuPapel,
 } from "./types";
+
+export type { LigaBuscaResultado } from "./types";
 
 type LeagueRow = Database["public"]["Tables"]["leagues"]["Row"];
 
@@ -18,6 +21,7 @@ export type LigaResumo = {
   descricao: string | null;
   codigoConvite: string;
   ownerId: string;
+  isPublica: boolean;
   meuPapel: MeuPapel;
 };
 
@@ -28,6 +32,7 @@ export type LigaPorCodigo = {
   ownerId: string;
   ownerNome: string;
   countAprovados: number;
+  isPublica: boolean;
 };
 
 export type PendenteResumo = {
@@ -47,13 +52,13 @@ export type LigaStats = {
 };
 
 const LIGA_EMBED =
-  "leagues:league_id(id, nome, descricao, codigo_convite, owner_id)";
+  "leagues:league_id(id, nome, descricao, codigo_convite, owner_id, is_publica)";
 
 type MinhasLigasRaw = {
   status: string;
   leagues: Pick<
     LeagueRow,
-    "id" | "nome" | "descricao" | "codigo_convite" | "owner_id"
+    "id" | "nome" | "descricao" | "codigo_convite" | "owner_id" | "is_publica"
   > | null;
 };
 
@@ -82,6 +87,7 @@ export async function getMinhasLigas(
         descricao: l.descricao,
         codigoConvite: l.codigo_convite,
         ownerId: l.owner_id,
+        isPublica: l.is_publica,
         meuPapel,
       };
     });
@@ -96,7 +102,7 @@ export async function getLigaById(
 ): Promise<LigaResumo | null> {
   const { data, error } = await supabase
     .from("leagues")
-    .select("id, nome, descricao, codigo_convite, owner_id")
+    .select("id, nome, descricao, codigo_convite, owner_id, is_publica")
     .eq("id", ligaId)
     .maybeSingle();
   if (error) throw error;
@@ -109,6 +115,7 @@ export async function getLigaById(
     descricao: data.descricao,
     codigoConvite: data.codigo_convite,
     ownerId: data.owner_id,
+    isPublica: data.is_publica,
     meuPapel,
   };
 }
@@ -140,7 +147,7 @@ export async function getLigaPorCodigo(
 ): Promise<LigaPorCodigo | null> {
   const { data: liga, error: ligaErr } = await supabase
     .from("leagues")
-    .select("id, nome, descricao, owner_id")
+    .select("id, nome, descricao, owner_id, is_publica")
     .eq("codigo_convite", codigo)
     .maybeSingle();
   if (ligaErr) throw ligaErr;
@@ -166,6 +173,7 @@ export async function getLigaPorCodigo(
     ownerId: liga.owner_id,
     ownerNome: ownerRes.data?.nome ?? "",
     countAprovados: countRes.count ?? 0,
+    isPublica: liga.is_publica,
   };
 }
 
@@ -321,4 +329,65 @@ export async function aggregateLigaStats(
     else if (row.status === MEMBRO_STATUS.PENDENTE) stats.countPendentes += 1;
   }
   return map;
+}
+
+// Busca ligas por nome (públicas E privadas). Projeção curada via service_role
+// — NUNCA expõe codigo_convite. Mesmo motivo de getLigaPorCodigo usar admin:
+// mostra info de liga pra quem ainda não é membro sem afrouxar a RLS.
+// meuPapel indica se o participante já é owner/aprovado/pendente (ou null).
+export async function buscarLigas(
+  supabase: SupabaseClient<Database>,
+  termo: string,
+  myId: string,
+): Promise<LigaBuscaResultado[]> {
+  // Escapa curingas do ILIKE (default escape = backslash).
+  const padrao = `%${termo.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
+
+  const { data: ligas, error } = await supabase
+    .from("leagues")
+    .select("id, nome, descricao, owner_id, is_publica")
+    .ilike("nome", padrao)
+    .order("nome", { ascending: true })
+    .limit(30);
+  if (error) throw error;
+  const rows = ligas ?? [];
+  if (rows.length === 0) return [];
+
+  const ligaIds = rows.map((l) => l.id);
+  const ownerIds = [...new Set(rows.map((l) => l.owner_id))];
+
+  const [ownersRes, membersRes, statsMap] = await Promise.all([
+    supabase.from("participants").select("id, nome").in("id", ownerIds),
+    supabase
+      .from("league_members")
+      .select("league_id, status")
+      .eq("participant_id", myId)
+      .in("league_id", ligaIds),
+    aggregateLigaStats(supabase, ligaIds),
+  ]);
+  if (ownersRes.error) throw ownersRes.error;
+  if (membersRes.error) throw membersRes.error;
+
+  const ownerNomeById = new Map(
+    (ownersRes.data ?? []).map((o) => [o.id, o.nome]),
+  );
+  const meuStatusById = new Map(
+    (membersRes.data ?? []).map(
+      (m) => [m.league_id, m.status as MembroStatus] as const,
+    ),
+  );
+
+  return rows.map((l) => {
+    const meuPapel: MeuPapel | null =
+      l.owner_id === myId ? "owner" : (meuStatusById.get(l.id) ?? null);
+    return {
+      id: l.id,
+      nome: l.nome,
+      descricao: l.descricao,
+      isPublica: l.is_publica,
+      ownerNome: ownerNomeById.get(l.owner_id) ?? "",
+      countAprovados: statsMap.get(l.id)?.countAprovados ?? 0,
+      meuPapel,
+    };
+  });
 }

@@ -104,9 +104,20 @@ export default async function LigasPage() {
                       <p className="truncate text-base font-semibold text-slate-900">
                         {l.nome}
                       </p>
-                      <p className="mt-0.5 text-[10px] uppercase tracking-wider text-slate-500">
-                        {labelPapel(l.meuPapel)}
-                      </p>
+                      <div className="mt-0.5 flex items-center gap-2">
+                        <span className="text-[10px] uppercase tracking-wider text-slate-500">
+                          {labelPapel(l.meuPapel)}
+                        </span>
+                        <span
+                          className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+                            l.isPublica
+                              ? "bg-emerald-100 text-emerald-800"
+                              : "bg-slate-100 text-slate-600"
+                          }`}
+                        >
+                          {l.isPublica ? "Pública" : "Privada"}
+                        </span>
+                      </div>
                     </div>
                     {pendentes > 0 ? (
                       <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-900">

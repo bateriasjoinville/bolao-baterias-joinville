@@ -92,9 +92,11 @@ export default async function LandingConvitePage({
       </section>
 
       <section className="mx-4 mt-4">
-        <PedirEntradaButton codigo={codigo} />
+        <PedirEntradaButton codigo={codigo} isPublica={liga.isPublica} />
         <p className="mt-2 text-center text-xs text-slate-500">
-          Depois de pedir, espera o organizador aprovar.
+          {liga.isPublica
+            ? "Liga pública — você entra na hora."
+            : "Liga privada — depois de pedir, espera o organizador aprovar."}
         </p>
       </section>
     </>

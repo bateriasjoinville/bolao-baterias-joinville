@@ -9,7 +9,13 @@ import {
   type PedirEntradaState,
 } from "../../actions";
 
-export function PedirEntradaButton({ codigo }: { codigo: string }) {
+export function PedirEntradaButton({
+  codigo,
+  isPublica,
+}: {
+  codigo: string;
+  isPublica: boolean;
+}) {
   const initial: PedirEntradaState = { codigo };
   const [state, formAction] = useActionState(
     pedirEntradaPorCodigo,
@@ -27,13 +33,14 @@ export function PedirEntradaButton({ codigo }: { codigo: string }) {
           {state.error}
         </div>
       ) : null}
-      <Submit />
+      <Submit isPublica={isPublica} />
     </form>
   );
 }
 
-function Submit() {
+function Submit({ isPublica }: { isPublica: boolean }) {
   const { pending } = useFormStatus();
+  const label = isPublica ? "Entrar na liga" : "Pedir entrada";
   return (
     <button
       type="submit"
@@ -43,10 +50,10 @@ function Submit() {
       {pending ? (
         <>
           <Loader2 className="h-5 w-5 animate-spin" aria-hidden />
-          <span>Pedindo entrada...</span>
+          <span>{isPublica ? "Entrando..." : "Pedindo entrada..."}</span>
         </>
       ) : (
-        <span>Pedir entrada →</span>
+        <span>{label} →</span>
       )}
     </button>
   );

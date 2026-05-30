@@ -7,6 +7,7 @@ import { useState, useTransition } from "react";
 import {
   apagarLiga,
   aprovarMembro,
+  definirLigaPublica,
   recusarMembro,
   removerMembro,
   sairDaLiga,
@@ -38,6 +39,63 @@ export function CopyCodeButton({ codigo }: { codigo: string }) {
       )}
       <span>{copied ? "Copiado" : "Copiar"}</span>
     </button>
+  );
+}
+
+export function VisibilidadeToggle({
+  ligaId,
+  isPublica,
+}: {
+  ligaId: string;
+  isPublica: boolean;
+}) {
+  const [pending, startTransition] = useTransition();
+  const [pub, setPub] = useState(isPublica);
+  const router = useRouter();
+
+  function handleToggle() {
+    const novo = !pub;
+    startTransition(async () => {
+      const r = await definirLigaPublica({ ligaId, isPublica: novo });
+      if (!r.ok) {
+        alert(r.error);
+        return;
+      }
+      setPub(novo);
+      router.refresh();
+    });
+  }
+
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <p className="text-sm font-semibold text-slate-900">
+          {pub ? "Liga pública" : "Liga privada"}
+        </p>
+        <p className="text-xs text-slate-500">
+          {pub
+            ? "Qualquer participante entra direto."
+            : "Você aprova cada pedido de entrada."}
+        </p>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={pub}
+        aria-label="Liga pública"
+        onClick={handleToggle}
+        disabled={pending}
+        className={`relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-60 ${
+          pub ? "bg-brand-blue" : "bg-slate-300"
+        }`}
+      >
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+            pub ? "translate-x-5" : "translate-x-0.5"
+          }`}
+        />
+      </button>
+    </div>
   );
 }
 

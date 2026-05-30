@@ -5,9 +5,11 @@ import { redirect } from "next/navigation";
 
 import { gerarCodigoConvite } from "@/lib/leagues/codigo";
 import {
+  buscarLigas,
   countLigasComoMembro,
   countLigasComoOwner,
   getMeuStatusNaLiga,
+  type LigaBuscaResultado,
 } from "@/lib/leagues/queries";
 import {
   LIMITE_LIGAS_CRIADAS,
@@ -19,6 +21,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import {
   codigoConviteSchema,
   criarLigaInputSchema,
+  termoBuscaSchema,
   uuidSchema,
 } from "@/lib/validation/liga";
 
@@ -33,13 +36,17 @@ export type ActionResult = { ok: true } | { ok: false; error: string };
 export type CriarLigaState = {
   error?: string;
   fieldErrors?: { nome?: string; descricao?: string };
-  values?: { nome: string; descricao: string };
+  values?: { nome: string; descricao: string; isPublica: boolean };
 };
 
 export type PedirEntradaState = {
   error?: string;
   codigo?: string;
 };
+
+export type BuscarLigasResult =
+  | { ok: true; resultados: LigaBuscaResultado[] }
+  | { ok: false; error: string };
 
 // ==================================================
 // Helpers
@@ -63,6 +70,48 @@ async function assertOwner(
   return { ok: true };
 }
 
+type EntrarResult =
+  | { ok: true; ligaId: string }
+  | { ok: false; error: string };
+
+// Núcleo da entrada numa liga (por código OU por busca). Liga pública → vira
+// membro aprovado direto; privada → cria pedido pendente (fluxo atual).
+// Idempotente: owner ou já-membro retorna ok sem mexer em nada.
+async function entrarEmLiga(
+  admin: Admin,
+  liga: { id: string; owner_id: string; is_publica: boolean },
+  myId: string,
+): Promise<EntrarResult> {
+  if (liga.owner_id === myId) return { ok: true, ligaId: liga.id };
+
+  const status = await getMeuStatusNaLiga(admin, liga.id, myId);
+  if (status !== null) return { ok: true, ligaId: liga.id };
+
+  const totalMembro = await countLigasComoMembro(admin, myId);
+  if (totalMembro >= LIMITE_LIGAS_PARTICIPANDO) {
+    return {
+      ok: false,
+      error: `Você já participa de ${LIMITE_LIGAS_PARTICIPANDO} ligas (limite).`,
+    };
+  }
+
+  const novoStatus = liga.is_publica
+    ? MEMBRO_STATUS.APROVADO
+    : MEMBRO_STATUS.PENDENTE;
+
+  const { error: insErr } = await admin.from("league_members").insert({
+    league_id: liga.id,
+    participant_id: myId,
+    status: novoStatus,
+  });
+  if (insErr) {
+    // Race: virou membro entre o check e o insert. Idempotente.
+    if (insErr.code === "23505") return { ok: true, ligaId: liga.id };
+    return { ok: false, error: "Erro ao entrar na liga. Tenta de novo." };
+  }
+  return { ok: true, ligaId: liga.id };
+}
+
 // ==================================================
 // criarLiga (form action)
 // ==================================================
@@ -77,12 +126,15 @@ export async function criarLiga(
 
   const rawNome = String(formData.get("nome") ?? "");
   const rawDescricao = String(formData.get("descricao") ?? "");
+  const isPublica = formData.get("isPublica") === "on";
   const descricaoNorm =
     rawDescricao.trim().length > 0 ? rawDescricao.trim() : null;
+  const values = { nome: rawNome, descricao: rawDescricao, isPublica };
 
   const parsed = criarLigaInputSchema.safeParse({
     nome: rawNome,
     descricao: descricaoNorm,
+    isPublica,
   });
   if (!parsed.success) {
     const issues = parsed.error.issues;
@@ -91,7 +143,7 @@ export async function criarLiga(
         nome: issues.find((i) => i.path[0] === "nome")?.message,
         descricao: issues.find((i) => i.path[0] === "descricao")?.message,
       },
-      values: { nome: rawNome, descricao: rawDescricao },
+      values,
     };
   }
 
@@ -101,7 +153,7 @@ export async function criarLiga(
   if (totalOwn >= LIMITE_LIGAS_CRIADAS) {
     return {
       error: `Você já criou ${LIMITE_LIGAS_CRIADAS} ligas (limite).`,
-      values: { nome: rawNome, descricao: rawDescricao },
+      values,
     };
   }
 
@@ -109,7 +161,7 @@ export async function criarLiga(
   if (totalMembro >= LIMITE_LIGAS_PARTICIPANDO) {
     return {
       error: `Você já participa de ${LIMITE_LIGAS_PARTICIPANDO} ligas (limite, incluindo as criadas).`,
-      values: { nome: rawNome, descricao: rawDescricao },
+      values,
     };
   }
 
@@ -123,6 +175,7 @@ export async function criarLiga(
         descricao: parsed.data.descricao,
         codigo_convite: codigo,
         owner_id: myId,
+        is_publica: parsed.data.isPublica,
       })
       .select("id")
       .single();
@@ -133,7 +186,7 @@ export async function criarLiga(
     if (error?.code !== "23505") {
       return {
         error: "Erro ao criar a liga. Tenta de novo em uns segundos.",
-        values: { nome: rawNome, descricao: rawDescricao },
+        values,
       };
     }
     // 23505 = unique_violation no codigo_convite → tenta de novo com novo código
@@ -142,7 +195,7 @@ export async function criarLiga(
   if (!newId) {
     return {
       error: "Não foi possível gerar código único. Tenta de novo.",
-      values: { nome: rawNome, descricao: rawDescricao },
+      values,
     };
   }
 
@@ -176,7 +229,7 @@ export async function pedirEntradaPorCodigo(
   const admin = getSupabaseAdmin();
   const { data: liga, error: ligaErr } = await admin
     .from("leagues")
-    .select("id, owner_id")
+    .select("id, owner_id, is_publica")
     .eq("codigo_convite", codigo)
     .maybeSingle();
   if (ligaErr) {
@@ -186,46 +239,14 @@ export async function pedirEntradaPorCodigo(
     return { error: "Liga não encontrada.", codigo: rawCodigo };
   }
 
-  // Owner não usa código — trigger já criou membership. Estado anômalo se cair aqui.
-  // Redireciona pra liga sem mais nada.
-  if (liga.owner_id === myId) {
-    redirect(`/ligas/${liga.id}`);
-  }
-
-  // Já tem row? Pendente ou aprovado: idempotente — redireciona.
-  const status = await getMeuStatusNaLiga(admin, liga.id, myId);
-  if (status !== null) {
-    redirect(`/ligas/${liga.id}`);
-  }
-
-  // Limite participando (Q1b: conta pendentes + aprovados).
-  const totalMembro = await countLigasComoMembro(admin, myId);
-  if (totalMembro >= LIMITE_LIGAS_PARTICIPANDO) {
-    return {
-      error: `Você já participa de ${LIMITE_LIGAS_PARTICIPANDO} ligas (limite).`,
-      codigo: rawCodigo,
-    };
-  }
-
-  const { error: insErr } = await admin.from("league_members").insert({
-    league_id: liga.id,
-    participant_id: myId,
-    status: MEMBRO_STATUS.PENDENTE,
-  });
-  if (insErr) {
-    // Race: virou membro entre check e insert. Redireciona pra liga.
-    if (insErr.code === "23505") {
-      redirect(`/ligas/${liga.id}`);
-    }
-    return {
-      error: "Erro ao pedir entrada. Tenta de novo.",
-      codigo: rawCodigo,
-    };
+  const result = await entrarEmLiga(admin, liga, myId);
+  if (!result.ok) {
+    return { error: result.error, codigo: rawCodigo };
   }
 
   revalidatePath("/ligas");
   revalidatePath("/dashboard");
-  redirect(`/ligas/${liga.id}`);
+  redirect(`/ligas/${result.ligaId}`);
 }
 
 // ==================================================
@@ -403,6 +424,91 @@ export async function apagarLiga(input: {
     .eq("id", ligaParsed.data);
   if (error) return { ok: false, error: "Erro ao apagar." };
 
+  revalidatePath("/ligas");
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
+
+// ==================================================
+// Busca + entrada por id (fluxo de busca por nome)
+// ==================================================
+
+export async function buscarLigasAction(
+  termo: string,
+): Promise<BuscarLigasResult> {
+  const session = await getSession();
+  if (!session.participantId) return { ok: false, error: "Sessão expirada." };
+  const myId = session.participantId;
+
+  const parsed = termoBuscaSchema.safeParse(termo);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      error: parsed.error.issues[0]?.message ?? "Busca inválida.",
+    };
+  }
+
+  const admin = getSupabaseAdmin();
+  try {
+    const resultados = await buscarLigas(admin, parsed.data, myId);
+    return { ok: true, resultados };
+  } catch {
+    return { ok: false, error: "Erro ao buscar ligas. Tenta de novo." };
+  }
+}
+
+export async function entrarNaLigaPorId(input: {
+  ligaId: string;
+}): Promise<ActionResult> {
+  const session = await getSession();
+  if (!session.participantId) return { ok: false, error: "Sessão expirada." };
+  const myId = session.participantId;
+
+  const ligaParsed = uuidSchema.safeParse(input.ligaId);
+  if (!ligaParsed.success) return { ok: false, error: "ID inválido." };
+
+  const admin = getSupabaseAdmin();
+  const { data: liga, error: ligaErr } = await admin
+    .from("leagues")
+    .select("id, owner_id, is_publica")
+    .eq("id", ligaParsed.data)
+    .maybeSingle();
+  if (ligaErr) return { ok: false, error: "Erro ao verificar a liga." };
+  if (!liga) return { ok: false, error: "Liga não encontrada." };
+
+  const result = await entrarEmLiga(admin, liga, myId);
+  if (!result.ok) return { ok: false, error: result.error };
+
+  revalidatePath("/ligas");
+  revalidatePath("/dashboard");
+  redirect(`/ligas/${result.ligaId}`);
+}
+
+export async function definirLigaPublica(input: {
+  ligaId: string;
+  isPublica: boolean;
+}): Promise<ActionResult> {
+  const session = await getSession();
+  if (!session.participantId) return { ok: false, error: "Sessão expirada." };
+  const myId = session.participantId;
+
+  const ligaParsed = uuidSchema.safeParse(input.ligaId);
+  if (!ligaParsed.success) return { ok: false, error: "ID inválido." };
+  if (typeof input.isPublica !== "boolean") {
+    return { ok: false, error: "Valor inválido." };
+  }
+
+  const admin = getSupabaseAdmin();
+  const owner = await assertOwner(admin, ligaParsed.data, myId);
+  if (!owner.ok) return owner;
+
+  const { error } = await admin
+    .from("leagues")
+    .update({ is_publica: input.isPublica })
+    .eq("id", ligaParsed.data);
+  if (error) return { ok: false, error: "Erro ao atualizar a liga." };
+
+  revalidatePath(`/ligas/${ligaParsed.data}`);
   revalidatePath("/ligas");
   revalidatePath("/dashboard");
   return { ok: true };

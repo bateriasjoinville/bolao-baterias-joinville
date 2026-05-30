@@ -163,6 +163,7 @@ export type Database = {
           created_at: string
           descricao: string | null
           id: string
+          is_publica: boolean
           nome: string
           owner_id: string
         }
@@ -171,6 +172,7 @@ export type Database = {
           created_at?: string
           descricao?: string | null
           id?: string
+          is_publica?: boolean
           nome: string
           owner_id: string
         }
@@ -179,6 +181,7 @@ export type Database = {
           created_at?: string
           descricao?: string | null
           id?: string
+          is_publica?: boolean
           nome?: string
           owner_id?: string
         }

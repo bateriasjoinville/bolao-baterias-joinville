@@ -23,6 +23,7 @@ import {
   MembroPendenteActions,
   RemoverMembroButton,
   SairButton,
+  VisibilidadeToggle,
 } from "./client";
 
 export const metadata = {
@@ -112,6 +113,27 @@ export default async function LigaPage({
             </p>
             <CopyCodeButton codigo={liga.codigoConvite} />
           </div>
+        </div>
+
+        <div className="mt-3 border-t border-slate-100 pt-3">
+          {isOwner ? (
+            <VisibilidadeToggle ligaId={liga.id} isPublica={liga.isPublica} />
+          ) : (
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-sm font-semibold text-slate-900">
+                {liga.isPublica ? "Liga pública" : "Liga privada"}
+              </p>
+              <span
+                className={`inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                  liga.isPublica
+                    ? "bg-emerald-100 text-emerald-800"
+                    : "bg-slate-100 text-slate-600"
+                }`}
+              >
+                {liga.isPublica ? "Pública" : "Privada"}
+              </span>
+            </div>
+          )}
         </div>
       </section>
 
