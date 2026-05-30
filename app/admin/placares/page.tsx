@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PlacarRow } from "@/components/admin/placar-row";
 import { RecalcButton } from "@/components/admin/recalc-button";
 import { countPendentes } from "@/lib/admin/help-requests";
+import { countConfrontosPendentes } from "@/lib/admin/mata-mata";
 import { requireAdmin } from "@/lib/admin/session";
 import { getAdminMatches } from "@/lib/admin/queries";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
@@ -18,9 +19,10 @@ export default async function AdminPlacaresPage() {
   await requireAdmin();
 
   const admin = getSupabaseAdmin();
-  const [matches, pedidosPendentes] = await Promise.all([
+  const [matches, pedidosPendentes, confrontosPendentes] = await Promise.all([
     getAdminMatches(admin),
     countPendentes(admin),
+    countConfrontosPendentes(admin),
   ]);
 
   const finalizados = matches.filter(
@@ -51,6 +53,14 @@ export default async function AdminPlacaresPage() {
                   {pedidosPendentes === 1 ? "" : "s"} →
                 </Link>
               ) : null}
+              <Link
+                href="/admin/mata-mata"
+                className="mt-1.5 block text-[11px] font-semibold text-white underline underline-offset-2 opacity-90 hover:opacity-100"
+              >
+                {confrontosPendentes > 0
+                  ? `${confrontosPendentes} confronto${confrontosPendentes === 1 ? "" : "s"} de mata-mata a definir →`
+                  : "Definir confrontos do mata-mata →"}
+              </Link>
             </div>
             <div className="flex items-start gap-2">
               <RecalcButton />
