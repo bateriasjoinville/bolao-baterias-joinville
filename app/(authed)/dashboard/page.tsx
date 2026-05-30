@@ -73,6 +73,12 @@ export default async function DashboardPage() {
 
       {preCopa && <CountdownCard dias={dias} />}
 
+      <PredictionsProgress
+        feitos={data.predictions.length}
+        total={data.totalMatches}
+        aberto={aberto}
+      />
+
       {data.proximoBrasil && (
         <ProximoBrasilCard
           match={data.proximoBrasil}
@@ -80,7 +86,11 @@ export default async function DashboardPage() {
         />
       )}
 
-      {mostrarRankingCard && <RankingLinkCard myEntry={myEntry} />}
+      <ProximosJogosList
+        matches={data.proximos5}
+        predictions={data.predictions}
+        aberto={aberto}
+      />
 
       {mostrarProximoJogo && data.proximoGeral && (
         <ProximoJogoCard
@@ -89,17 +99,7 @@ export default async function DashboardPage() {
         />
       )}
 
-      <PredictionsProgress
-        feitos={data.predictions.length}
-        total={data.totalMatches}
-        aberto={aberto}
-      />
-
-      <ProximosJogosList
-        matches={data.proximos5}
-        predictions={data.predictions}
-        aberto={aberto}
-      />
+      {mostrarRankingCard && <RankingLinkCard myEntry={myEntry} />}
 
       <LigasResumo ligas={ligas} stats={ligaStats} />
     </>

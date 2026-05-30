@@ -88,11 +88,11 @@ function ProximosJogosItem({ match, prediction, aberto }: ItemProps) {
         )}
         <span className="ml-auto">
           {prediction ? (
-            <span className="font-semibold text-brand-blue">
-              {prediction.placar_a} × {prediction.placar_b}
+            <span className="font-semibold text-emerald-600">
+              ✓ {prediction.placar_a}×{prediction.placar_b}
             </span>
           ) : (
-            <span className="text-slate-400">—</span>
+            <span className="text-slate-400">— sem palpite</span>
           )}
         </span>
       </div>
@@ -103,7 +103,7 @@ function ProximosJogosItem({ match, prediction, aberto }: ItemProps) {
     <li className="border-b border-slate-100 last:border-b-0">
       {aberto ? (
         <Link
-          href={`/palpitar/${match.id}`}
+          href="/palpitar"
           className="block px-4 py-3 transition-colors hover:bg-slate-50"
         >
           {conteudo}

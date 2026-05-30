@@ -44,7 +44,7 @@ export function PredictionsProgress({
             href="/palpitar"
             className="block rounded-md bg-brand-blue py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-brand-blue-hover"
           >
-            Palpitar agora
+            Palpitar agora →
           </Link>
         ) : (
           <Link
