@@ -86,11 +86,10 @@ export function LigasResumo({ ligas, stats }: Props) {
 
       <Link
         href="/ligas"
-        className="mt-3 block text-center text-xs font-semibold text-brand-blue underline"
+        className="mt-3 block w-full rounded-md bg-slate-100 py-2.5 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200"
       >
-        {ordenadas.length > 3
-          ? `Ver todas (${ordenadas.length})`
-          : "Ver todas"}
+        Ver todas as ligas
+        {ordenadas.length > 3 ? ` (${ordenadas.length})` : ""}
       </Link>
     </section>
   );
