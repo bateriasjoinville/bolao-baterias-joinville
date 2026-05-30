@@ -34,7 +34,7 @@ export function ScoreButtons({
 
   return (
     <div className="space-y-1.5">
-      <div className="grid grid-cols-4 gap-1.5">
+      <div className="grid grid-cols-8 gap-1">
         {BASE.map((n) => (
           <Button
             key={n}
@@ -46,13 +46,13 @@ export function ScoreButtons({
         ))}
         <Button
           label="7+"
-          active={expanded && value != null && value >= 7}
+          active={value === 7}
           onClick={handleSevenPlus}
           disabled={disabled}
         />
       </div>
       {expanded && (
-        <div className="grid grid-cols-4 gap-1.5">
+        <div className="grid grid-cols-8 gap-1">
           {HIGH.map((n) => (
             <Button
               key={n}
