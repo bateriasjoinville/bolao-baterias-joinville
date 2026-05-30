@@ -12,6 +12,24 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
+const FASE_ORDEM = [
+  "r32",
+  "oitavas",
+  "quartas",
+  "semifinais",
+  "terceiro",
+  "final",
+] as const;
+
+const FASE_TITULO: Record<string, string> = {
+  r32: "32-avos de final",
+  oitavas: "Oitavas de final",
+  quartas: "Quartas de final",
+  semifinais: "Semifinal",
+  terceiro: "Disputa de 3º lugar",
+  final: "Final",
+};
+
 export default async function AdminMataMataPage() {
   await requireAdmin();
 
@@ -42,27 +60,46 @@ export default async function AdminMataMataPage() {
           </div>
         </header>
 
-        <section className="space-y-2 px-3 py-4">
+        <div className="px-3 py-4">
           {confrontos.length === 0 ? (
             <p className="rounded-xl border border-dashed border-slate-300 bg-white px-4 py-8 text-center text-sm text-slate-500">
               Todos os confrontos do mata-mata já estão definidos.
             </p>
           ) : (
-            confrontos.map((c) => (
-              <ConfrontoRow
-                key={c.id}
-                matchId={c.id}
-                fase={c.fase}
-                kickoffAt={c.kickoffAt}
-                estadio={c.estadio}
-                isBrasil={c.isBrasil}
-                ladoA={c.ladoA}
-                ladoB={c.ladoB}
-                todasSelecoes={selecoes}
-              />
-            ))
+            FASE_ORDEM.map((fase) => {
+              const doFase = confrontos.filter((c) => c.fase === fase);
+              if (doFase.length === 0) return null;
+              return (
+                <section key={fase} className="mb-6">
+                  <h2 className="mb-2 flex items-center gap-2 px-1">
+                    <span className="text-sm font-extrabold text-slate-800">
+                      {FASE_TITULO[fase]}
+                    </span>
+                    <span className="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-bold text-slate-600">
+                      {doFase.length}{" "}
+                      {doFase.length === 1 ? "jogo" : "jogos"}
+                    </span>
+                  </h2>
+                  <div className="space-y-2">
+                    {doFase.map((c) => (
+                      <ConfrontoRow
+                        key={c.id}
+                        matchId={c.id}
+                        fase={c.fase}
+                        kickoffAt={c.kickoffAt}
+                        estadio={c.estadio}
+                        isBrasil={c.isBrasil}
+                        ladoA={c.ladoA}
+                        ladoB={c.ladoB}
+                        todasSelecoes={selecoes}
+                      />
+                    ))}
+                  </div>
+                </section>
+              );
+            })
           )}
-        </section>
+        </div>
       </main>
     </div>
   );
