@@ -22,8 +22,16 @@ export function BottomTabBar() {
   return (
     <nav
       aria-label="Navegação principal"
-      className="fixed bottom-0 left-1/2 z-30 w-full max-w-md -translate-x-1/2 border-t border-slate-200 bg-white"
+      className="fixed bottom-0 left-1/2 z-30 w-full max-w-md -translate-x-1/2 bg-white"
     >
+      <div
+        aria-hidden="true"
+        className="h-[3px] w-full"
+        style={{
+          background:
+            "linear-gradient(90deg, #009739 0 50%, #FFD400 50% 100%)",
+        }}
+      />
       <ul className="flex">
         {TABS.map(({ label, href, Icon }) => {
           const active =

@@ -21,9 +21,18 @@ export function ProximoBrasilCard({
   const ladoB = getMatchSide(match, "b");
 
   return (
-    <section className="mx-4 mt-4 rounded-lg border-2 border-brand-yellow bg-white p-4">
+    <section className="mx-4 mt-4 overflow-hidden rounded-lg border-2 border-brand-yellow bg-white">
+      <div
+        aria-hidden="true"
+        className="h-1.5 w-full"
+        style={{
+          background:
+            "linear-gradient(90deg, #009739 0 50%, #FFD400 50% 100%)",
+        }}
+      />
+      <div className="p-4">
       <div className="mb-3 flex items-center justify-between">
-        <span className="inline-flex items-center gap-1 rounded bg-brand-yellow px-2 py-0.5 text-xs font-bold text-brand-blue-dark">
+        <span className="inline-flex items-center gap-1 rounded bg-brand-green px-2 py-0.5 text-xs font-bold text-white">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/flags/br.svg"
@@ -80,6 +89,7 @@ export function ProximoBrasilCard({
           <span className="text-slate-500">Sem palpite ainda</span>
         )}
       </p>
+      </div>
     </section>
   );
 }
