@@ -41,27 +41,10 @@ export async function verifyTurnstileToken(
       body,
       cache: "no-store",
     });
-    if (!res.ok) {
-      console.error("[turnstile] siteverify HTTP not OK", {
-        status: res.status,
-        statusText: res.statusText,
-      });
-      return false;
-    }
+    if (!res.ok) return false;
     const data = (await res.json()) as SiteverifyResponse;
-    if (data.success !== true) {
-      console.error("[turnstile] siteverify rejected token", {
-        success: data.success,
-        errorCodes: data["error-codes"] ?? [],
-        tokenPrefix: token.slice(0, 12),
-        tokenLength: token.length,
-        remoteIp: remoteIp ?? "(none)",
-        fullResponse: data,
-      });
-    }
     return data.success === true;
-  } catch (err) {
-    console.error("[turnstile] siteverify fetch threw", err);
+  } catch {
     return false;
   }
 }
