@@ -1,13 +1,7 @@
 import { BannerPreCopa } from "@/components/palpitar/banner-pre-copa";
 import { PalpitarBoard } from "@/components/palpitar/board";
 import { PlaceholderSection } from "@/components/palpitar/placeholder-section";
-import { Tabs } from "@/components/palpitar/tabs";
 import { palpitesAbertos } from "@/lib/dashboard/format";
-import {
-  filtrarPorTab,
-  isMatchToday,
-  parseTab,
-} from "@/lib/palpitar/filter";
 import { getPalpitarPageData } from "@/lib/palpitar/queries";
 import { createAuthedServerClient } from "@/lib/supabase/server";
 
@@ -15,24 +9,15 @@ export const metadata = {
   title: "Palpitar — Bolão Copa 2026",
 };
 
-export default async function PalpitarPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ fase?: string }>;
-}) {
+export default async function PalpitarPage() {
   const supabase = await createAuthedServerClient();
   const data = await getPalpitarPageData(supabase);
-  const { fase } = await searchParams;
-  const activeTab = parseTab(fase);
   const aberto = palpitesAbertos();
 
-  const showHoje = data.matches.some((m) => isMatchToday(m));
-  const filtered = filtrarPorTab(data.matches, activeTab);
-
-  const defined = filtered.filter(
+  const defined = data.matches.filter(
     (m) => m.selecao_a != null && m.selecao_b != null,
   );
-  const placeholders = filtered.filter(
+  const placeholders = data.matches.filter(
     (m) => m.selecao_a == null || m.selecao_b == null,
   );
 
@@ -44,12 +29,7 @@ export default async function PalpitarPage({
         aberto={aberto}
         matches={defined}
         predictions={data.predictions}
-        tabs={
-          <>
-            {!aberto && <BannerPreCopa />}
-            <Tabs active={activeTab} showHoje={showHoje} />
-          </>
-        }
+        banner={!aberto ? <BannerPreCopa /> : undefined}
       />
       <PlaceholderSection matches={placeholders} />
     </>

@@ -8,34 +8,33 @@ type ScoreButtonsProps = {
   disabled?: boolean;
 };
 
-const BASE = [0, 1, 2, 3, 4] as const;
-const EXTENDED = [5, 6, 7, 8, 9, 10] as const;
+const BASE = [0, 1, 2, 3, 4, 5, 6] as const;
+const HIGH = [8, 9, 10, 11, 12, 13, 14] as const;
 
 export function ScoreButtons({
   value,
   onChange,
   disabled = false,
 }: ScoreButtonsProps) {
-  const valueIsHigh = value != null && value >= 5;
-  const [showExtended, setShowExtended] = useState(valueIsHigh);
+  const valueIsHigh = value != null && value >= 7;
+  const [showHigh, setShowHigh] = useState(valueIsHigh);
+  const expanded = showHigh || valueIsHigh;
 
-  const expanded = showExtended || valueIsHigh;
-
-  function handleFive() {
+  function handleSevenPlus() {
     if (disabled) return;
-    setShowExtended(true);
-    if (value == null || value < 5) onChange(5);
+    setShowHigh(true);
+    if (value == null || value < 7) onChange(7);
   }
 
   function handleBase(n: number) {
     if (disabled) return;
-    setShowExtended(false);
+    setShowHigh(false);
     onChange(n);
   }
 
   return (
     <div className="space-y-1.5">
-      <div className="flex gap-1.5">
+      <div className="grid grid-cols-4 gap-1.5">
         {BASE.map((n) => (
           <Button
             key={n}
@@ -46,15 +45,15 @@ export function ScoreButtons({
           />
         ))}
         <Button
-          label="5+"
-          active={expanded && value != null && value >= 5}
-          onClick={handleFive}
+          label="7+"
+          active={expanded && value != null && value >= 7}
+          onClick={handleSevenPlus}
           disabled={disabled}
         />
       </div>
       {expanded && (
-        <div className="flex gap-1.5">
-          {EXTENDED.map((n) => (
+        <div className="grid grid-cols-4 gap-1.5">
+          {HIGH.map((n) => (
             <Button
               key={n}
               label={String(n)}
@@ -63,6 +62,12 @@ export function ScoreButtons({
               disabled={disabled}
             />
           ))}
+          <Button
+            label="15+"
+            active={value === 15}
+            onClick={() => !disabled && onChange(15)}
+            disabled={disabled}
+          />
         </div>
       )}
     </div>
@@ -85,7 +90,7 @@ function Button({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`flex min-h-11 flex-1 items-center justify-center rounded-md text-sm font-semibold transition-colors ${
+      className={`flex min-h-11 items-center justify-center rounded-md text-sm font-semibold transition-colors ${
         disabled
           ? "cursor-not-allowed bg-slate-100 text-slate-400"
           : active
