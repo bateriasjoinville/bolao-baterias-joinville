@@ -8,12 +8,13 @@ import { getMatchSide } from "@/lib/dashboard/match-helpers";
 import { type MatchRow } from "@/lib/dashboard/queries";
 import { ScoreButtons } from "@/components/palpitar/score-buttons";
 import { type PalpiteStatus } from "@/lib/palpitar/types";
+import { calculatePoints } from "@/lib/scoring/calculate";
 
 type MatchCardProps = {
   match: MatchRow;
   placarA: number | null;
   placarB: number | null;
-  mode: "edit" | "compact";
+  mode: "edit" | "compact" | "encerrado";
   isSaved: boolean;
   status: PalpiteStatus;
   errorMsg?: string;
@@ -41,6 +42,26 @@ export function MatchCard({
   const ladoA = getMatchSide(match, "a");
   const ladoB = getMatchSide(match, "b");
   const hasPalpite = placarA != null && placarB != null;
+
+  if (
+    mode === "encerrado" &&
+    match.placar_a != null &&
+    match.placar_b != null
+  ) {
+    return (
+      <EncerradoCard
+        nomeA={ladoA.nome}
+        nomeB={ladoB.nome}
+        bandeiraA={ladoA.bandeira}
+        bandeiraB={ladoB.bandeira}
+        realA={match.placar_a}
+        realB={match.placar_b}
+        palpiteA={placarA}
+        palpiteB={placarB}
+        isBrasil={match.is_brasil}
+      />
+    );
+  }
 
   if (mode === "compact") {
     return (
@@ -190,6 +211,158 @@ function CompactCard({
           {conteudo}
         </button>
       )}
+    </article>
+  );
+}
+
+type CasoEncerrado = "exato" | "vencedor" | "errou" | "sem";
+
+const CASO_ESTILO: Record<
+  CasoEncerrado,
+  { label: string; accent: string; faixa: string; selo: string; pontos: string }
+> = {
+  exato: {
+    label: "✓ Cravou!",
+    accent: "border-l-emerald-500",
+    faixa: "border-emerald-200 bg-emerald-50",
+    selo: "text-emerald-700",
+    pontos: "bg-emerald-600 text-white",
+  },
+  vencedor: {
+    label: "Acertou o vencedor",
+    accent: "border-l-amber-400",
+    faixa: "border-amber-200 bg-amber-50",
+    selo: "text-amber-800",
+    pontos: "bg-brand-yellow text-brand-blue-dark",
+  },
+  errou: {
+    label: "Não foi dessa vez",
+    accent: "border-l-rose-400",
+    faixa: "border-rose-200 bg-rose-50",
+    selo: "text-rose-700",
+    pontos: "bg-slate-200 text-slate-600",
+  },
+  sem: {
+    label: "Sem palpite",
+    accent: "border-l-slate-300",
+    faixa: "border-slate-200 bg-slate-50",
+    selo: "text-slate-600",
+    pontos: "bg-slate-200 text-slate-500",
+  },
+};
+
+function BrasilTag() {
+  return (
+    <span className="inline-flex items-center gap-1 rounded bg-brand-yellow px-1.5 py-0.5 text-[10px] font-bold text-brand-blue-dark">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/flags/br.svg"
+        alt=""
+        className="h-3 w-4 rounded-[1px] object-cover"
+      />
+      2x PONTOS
+    </span>
+  );
+}
+
+function EncerradoCard({
+  nomeA,
+  nomeB,
+  bandeiraA,
+  bandeiraB,
+  realA,
+  realB,
+  palpiteA,
+  palpiteB,
+  isBrasil,
+}: {
+  nomeA: string;
+  nomeB: string;
+  bandeiraA: string;
+  bandeiraB: string;
+  realA: number;
+  realB: number;
+  palpiteA: number | null;
+  palpiteB: number | null;
+  isBrasil: boolean;
+}) {
+  const hasPalpite = palpiteA != null && palpiteB != null;
+  const bd =
+    palpiteA != null && palpiteB != null
+      ? calculatePoints(
+          { a: palpiteA, b: palpiteB },
+          { a: realA, b: realB },
+          isBrasil,
+        )
+      : null;
+
+  const caso: CasoEncerrado = !bd
+    ? "sem"
+    : bd.exato
+      ? "exato"
+      : bd.vencedor
+        ? "vencedor"
+        : "errou";
+  const estilo = CASO_ESTILO[caso];
+
+  return (
+    <article
+      className={`border-b border-b-slate-100 border-l-4 bg-white px-4 py-4 last:border-b-0 ${estilo.accent}`}
+    >
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+          Resultado final
+        </span>
+        {isBrasil ? <BrasilTag /> : null}
+      </div>
+
+      <div className="flex items-center justify-center gap-3">
+        <div className="flex flex-1 flex-col items-center gap-1.5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={bandeiraA}
+            alt=""
+            className="h-10 w-14 rounded-sm object-cover shadow-sm"
+          />
+          <p className="text-center text-xs font-semibold text-slate-900">
+            {nomeA}
+          </p>
+        </div>
+        <div className="flex shrink-0 items-baseline gap-1.5">
+          <span className="text-3xl font-extrabold text-slate-900">{realA}</span>
+          <span className="text-base font-bold text-slate-400">×</span>
+          <span className="text-3xl font-extrabold text-slate-900">{realB}</span>
+        </div>
+        <div className="flex flex-1 flex-col items-center gap-1.5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={bandeiraB}
+            alt=""
+            className="h-10 w-14 rounded-sm object-cover shadow-sm"
+          />
+          <p className="text-center text-xs font-semibold text-slate-900">
+            {nomeB}
+          </p>
+        </div>
+      </div>
+
+      <div
+        className={`mt-3 flex items-center justify-between gap-2 rounded-md border px-3 py-2 ${estilo.faixa}`}
+      >
+        <div className="min-w-0">
+          <p className={`text-xs font-bold ${estilo.selo}`}>{estilo.label}</p>
+          <p className="mt-0.5 text-xs text-slate-600">
+            {hasPalpite
+              ? `Seu palpite: ${palpiteA}×${palpiteB}`
+              : "Você não palpitou"}
+          </p>
+        </div>
+        <span
+          className={`shrink-0 rounded-full px-2.5 py-1 text-sm font-extrabold ${estilo.pontos}`}
+        >
+          {bd && bd.pontos > 0 ? `+${bd.pontos} pts` : "0 pts"}
+        </span>
+      </div>
     </article>
   );
 }

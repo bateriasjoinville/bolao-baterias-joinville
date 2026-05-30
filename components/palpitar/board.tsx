@@ -22,10 +22,14 @@ type PalpitarBoardProps = {
 };
 
 type ScoreState = { a: number | null; b: number | null };
-type StatusTab = "pendentes" | "palpitados" | "todos";
+type StatusTab = "pendentes" | "palpitados" | "encerrados" | "todos";
 
 const DEBOUNCE_MS = 800;
 const SAVED_DISPLAY_MS = 2000;
+
+function isEncerrado(m: MatchRow): boolean {
+  return m.placar_a != null && m.placar_b != null;
+}
 
 function initialScores(
   predictions: PredictionMin[],
@@ -173,19 +177,23 @@ export function PalpitarBoard({
   }
 
   const counts = useMemo(() => {
+    let pendentes = 0;
     let palpitados = 0;
-    for (const m of matches) if (savedIds.has(m.id)) palpitados += 1;
-    return {
-      pendentes: matches.length - palpitados,
-      palpitados,
-      todos: matches.length,
-    };
+    let encerrados = 0;
+    for (const m of matches) {
+      if (isEncerrado(m)) encerrados += 1;
+      else if (savedIds.has(m.id)) palpitados += 1;
+      else pendentes += 1;
+    }
+    return { pendentes, palpitados, encerrados, todos: matches.length };
   }, [matches, savedIds]);
 
   const visiveis = matches.filter((m) => {
+    const encerrado = isEncerrado(m);
     const saved = savedIds.has(m.id);
-    if (tab === "pendentes") return !saved || keepVisible.has(m.id);
-    if (tab === "palpitados") return saved;
+    if (tab === "pendentes") return !encerrado && (!saved || keepVisible.has(m.id));
+    if (tab === "palpitados") return !encerrado && saved;
+    if (tab === "encerrados") return encerrado;
     return true;
   });
 
@@ -200,7 +208,9 @@ export function PalpitarBoard({
             ? "Tudo palpitado por aqui 🎉"
             : tab === "palpitados"
               ? "Você ainda não palpitou nenhum jogo."
-              : "Nenhum jogo encontrado."}
+              : tab === "encerrados"
+                ? "Nenhum jogo encerrado ainda."
+                : "Nenhum jogo encontrado."}
         </p>
       ) : (
         <ul className="bg-white">
@@ -214,10 +224,14 @@ export function PalpitarBoard({
               : matchLocked
                 ? lockLabel(match.kickoff_at)
                 : undefined;
+            const encerrado = isEncerrado(match);
             const saved = savedIds.has(match.id);
             const editing = editingIds.has(match.id) || keepVisible.has(match.id);
-            const mode: "edit" | "compact" =
-              saved && !editing ? "compact" : "edit";
+            const mode: "edit" | "compact" | "encerrado" = encerrado
+              ? "encerrado"
+              : saved && !editing
+                ? "compact"
+                : "edit";
             return (
               <li key={match.id}>
                 <MatchCard
@@ -251,35 +265,43 @@ function StatusFilter({
   onChange,
 }: {
   active: StatusTab;
-  counts: { pendentes: number; palpitados: number; todos: number };
+  counts: {
+    pendentes: number;
+    palpitados: number;
+    encerrados: number;
+    todos: number;
+  };
   onChange: (tab: StatusTab) => void;
 }) {
   const items: { key: StatusTab; label: string; count: number }[] = [
     { key: "pendentes", label: "Pendentes", count: counts.pendentes },
     { key: "palpitados", label: "Palpitados", count: counts.palpitados },
+    { key: "encerrados", label: "Encerrados", count: counts.encerrados },
     { key: "todos", label: "Todos", count: counts.todos },
   ];
 
   return (
-    <nav className="sticky top-[3.25rem] z-10 grid grid-cols-3 gap-1.5 border-b border-slate-200 bg-white px-3 py-2">
-      {items.map((it) => {
-        const isActive = it.key === active;
-        return (
-          <button
-            key={it.key}
-            type="button"
-            onClick={() => onChange(it.key)}
-            aria-pressed={isActive}
-            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-              isActive
-                ? "bg-brand-blue text-white"
-                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-            }`}
-          >
-            {it.label} ({it.count})
-          </button>
-        );
-      })}
+    <nav className="sticky top-[3.25rem] z-10 border-b border-slate-200 bg-white">
+      <div className="flex gap-1.5 overflow-x-auto px-3 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {items.map((it) => {
+          const isActive = it.key === active;
+          return (
+            <button
+              key={it.key}
+              type="button"
+              onClick={() => onChange(it.key)}
+              aria-pressed={isActive}
+              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                isActive
+                  ? "bg-brand-blue text-white"
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+              }`}
+            >
+              {it.label} ({it.count})
+            </button>
+          );
+        })}
+      </div>
     </nav>
   );
 }
