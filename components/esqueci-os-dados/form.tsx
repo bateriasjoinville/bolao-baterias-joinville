@@ -14,10 +14,11 @@ import { useFormStatus } from "react-dom";
 import { solicitarAjuda, type HelpRequestState } from "@/app/esqueci-os-dados/actions";
 import { Campo } from "@/components/cadastro/campo";
 import { TurnstileWidget } from "@/components/cadastro/turnstile-widget";
+import { formatCPF, formatWhatsApp } from "@/lib/format";
 
 const INITIAL_STATE: HelpRequestState = {};
 
-const FIELD_ORDER = ["nome", "cpf_parcial", "whatsapp_parcial", "mensagem"] as const;
+const FIELD_ORDER = ["nome", "cpf", "whatsapp", "mensagem"] as const;
 
 type HelpRequestFormProps = {
   turnstileSiteKey: string | null;
@@ -31,6 +32,8 @@ export function HelpRequestForm({ turnstileSiteKey }: HelpRequestFormProps) {
   const tokenInputRef = useRef<HTMLInputElement>(null);
 
   const [captchaError, setCaptchaError] = useState<string | null>(null);
+  const [cpf, setCpf] = useState(state.values?.cpf ?? "");
+  const [whatsapp, setWhatsapp] = useState(state.values?.whatsapp ?? "");
 
   useEffect(() => {
     if (!state.errors) return;
@@ -113,47 +116,37 @@ export function HelpRequestForm({ turnstileSiteKey }: HelpRequestFormProps) {
         />
       </Campo>
 
-      <Campo
-        label="Últimos 3 dígitos do CPF"
-        htmlFor="cpf_parcial"
-        error={state.errors?.cpf_parcial}
-      >
+      <Campo label="CPF" htmlFor="cpf" error={state.errors?.cpf}>
         <input
-          id="cpf_parcial"
-          name="cpf_parcial"
+          id="cpf"
+          name="cpf"
           type="text"
           inputMode="numeric"
-          pattern="\d*"
-          maxLength={3}
-          required
           autoComplete="off"
-          placeholder="123"
-          defaultValue={state.values?.cpf_parcial}
-          aria-invalid={Boolean(state.errors?.cpf_parcial)}
-          aria-describedby={
-            state.errors?.cpf_parcial ? "erro-cpf_parcial" : undefined
-          }
+          required
+          placeholder="123.456.789-00"
+          value={cpf}
+          onChange={(e) => setCpf(formatCPF(e.target.value))}
+          aria-invalid={Boolean(state.errors?.cpf)}
+          aria-describedby={state.errors?.cpf ? "erro-cpf" : undefined}
           className="w-full rounded-xl border border-slate-300 px-3.5 py-3 text-base text-slate-900 focus:border-brand-blue focus:ring-1 focus:ring-brand-blue focus:outline-none aria-invalid:border-red-500"
         />
       </Campo>
 
-      <Campo
-        label="DDD + últimos 4 dígitos do WhatsApp"
-        htmlFor="whatsapp_parcial"
-        error={state.errors?.whatsapp_parcial}
-      >
+      <Campo label="WhatsApp" htmlFor="whatsapp" error={state.errors?.whatsapp}>
         <input
-          id="whatsapp_parcial"
-          name="whatsapp_parcial"
-          type="text"
+          id="whatsapp"
+          name="whatsapp"
+          type="tel"
           inputMode="numeric"
-          required
           autoComplete="off"
-          placeholder="47 e 1234"
-          defaultValue={state.values?.whatsapp_parcial}
-          aria-invalid={Boolean(state.errors?.whatsapp_parcial)}
+          required
+          placeholder="(47) 99999-9999"
+          value={whatsapp}
+          onChange={(e) => setWhatsapp(formatWhatsApp(e.target.value))}
+          aria-invalid={Boolean(state.errors?.whatsapp)}
           aria-describedby={
-            state.errors?.whatsapp_parcial ? "erro-whatsapp_parcial" : undefined
+            state.errors?.whatsapp ? "erro-whatsapp" : undefined
           }
           className="w-full rounded-xl border border-slate-300 px-3.5 py-3 text-base text-slate-900 focus:border-brand-blue focus:ring-1 focus:ring-brand-blue focus:outline-none aria-invalid:border-red-500"
         />

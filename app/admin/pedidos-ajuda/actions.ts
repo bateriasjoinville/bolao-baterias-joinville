@@ -74,7 +74,7 @@ export async function buscarCadastros(
 
   const { data: pedido, error: pedErr } = await admin
     .from("help_requests")
-    .select("nome, cpf_parcial, whatsapp_parcial")
+    .select("nome, cpf, whatsapp")
     .eq("id", parsed.data.helpRequestId)
     .single();
 
@@ -95,25 +95,21 @@ export async function buscarCadastros(
     for (const p of r1.data ?? []) acumulado.set(p.id, p);
   }
 
-  if (pedido.cpf_parcial && acumulado.size < 20) {
-    const cpfEsc = escapeIlike(pedido.cpf_parcial);
+  if (pedido.cpf && acumulado.size < 20) {
     const r2 = await admin
       .from("participants")
       .select(COLS)
-      .ilike("cpf", `%${cpfEsc}`)
+      .eq("cpf", pedido.cpf)
       .limit(20);
     if (r2.error) return { ok: false, error: r2.error.message };
     for (const p of r2.data ?? []) acumulado.set(p.id, p);
   }
 
-  if (pedido.whatsapp_parcial && acumulado.size < 20) {
-    const wppEsc = escapeIlike(pedido.whatsapp_parcial);
-    const ddd = wppEsc.slice(0, 2);
-    const ult = wppEsc.slice(2);
+  if (pedido.whatsapp && acumulado.size < 20) {
     const r3 = await admin
       .from("participants")
       .select(COLS)
-      .ilike("whatsapp", `${ddd}%${ult}`)
+      .eq("whatsapp", pedido.whatsapp)
       .limit(20);
     if (r3.error) return { ok: false, error: r3.error.message };
     for (const p of r3.data ?? []) acumulado.set(p.id, p);

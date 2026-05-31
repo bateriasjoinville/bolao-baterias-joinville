@@ -90,34 +90,34 @@ export type Database = {
       }
       help_requests: {
         Row: {
-          cpf_parcial: string | null
+          cpf: string | null
           created_at: string
           id: string
           mensagem: string
           nome: string
           resolved_at: string | null
           status: string
-          whatsapp_parcial: string | null
+          whatsapp: string | null
         }
         Insert: {
-          cpf_parcial?: string | null
+          cpf?: string | null
           created_at?: string
           id?: string
           mensagem: string
           nome: string
           resolved_at?: string | null
           status?: string
-          whatsapp_parcial?: string | null
+          whatsapp?: string | null
         }
         Update: {
-          cpf_parcial?: string | null
+          cpf?: string | null
           created_at?: string
           id?: string
           mensagem?: string
           nome?: string
           resolved_at?: string | null
           status?: string
-          whatsapp_parcial?: string | null
+          whatsapp?: string | null
         }
         Relationships: []
       }

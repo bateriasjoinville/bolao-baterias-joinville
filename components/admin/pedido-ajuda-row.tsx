@@ -14,18 +14,6 @@ type PedidoAjudaRowProps = {
   pedido: HelpRequestRow;
 };
 
-function formatarCpfParcial(parcial: string | null): string {
-  if (!parcial) return "CPF não informado";
-  return `···.···.···-${parcial}`;
-}
-
-function formatarWhatsappParcial(parcial: string | null): string {
-  if (!parcial) return "WhatsApp não informado";
-  const ddd = parcial.slice(0, 2);
-  const ultimos = parcial.slice(2);
-  return `(${ddd}) ···· ${ultimos}`;
-}
-
 function formatarDataHora(iso: string): string {
   const d = new Date(iso);
   return d.toLocaleString("pt-BR", {
@@ -92,13 +80,13 @@ export function PedidoAjudaRow({ pedido }: PedidoAjudaRowProps) {
         <div>
           <dt className="inline font-medium text-slate-500">CPF: </dt>
           <dd className="inline font-mono">
-            {formatarCpfParcial(pedido.cpf_parcial)}
+            {pedido.cpf ? formatCPF(pedido.cpf) : "CPF não informado"}
           </dd>
         </div>
         <div>
           <dt className="inline font-medium text-slate-500">WhatsApp: </dt>
           <dd className="inline font-mono">
-            {formatarWhatsappParcial(pedido.whatsapp_parcial)}
+            {pedido.whatsapp ? formatWhatsApp(pedido.whatsapp) : "WhatsApp não informado"}
           </dd>
         </div>
       </dl>

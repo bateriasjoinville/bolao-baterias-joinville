@@ -15,8 +15,8 @@ export type HelpRequestState = {
   formError?: string;
   values?: {
     nome?: string;
-    cpf_parcial?: string;
-    whatsapp_parcial?: string;
+    cpf?: string;
+    whatsapp?: string;
     mensagem?: string;
   };
 };
@@ -40,16 +40,16 @@ export async function solicitarAjuda(
 ): Promise<HelpRequestState> {
   const raw = {
     nome: String(formData.get("nome") ?? ""),
-    cpf_parcial: String(formData.get("cpf_parcial") ?? ""),
-    whatsapp_parcial: String(formData.get("whatsapp_parcial") ?? ""),
+    cpf: String(formData.get("cpf") ?? ""),
+    whatsapp: String(formData.get("whatsapp") ?? ""),
     mensagem: String(formData.get("mensagem") ?? ""),
     turnstileToken: String(formData.get("turnstileToken") ?? ""),
   };
 
   const values: HelpRequestState["values"] = {
     nome: raw.nome,
-    cpf_parcial: raw.cpf_parcial,
-    whatsapp_parcial: raw.whatsapp_parcial,
+    cpf: raw.cpf,
+    whatsapp: raw.whatsapp,
     mensagem: raw.mensagem,
   };
 
@@ -81,8 +81,8 @@ export async function solicitarAjuda(
   const supabase = getSupabaseAdmin();
   const { error } = await supabase.from("help_requests").insert({
     nome: parsed.data.nome,
-    cpf_parcial: parsed.data.cpf_parcial,
-    whatsapp_parcial: parsed.data.whatsapp_parcial,
+    cpf: parsed.data.cpf,
+    whatsapp: parsed.data.whatsapp,
     mensagem: parsed.data.mensagem,
   });
 
