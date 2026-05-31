@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ServiceWorkerRegister } from "@/components/pwa/sw-register";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -13,6 +14,12 @@ export const metadata: Metadata = {
   title: "Bolão Copa 2026 · Baterias Joinville",
   description:
     "Bolão gratuito da Copa do Mundo 2026. Palpita os 104 jogos e leva 1 Bateria Moura 60Ah de cortesia se for o melhor palpiteiro. Só pra Joinville e Pirabeiraba.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Bolão Copa",
+  },
 };
 
 export const viewport: Viewport = {
@@ -28,7 +35,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={inter.variable}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }

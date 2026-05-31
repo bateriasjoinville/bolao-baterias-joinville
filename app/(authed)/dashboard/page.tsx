@@ -1,3 +1,4 @@
+import { AddToHomeCard } from "@/components/pwa/add-to-home-card";
 import { CountdownCard } from "@/components/dashboard/countdown-card";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { LigasResumo } from "@/components/dashboard/ligas-resumo";
@@ -78,6 +79,8 @@ export default async function DashboardPage() {
         total={data.totalMatches}
         aberto={aberto}
       />
+
+      {data.predictions.length >= 1 && <AddToHomeCard />}
 
       {data.proximoBrasil && (
         <ProximoBrasilCard

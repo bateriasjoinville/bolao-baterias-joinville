@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 
 import { DashboardFooter } from "@/components/dashboard/footer";
+import { InstallBanner } from "@/components/pwa/install-banner";
 import { BottomTabBar } from "@/components/shared/bottom-tab-bar";
 
 export default function AuthedLayout({ children }: { children: ReactNode }) {
@@ -12,6 +13,7 @@ export default function AuthedLayout({ children }: { children: ReactNode }) {
         <DashboardFooter />
       </main>
       <BottomTabBar />
+      <InstallBanner />
     </div>
   );
 }
