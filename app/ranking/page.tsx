@@ -69,6 +69,7 @@ export default async function RankingPage({ searchParams }: PageProps) {
           <MyBanner
             entry={myEntry}
             contexto={tab === "geral" ? "geral" : "semana"}
+            total={ranked.length}
           />
         ) : null}
         <section className="pb-8">
