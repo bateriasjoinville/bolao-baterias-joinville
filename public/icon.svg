@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" fill="#2323E8"/>
-  <path d="M296 56 L150 300 L242 300 L216 456 L372 212 L280 212 Z" fill="#FFD400"/>
+  <defs>
+    <clipPath id="round"><rect width="512" height="512" rx="112"/></clipPath>
+  </defs>
+  <g clip-path="url(#round)">
+    <rect width="512" height="512" fill="#2323E8"/>
+    <rect x="0" y="0" width="256" height="46" fill="#009739"/>
+    <rect x="256" y="0" width="256" height="46" fill="#FFD400"/>
+    <rect x="0" y="466" width="256" height="46" fill="#009739"/>
+    <rect x="256" y="466" width="256" height="46" fill="#FFD400"/>
+    <path d="M296 56 L150 300 L242 300 L216 456 L372 212 L280 212 Z" fill="#FFD400"/>
+  </g>
 </svg>
