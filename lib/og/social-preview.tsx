@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-import { flagDataUri, loadFonts } from "@/lib/og/assets";
+import { emojiDataUri, flagDataUri, loadFonts } from "@/lib/og/assets";
 
 export const PREVIEW_SIZE = { width: 1200, height: 630 };
 export const PREVIEW_ALT =
@@ -11,31 +11,19 @@ const AZUL_ESCURO = "#13136e";
 const VERDE = "#009739";
 const AMARELO = "#FFD400";
 
-// Bola de futebol desenhada em SVG (Satori não renderiza emoji offline).
+// Bola de futebol: emoji ⚽ do Twemoji (SVG embutido) renderizado como <img>.
+// Satori não rasteriza emoji nativo (vira tofu); como <img> de SVG funciona
+// igual às bandeiras.
 function SoccerBall({ size }: { size: number }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        width: `${size}px`,
-        height: `${size}px`,
-        borderRadius: "9999px",
-        background: "#ffffff",
-        position: "relative",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <svg width={size} height={size} viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="49" fill="#ffffff" />
-        <path d="M50 36 L63 46 L58 61 L42 61 L37 46 Z" fill={AZUL_ESCURO} />
-        <path d="M72 13 L78 18 L76 26 L68 26 L65 18 Z" fill={AZUL_ESCURO} />
-        <path d="M85 54 L92 59 L89 67 L81 67 L79 59 Z" fill={AZUL_ESCURO} />
-        <path d="M50 80 L57 85 L54 93 L46 93 L43 85 Z" fill={AZUL_ESCURO} />
-        <path d="M15 54 L21 59 L19 67 L11 67 L8 59 Z" fill={AZUL_ESCURO} />
-        <path d="M28 13 L35 18 L32 26 L24 26 L22 18 Z" fill={AZUL_ESCURO} />
-      </svg>
-    </div>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      width={size}
+      height={size}
+      src={emojiDataUri("soccer-26bd")}
+      alt=""
+      style={{ display: "flex" }}
+    />
   );
 }
 
@@ -115,8 +103,8 @@ function Card() {
       </div>
 
       {/* bola à direita */}
-      <div style={{ position: "absolute", top: "150px", right: "80px", display: "flex" }}>
-        <SoccerBall size={360} />
+      <div style={{ position: "absolute", top: "172px", right: "60px", display: "flex" }}>
+        <SoccerBall size={336} />
       </div>
 
       {/* conteúdo principal */}
@@ -144,7 +132,7 @@ function Card() {
           style={{
             display: "flex",
             marginTop: "10px",
-            fontSize: "120px",
+            fontSize: "104px",
             fontWeight: 800,
             lineHeight: 1,
             letterSpacing: "-2px",

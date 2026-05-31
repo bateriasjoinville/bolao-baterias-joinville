@@ -7,8 +7,16 @@ const nextConfig: NextConfig = {
     "/share/palpite": ["./public/flags/**", "./lib/og/fonts/**"],
     "/share/cravou": ["./public/flags/**", "./lib/og/fonts/**"],
     "/share/ranking": ["./lib/og/fonts/**"],
-    "/opengraph-image": ["./public/flags/**", "./lib/og/fonts/**"],
-    "/twitter-image": ["./public/flags/**", "./lib/og/fonts/**"],
+    "/opengraph-image": [
+      "./public/flags/**",
+      "./lib/og/fonts/**",
+      "./lib/og/emoji/**",
+    ],
+    "/twitter-image": [
+      "./public/flags/**",
+      "./lib/og/fonts/**",
+      "./lib/og/emoji/**",
+    ],
   },
 };
 
