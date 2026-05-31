@@ -7,6 +7,13 @@ export type MembroStatus = (typeof MEMBRO_STATUS)[keyof typeof MEMBRO_STATUS];
 
 export type MeuPapel = "owner" | MembroStatus;
 
+export const LIGA_TIPO = {
+  GERAL: "geral",
+  BAIRRO: "bairro",
+} as const;
+
+export type LigaTipo = (typeof LIGA_TIPO)[keyof typeof LIGA_TIPO];
+
 export type LigaBuscaResultado = {
   id: string;
   nome: string;

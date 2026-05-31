@@ -7,6 +7,7 @@ import { type Database } from "@/lib/supabase/database.types";
 import {
   MEMBRO_STATUS,
   type LigaBuscaResultado,
+  type LigaTipo,
   type MembroStatus,
   type MeuPapel,
 } from "./types";
@@ -19,9 +20,11 @@ export type LigaResumo = {
   id: string;
   nome: string;
   descricao: string | null;
-  codigoConvite: string;
-  ownerId: string;
+  codigoConvite: string | null;
+  ownerId: string | null;
   isPublica: boolean;
+  isOficial: boolean;
+  tipo: LigaTipo | null;
   meuPapel: MeuPapel;
 };
 
@@ -52,13 +55,20 @@ export type LigaStats = {
 };
 
 const LIGA_EMBED =
-  "leagues:league_id(id, nome, descricao, codigo_convite, owner_id, is_publica)";
+  "leagues:league_id(id, nome, descricao, codigo_convite, owner_id, is_publica, is_oficial, tipo)";
 
 type MinhasLigasRaw = {
   status: string;
   leagues: Pick<
     LeagueRow,
-    "id" | "nome" | "descricao" | "codigo_convite" | "owner_id" | "is_publica"
+    | "id"
+    | "nome"
+    | "descricao"
+    | "codigo_convite"
+    | "owner_id"
+    | "is_publica"
+    | "is_oficial"
+    | "tipo"
   > | null;
 };
 
@@ -88,6 +98,8 @@ export async function getMinhasLigas(
         codigoConvite: l.codigo_convite,
         ownerId: l.owner_id,
         isPublica: l.is_publica,
+        isOficial: l.is_oficial,
+        tipo: l.tipo as LigaTipo | null,
         meuPapel,
       };
     });
@@ -102,7 +114,9 @@ export async function getLigaById(
 ): Promise<LigaResumo | null> {
   const { data, error } = await supabase
     .from("leagues")
-    .select("id, nome, descricao, codigo_convite, owner_id, is_publica")
+    .select(
+      "id, nome, descricao, codigo_convite, owner_id, is_publica, is_oficial, tipo",
+    )
     .eq("id", ligaId)
     .maybeSingle();
   if (error) throw error;
@@ -116,6 +130,8 @@ export async function getLigaById(
     codigoConvite: data.codigo_convite,
     ownerId: data.owner_id,
     isPublica: data.is_publica,
+    isOficial: data.is_oficial,
+    tipo: data.tipo as LigaTipo | null,
     meuPapel,
   };
 }
@@ -151,12 +167,13 @@ export async function getLigaPorCodigo(
     .eq("codigo_convite", codigo)
     .maybeSingle();
   if (ligaErr) throw ligaErr;
-  if (!liga) return null;
+  if (!liga || !liga.owner_id) return null;
+  const ownerId = liga.owner_id;
   const [ownerRes, countRes] = await Promise.all([
     supabase
       .from("participants")
       .select("nome")
-      .eq("id", liga.owner_id)
+      .eq("id", ownerId)
       .maybeSingle(),
     supabase
       .from("league_members")
@@ -170,7 +187,7 @@ export async function getLigaPorCodigo(
     id: liga.id,
     nome: liga.nome,
     descricao: liga.descricao,
-    ownerId: liga.owner_id,
+    ownerId,
     ownerNome: ownerRes.data?.nome ?? "",
     countAprovados: countRes.count ?? 0,
     isPublica: liga.is_publica,
@@ -277,17 +294,22 @@ export async function countLigasComoOwner(
   return count ?? 0;
 }
 
-// Conta TODAS as memberships do participante (pendente + aprovado, inclui
-// as que ele é owner — trigger adiciona owner como member aprovado).
-// Pra limite de participação (20). Q1b: simples, 1 query.
+// Conta memberships do participante em ligas de USUÁRIO (pendente + aprovado,
+// inclui as que ele é owner — trigger adiciona owner como member aprovado).
+// Pra limite de participação (20). Ligas oficiais NÃO contam — inner embed
+// filtra is_oficial = false.
 export async function countLigasComoMembro(
   supabase: SupabaseClient<Database>,
   myId: string,
 ): Promise<number> {
   const { count, error } = await supabase
     .from("league_members")
-    .select("league_id", { count: "exact", head: true })
-    .eq("participant_id", myId);
+    .select("league_id, leagues!inner(is_oficial)", {
+      count: "exact",
+      head: true,
+    })
+    .eq("participant_id", myId)
+    .eq("leagues.is_oficial", false);
   if (error) throw error;
   return count ?? 0;
 }
@@ -358,6 +380,7 @@ export async function buscarLigas(
   const { data: ligas, error } = await supabase
     .from("leagues")
     .select("id, nome, descricao, owner_id, is_publica")
+    .eq("is_oficial", false)
     .ilike("nome", padrao)
     .order("nome", { ascending: true })
     .limit(30);
@@ -366,7 +389,13 @@ export async function buscarLigas(
   if (rows.length === 0) return [];
 
   const ligaIds = rows.map((l) => l.id);
-  const ownerIds = [...new Set(rows.map((l) => l.owner_id))];
+  const ownerIds = [
+    ...new Set(
+      rows
+        .map((l) => l.owner_id)
+        .filter((id): id is string => id !== null),
+    ),
+  ];
 
   const [ownersRes, membersRes, statsMap] = await Promise.all([
     supabase.from("participants").select("id, nome").in("id", ownerIds),
@@ -397,7 +426,7 @@ export async function buscarLigas(
       nome: l.nome,
       descricao: l.descricao,
       isPublica: l.is_publica,
-      ownerNome: ownerNomeById.get(l.owner_id) ?? "",
+      ownerNome: ownerNomeById.get(l.owner_id ?? "") ?? "",
       countAprovados: statsMap.get(l.id)?.countAprovados ?? 0,
       meuPapel,
     };

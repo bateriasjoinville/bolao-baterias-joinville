@@ -10,7 +10,7 @@ import {
   getPendentes,
 } from "@/lib/leagues/queries";
 import { getRankingLiga } from "@/lib/leagues/ranking";
-import { MEMBRO_STATUS } from "@/lib/leagues/types";
+import { LIGA_TIPO, MEMBRO_STATUS } from "@/lib/leagues/types";
 import { assignRanks, rankKey } from "@/lib/ranking/rank";
 import { toDisplayName } from "@/lib/scoring/display-name";
 import { getSession } from "@/lib/session";
@@ -58,17 +58,24 @@ export default async function LigaPage({
   // (intent do schema 0001 — ver comentário antes das policies em league_members).
   const admin = getSupabaseAdmin();
   const isOwner = liga.meuPapel === "owner";
+  const isOficial = liga.isOficial;
+  const isGeral = liga.tipo === LIGA_TIPO.GERAL;
 
   const [rankingEntries, pendentes, stats, membrosAprovados] =
     await Promise.all([
-      getRankingLiga(admin, id),
+      getRankingLiga(admin, id, liga.tipo),
       isOwner
         ? getPendentes(admin, id)
         : Promise.resolve(
             [] as Awaited<ReturnType<typeof getPendentes>>,
           ),
       getLigaStats(admin, id),
-      getMembrosAprovadosComNomes(admin, id),
+      // Liga geral tem todo mundo — não enumera participantes (escala).
+      isGeral
+        ? Promise.resolve(
+            [] as Awaited<ReturnType<typeof getMembrosAprovadosComNomes>>,
+          )
+        : getMembrosAprovadosComNomes(admin, id),
     ]);
 
   const ranked = assignRanks(rankingEntries, rankKey);
@@ -90,57 +97,78 @@ export default async function LigaPage({
           <p className="truncate text-sm font-semibold">{liga.nome}</p>
         </div>
         <p className="mt-1 text-xs opacity-85">
-          {isOwner ? "Você é o organizador" : "Você é membro"} ·{" "}
-          {stats.countAprovados}{" "}
+          {isOficial
+            ? "Liga oficial"
+            : isOwner
+              ? "Você é o organizador"
+              : "Você é membro"}{" "}
+          · {stats.countAprovados}{" "}
           {stats.countAprovados === 1 ? "membro" : "membros"}
         </p>
       </header>
 
-      <section className="mx-4 mt-4 rounded-lg border border-slate-200 bg-white p-4">
-        {liga.descricao ? (
-          <p className="text-sm leading-relaxed text-slate-700">
-            {liga.descricao}
+      {isOficial ? (
+        <section className="mx-4 mt-4 rounded-lg border border-slate-200 bg-brand-blue-soft p-4">
+          <p className="text-sm font-semibold text-slate-900">
+            {isGeral
+              ? "Liga de todo o bolão"
+              : `Liga do bairro ${liga.nome}`}
           </p>
-        ) : (
-          <p className="text-xs italic text-slate-500">Sem descrição.</p>
-        )}
-        <div className="mt-3 rounded-md bg-slate-50 px-3 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-            Código de convite
+          <p className="mt-1 text-sm leading-relaxed text-slate-600">
+            {isGeral
+              ? "Todo participante do Bolão Baterias Joinville entra aqui automaticamente. Não precisa de convite."
+              : "Todo participante do seu bairro entra aqui automaticamente. Não precisa de convite."}
           </p>
-          <div className="mt-1 flex items-center justify-between gap-2">
-            <p className="font-mono text-base font-bold tracking-wider text-slate-900">
-              {liga.codigoConvite}
+        </section>
+      ) : (
+        <section className="mx-4 mt-4 rounded-lg border border-slate-200 bg-white p-4">
+          {liga.descricao ? (
+            <p className="text-sm leading-relaxed text-slate-700">
+              {liga.descricao}
             </p>
-            <CopyCodeButton codigo={liga.codigoConvite} />
-          </div>
-          <ConvidarWhatsappButton
-            codigo={liga.codigoConvite}
-            nomeLiga={liga.nome}
-          />
-        </div>
-
-        <div className="mt-3 border-t border-slate-100 pt-3">
-          {isOwner ? (
-            <VisibilidadeToggle ligaId={liga.id} isPublica={liga.isPublica} />
           ) : (
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-sm font-semibold text-slate-900">
-                {liga.isPublica ? "Liga pública" : "Liga privada"}
-              </p>
-              <span
-                className={`inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                  liga.isPublica
-                    ? "bg-emerald-100 text-emerald-800"
-                    : "bg-slate-100 text-slate-600"
-                }`}
-              >
-                {liga.isPublica ? "Pública" : "Privada"}
-              </span>
-            </div>
+            <p className="text-xs italic text-slate-500">Sem descrição.</p>
           )}
-        </div>
-      </section>
+          {liga.codigoConvite ? (
+            <div className="mt-3 rounded-md bg-slate-50 px-3 py-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                Código de convite
+              </p>
+              <div className="mt-1 flex items-center justify-between gap-2">
+                <p className="font-mono text-base font-bold tracking-wider text-slate-900">
+                  {liga.codigoConvite}
+                </p>
+                <CopyCodeButton codigo={liga.codigoConvite} />
+              </div>
+              <ConvidarWhatsappButton
+                codigo={liga.codigoConvite}
+                nomeLiga={liga.nome}
+              />
+            </div>
+          ) : null}
+
+          <div className="mt-3 border-t border-slate-100 pt-3">
+            {isOwner ? (
+              <VisibilidadeToggle ligaId={liga.id} isPublica={liga.isPublica} />
+            ) : (
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-semibold text-slate-900">
+                  {liga.isPublica ? "Liga pública" : "Liga privada"}
+                </p>
+                <span
+                  className={`inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                    liga.isPublica
+                      ? "bg-emerald-100 text-emerald-800"
+                      : "bg-slate-100 text-slate-600"
+                  }`}
+                >
+                  {liga.isPublica ? "Pública" : "Privada"}
+                </span>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {isOwner && pendentes.length > 0 ? (
         <section className="mx-4 mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4">
@@ -166,12 +194,25 @@ export default async function LigaPage({
         </section>
       ) : null}
 
-      <section className="mx-4 mt-4 rounded-lg border border-slate-200 bg-white p-4">
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-          Participantes ({membrosAprovados.length})
-        </p>
-        <ul className="mt-2 divide-y divide-slate-100">
-          {membrosAprovados.map((m) => (
+      {isGeral ? (
+        <section className="mx-4 mt-4 rounded-lg border border-slate-200 bg-white p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+            Participantes
+          </p>
+          <p className="mt-1 text-sm text-slate-700">
+            <span className="font-semibold">{stats.countAprovados}</span>{" "}
+            {stats.countAprovados === 1
+              ? "pessoa no bolão"
+              : "pessoas no bolão"}
+          </p>
+        </section>
+      ) : (
+        <section className="mx-4 mt-4 rounded-lg border border-slate-200 bg-white p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+            Participantes ({membrosAprovados.length})
+          </p>
+          <ul className="mt-2 divide-y divide-slate-100">
+            {membrosAprovados.map((m) => (
             <li
               key={m.participantId}
               className="flex items-center justify-between gap-2 py-2"
@@ -191,8 +232,9 @@ export default async function LigaPage({
               </p>
             </li>
           ))}
-        </ul>
-      </section>
+          </ul>
+        </section>
+      )}
 
       <section className="mx-4 mt-4 rounded-lg border border-slate-200 bg-white">
         <p className="px-4 pt-3 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
@@ -229,13 +271,15 @@ export default async function LigaPage({
         </section>
       ) : null}
 
-      <section className="mx-4 mt-6 mb-4">
-        {isOwner ? (
-          <ApagarButton ligaId={liga.id} />
-        ) : (
-          <SairButton ligaId={liga.id} />
-        )}
-      </section>
+      {isOficial ? null : (
+        <section className="mx-4 mt-6 mb-4">
+          {isOwner ? (
+            <ApagarButton ligaId={liga.id} />
+          ) : (
+            <SairButton ligaId={liga.id} />
+          )}
+        </section>
+      )}
     </>
   );
 }

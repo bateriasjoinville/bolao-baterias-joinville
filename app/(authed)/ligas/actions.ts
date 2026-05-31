@@ -70,6 +70,25 @@ async function assertOwner(
   return { ok: true };
 }
 
+const ERRO_LIGA_OFICIAL =
+  "Liga oficial — todo participante faz parte automaticamente.";
+
+// Bloqueia mutações em ligas oficiais (sem dono, fixas).
+async function assertNaoOficial(
+  admin: Admin,
+  ligaId: string,
+): Promise<ActionResult> {
+  const { data, error } = await admin
+    .from("leagues")
+    .select("is_oficial")
+    .eq("id", ligaId)
+    .maybeSingle();
+  if (error) return { ok: false, error: "Erro ao verificar a liga." };
+  if (!data) return { ok: false, error: "Liga não encontrada." };
+  if (data.is_oficial) return { ok: false, error: ERRO_LIGA_OFICIAL };
+  return { ok: true };
+}
+
 type EntrarResult =
   | { ok: true; ligaId: string }
   | { ok: false; error: string };
@@ -229,7 +248,7 @@ export async function pedirEntradaPorCodigo(
   const admin = getSupabaseAdmin();
   const { data: liga, error: ligaErr } = await admin
     .from("leagues")
-    .select("id, owner_id, is_publica")
+    .select("id, owner_id, is_publica, is_oficial")
     .eq("codigo_convite", codigo)
     .maybeSingle();
   if (ligaErr) {
@@ -238,8 +257,15 @@ export async function pedirEntradaPorCodigo(
   if (!liga) {
     return { error: "Liga não encontrada.", codigo: rawCodigo };
   }
+  if (liga.is_oficial || liga.owner_id === null) {
+    return { error: ERRO_LIGA_OFICIAL, codigo: rawCodigo };
+  }
 
-  const result = await entrarEmLiga(admin, liga, myId);
+  const result = await entrarEmLiga(
+    admin,
+    { id: liga.id, owner_id: liga.owner_id, is_publica: liga.is_publica },
+    myId,
+  );
   if (!result.ok) {
     return { error: result.error, codigo: rawCodigo };
   }
@@ -345,6 +371,8 @@ export async function removerMembro(input: {
   }
 
   const admin = getSupabaseAdmin();
+  const naoOficial = await assertNaoOficial(admin, ligaParsed.data);
+  if (!naoOficial.ok) return naoOficial;
   const owner = await assertOwner(admin, ligaParsed.data, myId);
   if (!owner.ok) return owner;
 
@@ -378,11 +406,18 @@ export async function sairDaLiga(input: {
   const admin = getSupabaseAdmin();
   const { data: liga, error: ligaErr } = await admin
     .from("leagues")
-    .select("owner_id")
+    .select("owner_id, is_oficial")
     .eq("id", ligaParsed.data)
     .maybeSingle();
   if (ligaErr) return { ok: false, error: "Erro ao verificar a liga." };
   if (!liga) return { ok: false, error: "Liga não encontrada." };
+
+  if (liga.is_oficial) {
+    return {
+      ok: false,
+      error: "Liga oficial — você faz parte automaticamente, não dá pra sair.",
+    };
+  }
 
   if (liga.owner_id === myId) {
     return {
@@ -414,6 +449,8 @@ export async function apagarLiga(input: {
   if (!ligaParsed.success) return { ok: false, error: "ID inválido." };
 
   const admin = getSupabaseAdmin();
+  const naoOficial = await assertNaoOficial(admin, ligaParsed.data);
+  if (!naoOficial.ok) return naoOficial;
   const owner = await assertOwner(admin, ligaParsed.data, myId);
   if (!owner.ok) return owner;
 
@@ -470,13 +507,20 @@ export async function entrarNaLigaPorId(input: {
   const admin = getSupabaseAdmin();
   const { data: liga, error: ligaErr } = await admin
     .from("leagues")
-    .select("id, owner_id, is_publica")
+    .select("id, owner_id, is_publica, is_oficial")
     .eq("id", ligaParsed.data)
     .maybeSingle();
   if (ligaErr) return { ok: false, error: "Erro ao verificar a liga." };
   if (!liga) return { ok: false, error: "Liga não encontrada." };
+  if (liga.is_oficial || liga.owner_id === null) {
+    return { ok: false, error: ERRO_LIGA_OFICIAL };
+  }
 
-  const result = await entrarEmLiga(admin, liga, myId);
+  const result = await entrarEmLiga(
+    admin,
+    { id: liga.id, owner_id: liga.owner_id, is_publica: liga.is_publica },
+    myId,
+  );
   if (!result.ok) return { ok: false, error: result.error };
 
   revalidatePath("/ligas");
@@ -499,6 +543,8 @@ export async function definirLigaPublica(input: {
   }
 
   const admin = getSupabaseAdmin();
+  const naoOficial = await assertNaoOficial(admin, ligaParsed.data);
+  if (!naoOficial.ok) return naoOficial;
   const owner = await assertOwner(admin, ligaParsed.data, myId);
   if (!owner.ok) return owner;
 

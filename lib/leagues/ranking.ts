@@ -2,18 +2,25 @@ import "server-only";
 
 import { type SupabaseClient } from "@supabase/supabase-js";
 
-import { type RankingEntry } from "@/lib/ranking/queries";
+import { getRankingGeral, type RankingEntry } from "@/lib/ranking/queries";
 import { type Database } from "@/lib/supabase/database.types";
 
 import { getMembrosAprovados } from "./queries";
+import { LIGA_TIPO, type LigaTipo } from "./types";
 
 // Ranking interno da liga: reusa participant_scores (mesma fonte do
 // ranking geral) filtrando pelos participantes aprovados.
 // Pre-Copa todo mundo zerado, esperado.
+// Liga oficial 'geral' = todo mundo: reusa getRankingGeral pra evitar um
+// .in() com milhares de ids (estouraria o limite de URL do PostgREST).
 export async function getRankingLiga(
   supabase: SupabaseClient<Database>,
   ligaId: string,
+  tipo: LigaTipo | null = null,
 ): Promise<RankingEntry[]> {
+  if (tipo === LIGA_TIPO.GERAL) {
+    return getRankingGeral(supabase);
+  }
   const ids = await getMembrosAprovados(supabase, ligaId);
   if (ids.length === 0) return [];
   const { data, error } = await supabase

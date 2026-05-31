@@ -159,31 +159,37 @@ export type Database = {
       }
       leagues: {
         Row: {
-          codigo_convite: string
+          codigo_convite: string | null
           created_at: string
           descricao: string | null
           id: string
+          is_oficial: boolean
           is_publica: boolean
           nome: string
-          owner_id: string
+          owner_id: string | null
+          tipo: string | null
         }
         Insert: {
-          codigo_convite: string
+          codigo_convite?: string | null
           created_at?: string
           descricao?: string | null
           id?: string
+          is_oficial?: boolean
           is_publica?: boolean
           nome: string
-          owner_id: string
+          owner_id?: string | null
+          tipo?: string | null
         }
         Update: {
-          codigo_convite?: string
+          codigo_convite?: string | null
           created_at?: string
           descricao?: string | null
           id?: string
+          is_oficial?: boolean
           is_publica?: boolean
           nome?: string
-          owner_id?: string
+          owner_id?: string | null
+          tipo?: string | null
         }
         Relationships: [
           {
