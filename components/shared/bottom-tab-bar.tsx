@@ -1,6 +1,6 @@
 "use client";
 
-import { House, Target, Trophy } from "lucide-react";
+import { House, Target, Trophy, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -13,6 +13,7 @@ type TabDef = {
 const TABS: TabDef[] = [
   { label: "Início", href: "/dashboard", Icon: House },
   { label: "Palpitar", href: "/palpitar", Icon: Target },
+  { label: "Ligas", href: "/ligas", Icon: Users },
   { label: "Ranking", href: "/ranking", Icon: Trophy },
 ];
 
