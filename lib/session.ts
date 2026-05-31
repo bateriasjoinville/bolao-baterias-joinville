@@ -13,6 +13,7 @@ export const SESSION_COOKIE_NAME = "bolao_session";
 
 export type SessionData = {
   participantId?: string;
+  pendingConvite?: string;
 };
 
 const PERSISTENT_TTL_SECONDS = 60 * 60 * 24 * 30;
@@ -65,4 +66,24 @@ export async function createSession(
 export async function destroySession(): Promise<void> {
   const session = await getSession();
   session.destroy();
+}
+
+// Guarda o código de convite na sessão pra sobreviver às etapas do cadastro
+// (cadastro → confirmar-whatsapp → liga). Cadastro cria sessão persistente, então
+// usar getSession (persistentOptions) mantém o cookie consistente.
+export async function stashPendingConvite(codigo: string): Promise<void> {
+  const session = await getSession();
+  session.pendingConvite = codigo;
+  await session.save();
+}
+
+// Lê e limpa o convite pendente da sessão (consumo único).
+export async function takePendingConvite(): Promise<string | null> {
+  const session = await getSession();
+  const codigo = session.pendingConvite ?? null;
+  if (codigo) {
+    delete session.pendingConvite;
+    await session.save();
+  }
+  return codigo;
 }

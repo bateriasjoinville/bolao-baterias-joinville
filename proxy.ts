@@ -11,6 +11,8 @@ const PROTECTED_PREFIXES = [
 ];
 const AUTH_PREFIXES = ["/entrar", "/cadastrar"];
 
+const INVITE_RE = /^\/ligas\/entrar\/([A-Za-z0-9]{6,10})$/;
+
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const hasSession = req.cookies.has(SESSION_COOKIE);
@@ -21,7 +23,13 @@ export function proxy(req: NextRequest) {
   if (isProtected && !hasSession) {
     const url = req.nextUrl.clone();
     url.pathname = "/entrar";
-    url.searchParams.set("next", pathname);
+    url.search = "";
+    const inviteCodigo = INVITE_RE.exec(pathname)?.[1];
+    if (inviteCodigo) {
+      url.searchParams.set("convite", inviteCodigo.toUpperCase());
+    } else {
+      url.searchParams.set("next", pathname);
+    }
     return NextResponse.redirect(url);
   }
 

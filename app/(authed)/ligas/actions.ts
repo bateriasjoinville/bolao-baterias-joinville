@@ -5,10 +5,14 @@ import { redirect } from "next/navigation";
 
 import { gerarCodigoConvite } from "@/lib/leagues/codigo";
 import {
+  entrarEmLiga,
+  entrarPorCodigo,
+  ERRO_LIGA_OFICIAL,
+} from "@/lib/leagues/entrar";
+import {
   buscarLigas,
   countLigasComoMembro,
   countLigasComoOwner,
-  getMeuStatusNaLiga,
   type LigaBuscaResultado,
 } from "@/lib/leagues/queries";
 import {
@@ -70,9 +74,6 @@ async function assertOwner(
   return { ok: true };
 }
 
-const ERRO_LIGA_OFICIAL =
-  "Liga oficial — todo participante faz parte automaticamente.";
-
 // Bloqueia mutações em ligas oficiais (sem dono, fixas).
 async function assertNaoOficial(
   admin: Admin,
@@ -87,48 +88,6 @@ async function assertNaoOficial(
   if (!data) return { ok: false, error: "Liga não encontrada." };
   if (data.is_oficial) return { ok: false, error: ERRO_LIGA_OFICIAL };
   return { ok: true };
-}
-
-type EntrarResult =
-  | { ok: true; ligaId: string }
-  | { ok: false; error: string };
-
-// Núcleo da entrada numa liga (por código OU por busca). Liga pública → vira
-// membro aprovado direto; privada → cria pedido pendente (fluxo atual).
-// Idempotente: owner ou já-membro retorna ok sem mexer em nada.
-async function entrarEmLiga(
-  admin: Admin,
-  liga: { id: string; owner_id: string; is_publica: boolean },
-  myId: string,
-): Promise<EntrarResult> {
-  if (liga.owner_id === myId) return { ok: true, ligaId: liga.id };
-
-  const status = await getMeuStatusNaLiga(admin, liga.id, myId);
-  if (status !== null) return { ok: true, ligaId: liga.id };
-
-  const totalMembro = await countLigasComoMembro(admin, myId);
-  if (totalMembro >= LIMITE_LIGAS_PARTICIPANDO) {
-    return {
-      ok: false,
-      error: `Você já participa de ${LIMITE_LIGAS_PARTICIPANDO} ligas (limite).`,
-    };
-  }
-
-  const novoStatus = liga.is_publica
-    ? MEMBRO_STATUS.APROVADO
-    : MEMBRO_STATUS.PENDENTE;
-
-  const { error: insErr } = await admin.from("league_members").insert({
-    league_id: liga.id,
-    participant_id: myId,
-    status: novoStatus,
-  });
-  if (insErr) {
-    // Race: virou membro entre o check e o insert. Idempotente.
-    if (insErr.code === "23505") return { ok: true, ligaId: liga.id };
-    return { ok: false, error: "Erro ao entrar na liga. Tenta de novo." };
-  }
-  return { ok: true, ligaId: liga.id };
 }
 
 // ==================================================
@@ -246,26 +205,7 @@ export async function pedirEntradaPorCodigo(
   const codigo = parsed.data;
 
   const admin = getSupabaseAdmin();
-  const { data: liga, error: ligaErr } = await admin
-    .from("leagues")
-    .select("id, owner_id, is_publica, is_oficial")
-    .eq("codigo_convite", codigo)
-    .maybeSingle();
-  if (ligaErr) {
-    return { error: "Erro ao verificar o código.", codigo: rawCodigo };
-  }
-  if (!liga) {
-    return { error: "Liga não encontrada.", codigo: rawCodigo };
-  }
-  if (liga.is_oficial || liga.owner_id === null) {
-    return { error: ERRO_LIGA_OFICIAL, codigo: rawCodigo };
-  }
-
-  const result = await entrarEmLiga(
-    admin,
-    { id: liga.id, owner_id: liga.owner_id, is_publica: liga.is_publica },
-    myId,
-  );
+  const result = await entrarPorCodigo(admin, codigo, myId);
   if (!result.ok) {
     return { error: result.error, codigo: rawCodigo };
   }

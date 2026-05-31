@@ -1,6 +1,7 @@
 "use client";
 
 import { type TurnstileInstance } from "@marsidev/react-turnstile";
+import Link from "next/link";
 import {
   useActionState,
   useEffect,
@@ -23,9 +24,17 @@ const FIELD_ORDER = ["cpf", "whatsapp"] as const;
 type LoginFormProps = {
   turnstileSiteKey: string | null;
   cpfInicial?: string | null;
+  convite?: string | null;
 };
 
-export function LoginForm({ turnstileSiteKey, cpfInicial }: LoginFormProps) {
+export function LoginForm({
+  turnstileSiteKey,
+  cpfInicial,
+  convite,
+}: LoginFormProps) {
+  const cadastrarHref = convite
+    ? `/cadastrar?convite=${convite}`
+    : "/cadastrar";
   const [state, formAction] = useActionState(entrar, INITIAL_STATE);
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -160,6 +169,10 @@ export function LoginForm({ turnstileSiteKey, cpfInicial }: LoginFormProps) {
         Manter conectado por 30 dias
       </AceiteCheckbox>
 
+      {convite ? (
+        <input type="hidden" name="convite" value={convite} readOnly />
+      ) : null}
+
       <input
         ref={tokenInputRef}
         type="hidden"
@@ -179,7 +192,7 @@ export function LoginForm({ turnstileSiteKey, cpfInicial }: LoginFormProps) {
         <input type="hidden" name="turnstileToken" value="dev-bypass" readOnly />
       )}
 
-      <SubmitButton />
+      <SubmitButton convite={Boolean(convite)} />
 
       <p className="pt-1 text-center text-sm">
         <a
@@ -190,20 +203,31 @@ export function LoginForm({ turnstileSiteKey, cpfInicial }: LoginFormProps) {
         </a>
       </p>
 
-      <p className="pt-1 text-center text-xs text-slate-500">
-        Ainda não tem cadastro?{" "}
-        <a
-          href="/cadastrar"
-          className="font-semibold text-brand-blue underline"
-        >
-          Cadastrar grátis
-        </a>
-      </p>
+      <div className="mt-4 overflow-hidden rounded-xl border border-brand-green bg-brand-green-soft">
+        <div className="flex h-1.5 w-full">
+          <div className="flex-1 bg-brand-green" />
+          <div className="flex-1 bg-brand-yellow" />
+        </div>
+        <div className="px-4 py-4 text-center">
+          <p className="text-sm font-bold text-brand-green-dark">
+            🎉 Primeira vez por aqui?
+          </p>
+          <p className="mt-1 text-xs text-slate-600">
+            Crie sua conta em 1 minuto. É grátis e sem pegadinha.
+          </p>
+          <Link
+            href={cadastrarHref}
+            className="mt-3 block w-full rounded-xl bg-brand-blue py-3 text-sm font-bold text-white transition-colors hover:bg-brand-blue-hover"
+          >
+            Cadastrar grátis →
+          </Link>
+        </div>
+      </div>
     </form>
   );
 }
 
-function SubmitButton() {
+function SubmitButton({ convite }: { convite: boolean }) {
   const { pending } = useFormStatus();
   return (
     <button
@@ -211,7 +235,7 @@ function SubmitButton() {
       disabled={pending}
       className="block w-full rounded-xl bg-brand-yellow py-4 text-base font-bold text-brand-blue-dark transition-transform active:scale-[0.98] disabled:opacity-60"
     >
-      {pending ? "Entrando..." : "Entrar"}
+      {pending ? "Entrando..." : convite ? "Entrar e ir pra liga" : "Entrar"}
     </button>
   );
 }

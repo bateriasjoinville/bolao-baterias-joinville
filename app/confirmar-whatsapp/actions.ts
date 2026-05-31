@@ -2,19 +2,28 @@
 
 import { redirect } from "next/navigation";
 
-import { getSession } from "@/lib/session";
+import { entrarPorCodigo } from "@/lib/leagues/entrar";
+import { getSession, takePendingConvite } from "@/lib/session";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { whatsappSchema } from "@/lib/validation/contato";
 
 export async function confirmarWhatsapp(): Promise<void> {
   const session = await getSession();
   if (!session.participantId) redirect("/entrar");
+  const myId = session.participantId;
 
   const supabase = getSupabaseAdmin();
   await supabase
     .from("participants")
     .update({ whatsapp_confirmed_at: new Date().toISOString() })
-    .eq("id", session.participantId);
+    .eq("id", myId);
+
+  const convite = await takePendingConvite();
+  if (convite) {
+    const result = await entrarPorCodigo(supabase, convite, myId);
+    if (result.ok) redirect(`/ligas/${result.ligaId}`);
+    redirect(`/ligas/entrar/${convite}`);
+  }
 
   redirect("/dashboard");
 }

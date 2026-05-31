@@ -74,9 +74,11 @@ function isCampoValidavel(name: string): name is CampoValidavel {
 
 type CadastroFormProps = {
   turnstileSiteKey: string | null;
+  convite?: string | null;
 };
 
-export function CadastroForm({ turnstileSiteKey }: CadastroFormProps) {
+export function CadastroForm({ turnstileSiteKey, convite }: CadastroFormProps) {
+  const entrarHref = convite ? `/entrar?convite=${convite}` : "/entrar";
   const [state, formAction] = useActionState(
     criarParticipante,
     INITIAL_STATE,
@@ -335,6 +337,10 @@ export function CadastroForm({ turnstileSiteKey }: CadastroFormProps) {
         </AceiteCheckbox>
       </div>
 
+      {convite ? (
+        <input type="hidden" name="convite" value={convite} readOnly />
+      ) : null}
+
       <input
         ref={tokenInputRef}
         type="hidden"
@@ -354,19 +360,22 @@ export function CadastroForm({ turnstileSiteKey }: CadastroFormProps) {
         <input type="hidden" name="turnstileToken" value="dev-bypass" readOnly />
       )}
 
-      <SubmitButton />
+      <SubmitButton convite={Boolean(convite)} />
 
       <p className="pt-1 text-center text-xs text-slate-500">
         Já tem cadastro?{" "}
-        <a href="/entrar" className="font-semibold text-brand-blue underline">
+        <Link
+          href={entrarHref}
+          className="font-semibold text-brand-blue underline"
+        >
           Entrar
-        </a>
+        </Link>
       </p>
     </form>
   );
 }
 
-function SubmitButton() {
+function SubmitButton({ convite }: { convite: boolean }) {
   const { pending } = useFormStatus();
   return (
     <button
@@ -380,7 +389,9 @@ function SubmitButton() {
           <span>Enviando...</span>
         </>
       ) : (
-        <span>Quero participar grátis →</span>
+        <span>
+          {convite ? "Cadastrar grátis e entrar →" : "Quero participar grátis →"}
+        </span>
       )}
     </button>
   );

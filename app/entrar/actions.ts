@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { entrarPorCodigo, parseConvite } from "@/lib/leagues/entrar";
 import { createSession } from "@/lib/session";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { verifyTurnstileToken } from "@/lib/turnstile";
@@ -86,5 +87,12 @@ export async function entrar(
   }
 
   await createSession(data.id, { persist: parsed.data.manter_conectado });
+
+  const convite = parseConvite(String(formData.get("convite") ?? ""));
+  if (convite) {
+    const result = await entrarPorCodigo(supabase, convite, data.id);
+    if (result.ok) redirect(`/ligas/${result.ligaId}`);
+    redirect(`/ligas/entrar/${convite}`);
+  }
   redirect("/dashboard");
 }

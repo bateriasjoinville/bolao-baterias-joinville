@@ -3,7 +3,8 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { createSession } from "@/lib/session";
+import { parseConvite } from "@/lib/leagues/entrar";
+import { createSession, stashPendingConvite } from "@/lib/session";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { verifyTurnstileToken } from "@/lib/turnstile";
 import {
@@ -122,5 +123,9 @@ export async function criarParticipante(
   }
 
   await createSession(data.id);
+
+  const convite = parseConvite(String(formData.get("convite") ?? ""));
+  if (convite) await stashPendingConvite(convite);
+
   redirect("/confirmar-whatsapp");
 }
