@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   aggregateLigaStats,
   getMinhasLigas,
+  getTotalLigasCriadas,
   type LigaStats,
 } from "@/lib/leagues/queries";
 import { type MeuPapel } from "@/lib/leagues/types";
@@ -38,6 +39,9 @@ export default async function LigasPage() {
       ? await aggregateLigaStats(admin, ownedIds)
       : new Map<string, LigaStats>();
 
+  const totalLigas =
+    ligas.length === 0 ? await getTotalLigasCriadas(admin) : 0;
+
   const ordenadas = [...ligas].sort((a, b) => {
     const rank = (l: (typeof ligas)[number]) =>
       l.meuPapel === "owner" ? 0 : l.meuPapel === "aprovado" ? 1 : 2;
@@ -62,29 +66,54 @@ export default async function LigasPage() {
         <p className="mt-1 text-xs opacity-85">{ligas.length} de 20 ligas</p>
       </header>
 
-      <section className="mx-4 mt-4 grid grid-cols-2 gap-2">
-        <Link
-          href="/ligas/criar"
-          className="block rounded-md bg-brand-blue py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-brand-blue-hover"
-        >
-          Criar liga
-        </Link>
-        <Link
-          href="/ligas/entrar"
-          className="block rounded-md border border-slate-300 bg-white py-3 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-        >
-          Entrar em liga
-        </Link>
-      </section>
+      {ligas.length > 0 ? (
+        <section className="mx-4 mt-4 grid grid-cols-2 gap-2">
+          <Link
+            href="/ligas/criar"
+            className="block rounded-md bg-brand-blue py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-brand-blue-hover"
+          >
+            Criar liga
+          </Link>
+          <Link
+            href="/ligas/entrar"
+            className="block rounded-md border border-slate-300 bg-white py-3 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+          >
+            Entrar em liga
+          </Link>
+        </section>
+      ) : null}
 
       {ligas.length === 0 ? (
-        <section className="mx-4 mt-4 rounded-lg border border-dashed border-slate-300 bg-white p-6 text-center">
-          <p className="text-sm font-semibold text-slate-700">
-            Você ainda não participa de nenhuma liga.
+        <section className="mx-4 mt-4 rounded-lg border border-slate-200 bg-white p-6 text-center">
+          <p className="text-lg font-extrabold text-slate-900">
+            Competir com amigos é muito melhor
           </p>
-          <p className="mt-1 text-xs text-slate-500">
-            Cria uma do zero ou entra em uma com o código de convite.
+          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            Crie uma liga e chame a galera do trabalho, da família ou da resenha
+            pra disputar um ranking só de vocês. É de graça e leva 1 minuto.
           </p>
+
+          {totalLigas > 0 ? (
+            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-brand-yellow-soft px-3 py-1 text-xs font-bold text-brand-blue-dark">
+              🏆 Já {totalLigas === 1 ? "tem" : "são"} {totalLigas}{" "}
+              {totalLigas === 1 ? "liga criada" : "ligas criadas"}
+            </p>
+          ) : null}
+
+          <div className="mt-5 space-y-2">
+            <Link
+              href="/ligas/criar"
+              className="block rounded-md bg-brand-blue py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-brand-blue-hover"
+            >
+              Criar liga
+            </Link>
+            <Link
+              href="/ligas/entrar"
+              className="block rounded-md border border-slate-300 bg-white py-2.5 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+            >
+              Entrar (tenho código)
+            </Link>
+          </div>
         </section>
       ) : (
         <ul className="mx-4 mt-4 space-y-2">

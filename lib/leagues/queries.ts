@@ -252,6 +252,18 @@ export async function getMembrosAprovadosComNomes(
     }));
 }
 
+// Total de ligas criadas na plataforma. Prova social no empty state de /ligas.
+// Via service_role (caller passa admin) — count simples, RLS intacta.
+export async function getTotalLigasCriadas(
+  supabase: SupabaseClient<Database>,
+): Promise<number> {
+  const { count, error } = await supabase
+    .from("leagues")
+    .select("id", { count: "exact", head: true });
+  if (error) throw error;
+  return count ?? 0;
+}
+
 // Conta ligas onde o participante é owner. Pra limite de criação (10).
 export async function countLigasComoOwner(
   supabase: SupabaseClient<Database>,

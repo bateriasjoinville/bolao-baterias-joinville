@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Copy, Loader2, X } from "lucide-react";
+import { Check, Copy, Loader2, MessageCircle, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -38,6 +38,39 @@ export function CopyCodeButton({ codigo }: { codigo: string }) {
         <Copy className="h-3 w-3" />
       )}
       <span>{copied ? "Copiado" : "Copiar"}</span>
+    </button>
+  );
+}
+
+export function ConvidarWhatsappButton({
+  codigo,
+  nomeLiga,
+}: {
+  codigo: string;
+  nomeLiga: string;
+}) {
+  function handle() {
+    const origin =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://bolao.bateriasjoinville.com.br";
+    const link = `${origin}/ligas/entrar/${codigo}`;
+    const msg =
+      `Entra na minha liga do Bolão da Copa! 🏆\n\n` +
+      `Liga: ${nomeLiga}\n` +
+      `Código: ${codigo}\n${link}`;
+    const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handle}
+      className="mt-2 flex w-full items-center justify-center gap-2 rounded-md bg-emerald-600 py-2.5 text-sm font-bold text-white transition-colors hover:bg-emerald-700"
+    >
+      <MessageCircle className="h-4 w-4" />
+      Convidar pelo WhatsApp
     </button>
   );
 }

@@ -19,6 +19,7 @@ import { createAuthedServerClient } from "@/lib/supabase/server";
 
 import {
   ApagarButton,
+  ConvidarWhatsappButton,
   CopyCodeButton,
   MembroPendenteActions,
   RemoverMembroButton,
@@ -113,6 +114,10 @@ export default async function LigaPage({
             </p>
             <CopyCodeButton codigo={liga.codigoConvite} />
           </div>
+          <ConvidarWhatsappButton
+            codigo={liga.codigoConvite}
+            nomeLiga={liga.nome}
+          />
         </div>
 
         <div className="mt-3 border-t border-slate-100 pt-3">
