@@ -9,7 +9,7 @@ const PASSOS = [
   },
   {
     titulo: "Acerta mais, sobe no ranking",
-    descricao: "Placar exato vale 6. Jogo do Brasil vale o dobro.",
+    descricao: "Placar exato vale 6, só o vencedor vale 3. Jogo do Brasil dobra.",
   },
 ];
 
@@ -20,7 +20,7 @@ export function ComoFunciona() {
       <div className="space-y-4">
         {PASSOS.map((passo, i) => (
           <div key={passo.titulo} className="flex gap-3">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-blue text-sm font-bold text-white">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white">
               {i + 1}
             </div>
             <div>
