@@ -22,18 +22,16 @@ const cpfParcialDigitos = z
 export const cpfParcialSchema = z
   .string()
   .transform(stripDigits)
-  .pipe(z.union([z.literal(""), cpfParcialDigitos]))
-  .transform((v) => (v === "" ? null : v));
+  .pipe(cpfParcialDigitos);
 
 const whatsappParcialDigitos = z
   .string()
-  .regex(/^\d{6}$/, "DDD + 4 últimos dígitos (6 números)");
+  .regex(/^\d{6}$/, "Informe DDD + 4 últimos dígitos do WhatsApp (6 números)");
 
 export const whatsappParcialSchema = z
   .string()
   .transform(stripDigits)
-  .pipe(z.union([z.literal(""), whatsappParcialDigitos]))
-  .transform((v) => (v === "" ? null : v));
+  .pipe(whatsappParcialDigitos);
 
 export const helpRequestSchema = z.object({
   nome: nomeAjudaSchema,

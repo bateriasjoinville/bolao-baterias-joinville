@@ -1,141 +1,213 @@
 "use client";
 
+import { type TurnstileInstance } from "@marsidev/react-turnstile";
 import { Loader2 } from "lucide-react";
-import { useActionState } from "react";
+import {
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { useFormStatus } from "react-dom";
 
-import { Turnstile } from "@/components/cadastro/turnstile-widget";
-import { enviarPedidoAjuda, type PedidoAjudaState } from "@/app/esqueci-os-dados/actions";
+import { solicitarAjuda, type HelpRequestState } from "@/app/esqueci-os-dados/actions";
+import { Campo } from "@/components/cadastro/campo";
+import { TurnstileWidget } from "@/components/cadastro/turnstile-widget";
 
-const INITIAL_STATE: PedidoAjudaState = {};
+const INITIAL_STATE: HelpRequestState = {};
 
-export function EsqueciDadosForm() {
-  const [state, formAction] = useActionState(
-    enviarPedidoAjuda,
-    INITIAL_STATE,
-  );
+const FIELD_ORDER = ["nome", "cpf_parcial", "whatsapp_parcial", "mensagem"] as const;
+
+type HelpRequestFormProps = {
+  turnstileSiteKey: string | null;
+};
+
+export function HelpRequestForm({ turnstileSiteKey }: HelpRequestFormProps) {
+  const [state, formAction] = useActionState(solicitarAjuda, INITIAL_STATE);
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
+  const tokenInputRef = useRef<HTMLInputElement>(null);
+
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!state.errors) return;
+    for (const field of FIELD_ORDER) {
+      if (state.errors[field]) {
+        const el = formRef.current?.querySelector<HTMLElement>(
+          `[name="${field}"]`,
+        );
+        el?.focus();
+        break;
+      }
+    }
+  }, [state]);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    if (!turnstileSiteKey) return;
+
+    const existingToken = tokenInputRef.current?.value;
+    if (existingToken) return;
+
+    e.preventDefault();
+    setCaptchaError(null);
+
+    const widget = turnstileRef.current;
+    if (!widget) {
+      setCaptchaError("Captcha indisponível. Recarrega a página.");
+      return;
+    }
+
+    const form = e.currentTarget;
+
+    try {
+      widget.execute();
+      const token = await widget.getResponsePromise(10000);
+      if (tokenInputRef.current) tokenInputRef.current.value = token;
+      form.requestSubmit();
+    } catch {
+      setCaptchaError("Captcha demorou. Toca de novo no botão.");
+      widget.reset();
+    }
+  };
 
   return (
-    <form action={formAction} className="space-y-4 px-4 py-5">
-      {state.error ? (
+    <form
+      ref={formRef}
+      action={formAction}
+      onSubmit={handleSubmit}
+      noValidate
+      className="space-y-4 px-4 py-5"
+    >
+      {state.formError ? (
         <div
           role="alert"
           className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
         >
-          {state.error}
+          {state.formError}
         </div>
       ) : null}
 
-      {state.fieldErrors?.geral ? (
+      {captchaError ? (
         <div
           role="alert"
           className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
         >
-          {state.fieldErrors.geral}
+          {captchaError}
         </div>
       ) : null}
 
-      <div>
-        <label
-          htmlFor="nome"
-          className="mb-1.5 block text-sm font-semibold text-slate-900"
-        >
-          Nome completo
-        </label>
+      <Campo label="Nome completo" htmlFor="nome" error={state.errors?.nome}>
         <input
           id="nome"
           name="nome"
           type="text"
+          autoComplete="name"
           required
-          maxLength={120}
-          placeholder="Seu nome completo"
-          defaultValue={state.values?.nome ?? ""}
-          aria-invalid={Boolean(state.fieldErrors?.nome)}
+          defaultValue={state.values?.nome}
+          aria-invalid={Boolean(state.errors?.nome)}
+          aria-describedby={state.errors?.nome ? "erro-nome" : undefined}
           className="w-full rounded-xl border border-slate-300 px-3.5 py-3 text-base text-slate-900 focus:border-brand-blue focus:ring-1 focus:ring-brand-blue focus:outline-none aria-invalid:border-red-500"
         />
-        {state.fieldErrors?.nome ? (
-          <p className="mt-1 text-xs text-red-600">{state.fieldErrors.nome}</p>
-        ) : null}
-      </div>
+      </Campo>
 
-      <div>
-        <label
-          htmlFor="cpf"
-          className="mb-1.5 block text-sm font-semibold text-slate-900"
-        >
-          CPF
-        </label>
+      <Campo
+        label="Últimos 3 dígitos do CPF"
+        htmlFor="cpf_parcial"
+        error={state.errors?.cpf_parcial}
+      >
         <input
-          id="cpf"
-          name="cpf"
+          id="cpf_parcial"
+          name="cpf_parcial"
           type="text"
-          required
           inputMode="numeric"
-          maxLength={14}
-          placeholder="000.000.000-00"
-          defaultValue={state.values?.cpf ?? ""}
-          aria-invalid={Boolean(state.fieldErrors?.cpf)}
+          pattern="\d*"
+          maxLength={3}
+          required
+          autoComplete="off"
+          placeholder="123"
+          defaultValue={state.values?.cpf_parcial}
+          aria-invalid={Boolean(state.errors?.cpf_parcial)}
+          aria-describedby={
+            state.errors?.cpf_parcial ? "erro-cpf_parcial" : undefined
+          }
           className="w-full rounded-xl border border-slate-300 px-3.5 py-3 text-base text-slate-900 focus:border-brand-blue focus:ring-1 focus:ring-brand-blue focus:outline-none aria-invalid:border-red-500"
         />
-        {state.fieldErrors?.cpf ? (
-          <p className="mt-1 text-xs text-red-600">{state.fieldErrors.cpf}</p>
-        ) : (
-          <p className="mt-1 text-xs text-slate-500">
-            Pra gente achar seu cadastro.
-          </p>
-        )}
-      </div>
+      </Campo>
 
-      <div>
-        <label
-          htmlFor="whatsapp"
-          className="mb-1.5 block text-sm font-semibold text-slate-900"
-        >
-          WhatsApp
-        </label>
+      <Campo
+        label="DDD + últimos 4 dígitos do WhatsApp"
+        htmlFor="whatsapp_parcial"
+        error={state.errors?.whatsapp_parcial}
+      >
         <input
-          id="whatsapp"
-          name="whatsapp"
-          type="tel"
-          required
+          id="whatsapp_parcial"
+          name="whatsapp_parcial"
+          type="text"
           inputMode="numeric"
-          maxLength={15}
-          placeholder="(47) 99999-9999"
-          defaultValue={state.values?.whatsapp ?? ""}
-          aria-invalid={Boolean(state.fieldErrors?.whatsapp)}
+          required
+          autoComplete="off"
+          placeholder="47 e 1234"
+          defaultValue={state.values?.whatsapp_parcial}
+          aria-invalid={Boolean(state.errors?.whatsapp_parcial)}
+          aria-describedby={
+            state.errors?.whatsapp_parcial ? "erro-whatsapp_parcial" : undefined
+          }
           className="w-full rounded-xl border border-slate-300 px-3.5 py-3 text-base text-slate-900 focus:border-brand-blue focus:ring-1 focus:ring-brand-blue focus:outline-none aria-invalid:border-red-500"
         />
-        {state.fieldErrors?.whatsapp ? (
-          <p className="mt-1 text-xs text-red-600">
-            {state.fieldErrors.whatsapp}
-          </p>
-        ) : (
-          <p className="mt-1 text-xs text-slate-500">Com DDD.</p>
-        )}
-      </div>
+      </Campo>
 
-      <div>
-        <label
-          htmlFor="mensagem"
-          className="mb-1.5 block text-sm font-semibold text-slate-900"
-        >
-          Mensagem{" "}
-          <span className="font-normal text-slate-500">(opcional)</span>
-        </label>
+      <Campo
+        label="O que aconteceu?"
+        htmlFor="mensagem"
+        error={state.errors?.mensagem}
+      >
         <textarea
           id="mensagem"
           name="mensagem"
-          rows={4}
+          required
+          rows={5}
           maxLength={1000}
-          placeholder="Conta pra gente o que aconteceu..."
-          defaultValue={state.values?.mensagem ?? ""}
-          className="w-full rounded-xl border border-slate-300 px-3.5 py-3 text-base text-slate-900 focus:border-brand-blue focus:ring-1 focus:ring-brand-blue focus:outline-none"
+          placeholder="Ex: troquei de celular e perdi o WhatsApp. Meu nome é..."
+          defaultValue={state.values?.mensagem}
+          aria-invalid={Boolean(state.errors?.mensagem)}
+          aria-describedby={
+            state.errors?.mensagem ? "erro-mensagem" : undefined
+          }
+          className="w-full resize-y rounded-xl border border-slate-300 px-3.5 py-3 text-base text-slate-900 focus:border-brand-blue focus:ring-1 focus:ring-brand-blue focus:outline-none aria-invalid:border-red-500"
         />
-      </div>
+      </Campo>
 
-      <Turnstile />
+      {turnstileSiteKey ? (
+        <>
+          <input
+            ref={tokenInputRef}
+            type="hidden"
+            name="turnstileToken"
+            defaultValue=""
+          />
+          <TurnstileWidget
+            siteKey={turnstileSiteKey}
+            instanceRef={turnstileRef}
+            onToken={(token) => {
+              if (tokenInputRef.current) tokenInputRef.current.value = token;
+            }}
+          />
+        </>
+      ) : (
+        <input type="hidden" name="turnstileToken" value="dev-bypass" readOnly />
+      )}
 
       <SubmitButton />
+
+      <p className="pt-1 text-center text-xs text-slate-500">
+        Lembrou os dados?{" "}
+        <a href="/entrar" className="font-semibold text-brand-blue underline">
+          Voltar pro login
+        </a>
+      </p>
     </form>
   );
 }
