@@ -21,7 +21,10 @@ export type CadastroState = {
     cpf?: string;
     whatsapp?: string;
     idade?: string;
+    cidade_tipo?: "joinville" | "outra";
     bairro?: string;
+    cidade?: string;
+    uf?: string;
     instagram?: string;
     aceite_regulamento?: boolean;
     aceite_comunicacoes?: boolean;
@@ -45,12 +48,20 @@ export async function criarParticipante(
   _prev: CadastroState,
   formData: FormData,
 ): Promise<CadastroState> {
+  const cidadeTipo =
+    String(formData.get("cidade_tipo") ?? "joinville") === "outra"
+      ? "outra"
+      : "joinville";
+
   const raw = {
     nome: String(formData.get("nome") ?? ""),
     cpf: String(formData.get("cpf") ?? ""),
     whatsapp: String(formData.get("whatsapp") ?? ""),
     idade: String(formData.get("idade") ?? ""),
+    cidade_tipo: cidadeTipo,
     bairro: String(formData.get("bairro") ?? ""),
+    cidade: String(formData.get("cidade") ?? ""),
+    uf: String(formData.get("uf") ?? ""),
     instagram: String(formData.get("instagram") ?? ""),
     aceite_regulamento: formData.get("aceite_regulamento") === "on",
     aceite_comunicacoes: formData.get("aceite_comunicacoes") === "on",
@@ -62,7 +73,10 @@ export async function criarParticipante(
     cpf: raw.cpf,
     whatsapp: raw.whatsapp,
     idade: raw.idade,
+    cidade_tipo: cidadeTipo,
     bairro: raw.bairro,
+    cidade: raw.cidade,
+    uf: raw.uf,
     instagram: raw.instagram,
     aceite_regulamento: raw.aceite_regulamento,
     aceite_comunicacoes: raw.aceite_comunicacoes,
@@ -93,6 +107,11 @@ export async function criarParticipante(
     };
   }
 
+  const localizacao =
+    parsed.data.cidade_tipo === "joinville"
+      ? { cidade: "Joinville", estado: "SC", bairro: parsed.data.bairro }
+      : { cidade: parsed.data.cidade, estado: parsed.data.uf, bairro: null };
+
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
     .from("participants")
@@ -101,7 +120,9 @@ export async function criarParticipante(
       cpf: parsed.data.cpf,
       whatsapp: parsed.data.whatsapp,
       idade: parsed.data.idade,
-      bairro: parsed.data.bairro,
+      cidade: localizacao.cidade,
+      estado: localizacao.estado,
+      bairro: localizacao.bairro,
       instagram: parsed.data.instagram ? parsed.data.instagram : null,
       aceite_regulamento: parsed.data.aceite_regulamento,
       aceite_comunicacoes: parsed.data.aceite_comunicacoes,

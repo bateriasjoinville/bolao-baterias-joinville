@@ -12,7 +12,9 @@ export type CadastroEncontrado = {
   nome: string;
   cpf: string;
   whatsapp: string;
-  bairro: string;
+  cidade: string;
+  estado: string;
+  bairro: string | null;
   created_at: string;
 };
 
@@ -55,7 +57,7 @@ export async function marcarResolvido(
   return { ok: true };
 }
 
-const COLS = "id, nome, cpf, whatsapp, bairro, created_at";
+const COLS = "id, nome, cpf, whatsapp, cidade, estado, bairro, created_at";
 
 function escapeIlike(value: string): string {
   return value.replace(/[%_]/g, "\\$&");

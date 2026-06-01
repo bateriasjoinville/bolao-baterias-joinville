@@ -342,9 +342,11 @@ export type Database = {
         Row: {
           aceite_comunicacoes: boolean
           aceite_regulamento: boolean
-          bairro: string
+          bairro: string | null
+          cidade: string
           cpf: string
           created_at: string
+          estado: string
           id: string
           idade: number
           instagram: string | null
@@ -356,9 +358,11 @@ export type Database = {
         Insert: {
           aceite_comunicacoes?: boolean
           aceite_regulamento?: boolean
-          bairro: string
+          bairro?: string | null
+          cidade: string
           cpf: string
           created_at?: string
+          estado: string
           id?: string
           idade: number
           instagram?: string | null
@@ -370,9 +374,11 @@ export type Database = {
         Update: {
           aceite_comunicacoes?: boolean
           aceite_regulamento?: boolean
-          bairro?: string
+          bairro?: string | null
+          cidade?: string
           cpf?: string
           created_at?: string
+          estado?: string
           id?: string
           idade?: number
           instagram?: string | null

@@ -10,7 +10,9 @@ export type ParticipantRow = {
   nome: string;
   cpf: string;
   whatsapp: string;
-  bairro: string;
+  cidade: string;
+  estado: string;
+  bairro: string | null;
   idade: number;
   instagram: string | null;
   created_at: string;
@@ -20,7 +22,7 @@ export type ParticipantRow = {
 type Admin = SupabaseClient<Database>;
 
 const COLS =
-  "id, nome, cpf, whatsapp, bairro, idade, instagram, created_at, whatsapp_confirmed_at";
+  "id, nome, cpf, whatsapp, cidade, estado, bairro, idade, instagram, created_at, whatsapp_confirmed_at";
 
 export const PAGE_SIZE = 50;
 

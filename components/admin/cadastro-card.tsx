@@ -6,9 +6,16 @@ export type CadastroCardData = {
   nome: string;
   cpf: string;
   whatsapp: string;
-  bairro: string;
+  cidade: string;
+  estado: string;
+  bairro: string | null;
   created_at: string;
 };
+
+function formatarLocal(c: CadastroCardData): string {
+  const base = `${c.cidade}/${c.estado}`;
+  return c.bairro ? `${base} · ${c.bairro}` : base;
+}
 
 export function formatarDataHora(iso: string): string {
   const d = new Date(iso);
@@ -35,8 +42,8 @@ export function CadastroCard({ cadastro }: { cadastro: CadastroCardData }) {
           <dd className="inline font-mono">{formatWhatsApp(cadastro.whatsapp)}</dd>
         </div>
         <div>
-          <dt className="inline font-medium text-slate-500">Bairro: </dt>
-          <dd className="inline">{cadastro.bairro}</dd>
+          <dt className="inline font-medium text-slate-500">Local: </dt>
+          <dd className="inline">{formatarLocal(cadastro)}</dd>
         </div>
         <div>
           <dt className="inline font-medium text-slate-500">Cadastro: </dt>

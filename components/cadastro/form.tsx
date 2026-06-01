@@ -18,15 +18,17 @@ import { criarParticipante, type CadastroState } from "@/app/cadastrar/actions";
 import { formatCPF, formatWhatsApp } from "@/lib/format";
 import {
   bairroSchema,
+  cidadeSchema,
   idadeSchema,
   instagramSchema,
   nomeSchema,
+  ufSchema,
 } from "@/lib/validation/cadastro";
 import { cpfSchema, whatsappSchema } from "@/lib/validation/contato";
 
 import { AceiteCheckbox } from "./aceite-checkbox";
-import { BairroSelect } from "./bairro-select";
 import { Campo } from "./campo";
+import { LocalizacaoFields } from "./localizacao-fields";
 import { TurnstileWidget } from "./turnstile-widget";
 
 const INITIAL_STATE: CadastroState = {};
@@ -37,6 +39,8 @@ const FIELD_ORDER = [
   "whatsapp",
   "idade",
   "bairro",
+  "uf",
+  "cidade",
   "instagram",
   "aceite_regulamento",
   "aceite_comunicacoes",
@@ -48,6 +52,8 @@ type CampoValidavel =
   | "whatsapp"
   | "idade"
   | "bairro"
+  | "cidade"
+  | "uf"
   | "instagram";
 
 type ClientErrors = Partial<Record<CampoValidavel, string | undefined>>;
@@ -65,6 +71,8 @@ const VALIDATORS: Record<CampoValidavel, (v: string) => string | undefined> = {
   whatsapp: (v) => validarCom(whatsappSchema, v),
   idade: (v) => validarCom(idadeSchema, v),
   bairro: (v) => validarCom(bairroSchema, v),
+  cidade: (v) => validarCom(cidadeSchema, v),
+  uf: (v) => validarCom(ufSchema, v),
   instagram: (v) => validarCom(instagramSchema, v),
 };
 
@@ -278,15 +286,15 @@ export function CadastroForm({ turnstileSiteKey, convite }: CadastroFormProps) {
         />
       </Campo>
 
-      <Campo label="Bairro" htmlFor="bairro" error={getErro("bairro")}>
-        <BairroSelect
-          id="bairro"
-          name="bairro"
-          defaultValue={state.values?.bairro}
-          ariaInvalid={Boolean(getErro("bairro"))}
-          ariaDescribedBy={getErro("bairro") ? "erro-bairro" : undefined}
-        />
-      </Campo>
+      <LocalizacaoFields
+        defaultTipo={state.values?.cidade_tipo}
+        defaultBairro={state.values?.bairro}
+        defaultCidade={state.values?.cidade}
+        defaultUf={state.values?.uf}
+        erroBairro={getErro("bairro")}
+        erroCidade={getErro("cidade")}
+        erroUf={getErro("uf")}
+      />
 
       <Campo
         label="Instagram (opcional)"

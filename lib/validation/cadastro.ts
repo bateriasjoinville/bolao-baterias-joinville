@@ -6,6 +6,7 @@ import {
   turnstileTokenSchema,
   whatsappSchema,
 } from "@/lib/validation/contato";
+import { UF_SIGLAS } from "@/lib/validation/ufs";
 
 export const nomeSchema = z
   .string()
@@ -27,6 +28,15 @@ export const bairroSchema = z.enum(BAIRROS_OPCOES, {
   message: "Escolha um bairro",
 });
 
+export const cidadeSchema = z
+  .string()
+  .trim()
+  .min(2, "Informe a cidade")
+  .max(80, "Cidade muito longa")
+  .regex(/^[\p{L}][\p{L}0-9 .'-]*$/u, "Cidade inválida");
+
+export const ufSchema = z.enum(UF_SIGLAS, { message: "Escolha o estado" });
+
 export const instagramSchema = z
   .string()
   .trim()
@@ -43,19 +53,45 @@ const aceiteObrigatorioSchema = z.literal(true, {
   message: "Aceite obrigatório",
 });
 
-export const cadastroSchema = z.object({
+const camposBase = {
   nome: nomeSchema,
   cpf: cpfSchema,
   whatsapp: whatsappSchema,
   idade: idadeSchema,
-  bairro: bairroSchema,
   instagram: instagramSchema,
   aceite_regulamento: aceiteObrigatorioSchema,
   aceite_comunicacoes: z.boolean(),
   turnstileToken: turnstileTokenSchema,
-});
+};
+
+export const cadastroSchema = z.discriminatedUnion("cidade_tipo", [
+  z.object({
+    cidade_tipo: z.literal("joinville"),
+    bairro: bairroSchema,
+    ...camposBase,
+  }),
+  z.object({
+    cidade_tipo: z.literal("outra"),
+    cidade: cidadeSchema,
+    uf: ufSchema,
+    ...camposBase,
+  }),
+]);
 
 export type CadastroInput = z.infer<typeof cadastroSchema>;
-export type CadastroFieldErrors = Partial<
-  Record<keyof CadastroInput, string>
->;
+
+export type CadastroField =
+  | "nome"
+  | "cpf"
+  | "whatsapp"
+  | "idade"
+  | "cidade_tipo"
+  | "bairro"
+  | "cidade"
+  | "uf"
+  | "instagram"
+  | "aceite_regulamento"
+  | "aceite_comunicacoes"
+  | "turnstileToken";
+
+export type CadastroFieldErrors = Partial<Record<CadastroField, string>>;
