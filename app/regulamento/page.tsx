@@ -62,8 +62,7 @@ export default function RegulamentoPage() {
                 <strong>18 (dezoito) anos</strong>
               </li>
               <li>
-                Residentes em <strong>Joinville/SC</strong>, incluindo o
-                distrito de <strong>Pirabeiraba</strong>
+                Residentes em <strong>qualquer cidade do Brasil</strong>
               </li>
               <li>Que aceitem expressamente este regulamento</li>
             </Bullets>
@@ -73,12 +72,18 @@ export default function RegulamentoPage() {
             </p>
             <Bullets>
               <li>Menores de 18 anos</li>
-              <li>Pessoas residentes fora de Joinville/SC</li>
               <li>
                 Funcionários da Baterias Joinville e seus familiares diretos
                 (cônjuges, filhos, pais, irmãos)
               </li>
             </Bullets>
+
+            <p className="mt-4">
+              Participantes de <strong>qualquer cidade</strong> concorrem
+              normalmente. O brinde cortesia (seção 5) é retirado{" "}
+              <strong>presencialmente</strong> na loja da Baterias Joinville em
+              Joinville/SC — sem envio pelos Correios.
+            </p>
 
             <p className="mt-4">
               <strong>Limite:</strong> 1 (uma) inscrição por CPF.
@@ -261,11 +266,6 @@ export default function RegulamentoPage() {
                 similar) confirmando idade igual ou superior a 18 anos
               </li>
               <li>
-                <strong>Comprovante de residência em Joinville</strong> (conta
-                de luz, água, gás, internet, ou similar), com data de emissão
-                de até 90 (noventa) dias
-              </li>
-              <li>
                 Confirmação de identidade do cadastro (CPF e WhatsApp
                 informados)
               </li>
@@ -287,7 +287,7 @@ export default function RegulamentoPage() {
               <li>CPF</li>
               <li>WhatsApp</li>
               <li>Idade</li>
-              <li>Bairro</li>
+              <li>Cidade e estado (e bairro, no caso de Joinville)</li>
               <li>Instagram (se fornecido voluntariamente)</li>
             </Bullets>
 

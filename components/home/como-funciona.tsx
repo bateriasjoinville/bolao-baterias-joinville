@@ -1,7 +1,8 @@
 const PASSOS = [
   {
     titulo: "Cadastra em 1 minuto",
-    descricao: "Nome, CPF, WhatsApp e bairro. Só Joinville e Pirabeiraba.",
+    descricao:
+      "Nome, CPF, WhatsApp e cidade. Aberto pra todo o Brasil, com foco em Joinville.",
   },
   {
     titulo: "Palpita os 104 jogos",

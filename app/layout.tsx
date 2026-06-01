@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Bolão Copa 2026 · Baterias Joinville",
   description:
-    "Bolão gratuito da Copa do Mundo 2026. Palpita os 104 jogos e leva 1 Bateria Moura 60Ah de cortesia se for o melhor palpiteiro. Só pra Joinville e Pirabeiraba.",
+    "Bolão gratuito da Copa do Mundo 2026. Palpita os 104 jogos e leva 1 Bateria Moura 60Ah de cortesia se for o melhor palpiteiro. Aberto pra todo o Brasil, com foco em Joinville.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
