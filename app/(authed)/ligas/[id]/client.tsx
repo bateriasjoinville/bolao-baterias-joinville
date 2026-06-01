@@ -12,6 +12,7 @@ import {
   removerMembro,
   sairDaLiga,
 } from "../actions";
+import { mensagemConviteLiga } from "@/lib/share/messages";
 
 export function CopyCodeButton({ codigo }: { codigo: string }) {
   const [copied, setCopied] = useState(false);
@@ -55,10 +56,7 @@ export function ConvidarWhatsappButton({
         ? window.location.origin
         : "https://bolao.bateriasjoinville.com.br";
     const link = `${origin}/ligas/entrar/${codigo}`;
-    const msg =
-      `Entra na minha liga do Bolão da Copa! 🏆\n\n` +
-      `Liga: ${nomeLiga}\n` +
-      `Código: ${codigo}\n${link}`;
+    const msg = mensagemConviteLiga(nomeLiga, link);
     const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
     window.open(url, "_blank", "noopener,noreferrer");
   }
