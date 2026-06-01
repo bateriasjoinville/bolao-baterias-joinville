@@ -1,7 +1,15 @@
 "use client";
 
-import { type ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
+import { ComoFuncionaBox } from "@/components/shared/como-funciona-box";
 import { PalpitarHeader } from "@/components/palpitar/header";
 import { MatchCard } from "@/components/palpitar/match-card";
 import { salvarPalpite } from "@/app/(authed)/palpitar/actions";
@@ -9,7 +17,7 @@ import {
   type MatchRow,
   type PredictionMin,
 } from "@/lib/dashboard/queries";
-import { isMatchLocked, lockLabel } from "@/lib/palpitar/lock";
+import { isMatchLocked, lockLabel, lockTier, minsToLock } from "@/lib/palpitar/lock";
 import { type PalpiteStatus } from "@/lib/palpitar/types";
 
 type PalpitarBoardProps = {
@@ -18,8 +26,11 @@ type PalpitarBoardProps = {
   aberto: boolean;
   matches: MatchRow[];
   predictions: PredictionMin[];
+  serverNowISO: string;
   banner?: ReactNode;
 };
+
+const CLOCK_TICK_MS = 30_000;
 
 type ScoreState = { a: number | null; b: number | null };
 type StatusTab = "pendentes" | "palpitados" | "encerrados" | "todos";
@@ -47,9 +58,19 @@ export function PalpitarBoard({
   aberto,
   matches,
   predictions,
+  serverNowISO,
   banner,
 }: PalpitarBoardProps) {
   const [tab, setTab] = useState<StatusTab>("pendentes");
+  // Relógio leve: inicia do tempo do servidor (sem mismatch de hidratação) e
+  // atualiza a cada 30s pra o selo de trava e o lock refletirem o tempo.
+  const [now, setNow] = useState<Date>(() => new Date(serverNowISO));
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), CLOCK_TICK_MS);
+    return () => clearInterval(id);
+  }, []);
+
   const [editingIds, setEditingIds] = useState<Set<number>>(() => new Set());
   // Palpites salvos durante esta visita à aba: ficam visíveis em modo edição
   // (verde) e não recolhem, mesmo já contando como palpitados. Limpa ao trocar de aba.
@@ -201,6 +222,7 @@ export function PalpitarBoard({
     <>
       <PalpitarHeader nome={nome} feitos={counts.palpitados} total={total} />
       {banner}
+      <ComoFuncionaBox />
       <StatusFilter active={tab} counts={counts} onChange={handleTab} />
       {visiveis.length === 0 ? (
         <p className="px-4 py-8 text-center text-sm text-slate-500">
@@ -217,14 +239,21 @@ export function PalpitarBoard({
           {visiveis.map((match) => {
             const s = scores.get(match.id);
             const status = statuses.get(match.id) ?? "idle";
-            const matchLocked = isMatchLocked(match.kickoff_at);
+            const matchLocked = isMatchLocked(match.kickoff_at, now);
             const locked = !aberto || matchLocked;
             const lockText = !aberto
               ? "Palpites ainda não abriram"
               : matchLocked
-                ? lockLabel(match.kickoff_at)
+                ? lockLabel(match.kickoff_at, now)
                 : undefined;
             const encerrado = isEncerrado(match);
+            const lockCountdown =
+              aberto && !encerrado
+                ? {
+                    tier: lockTier(match.kickoff_at, now),
+                    mins: minsToLock(match.kickoff_at, now),
+                  }
+                : undefined;
             const saved = savedIds.has(match.id);
             const editing = editingIds.has(match.id) || keepVisible.has(match.id);
             const mode: "edit" | "compact" | "encerrado" = encerrado
@@ -244,6 +273,7 @@ export function PalpitarBoard({
                   errorMsg={errors.get(match.id)}
                   isLocked={locked}
                   lockText={lockText}
+                  lockCountdown={lockCountdown}
                   onChangeScore={(side, value) =>
                     handleChangeScore(match.id, side, value)
                   }

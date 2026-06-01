@@ -4,6 +4,10 @@ export function DashboardFooter() {
       <p>Baterias Joinville · Rua Dona Francisca, 4523</p>
       <p>WhatsApp (47) 99680-1100</p>
       <p className="mt-1">
+        <a href="/como-funciona" className="underline">
+          Como funciona
+        </a>{" "}
+        ·{" "}
         <a href="/regulamento" className="underline">
           Regulamento
         </a>{" "}

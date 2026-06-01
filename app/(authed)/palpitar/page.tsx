@@ -29,6 +29,7 @@ export default async function PalpitarPage() {
         aberto={aberto}
         matches={defined}
         predictions={data.predictions}
+        serverNowISO={new Date().toISOString()}
         banner={!aberto ? <BannerPreCopa /> : undefined}
       />
       <PlaceholderSection matches={placeholders} />

@@ -6,9 +6,13 @@ import {
 } from "@/lib/dashboard/format";
 import { getMatchSide } from "@/lib/dashboard/match-helpers";
 import { type MatchRow } from "@/lib/dashboard/queries";
+import { LockCountdownBadge } from "@/components/palpitar/lock-countdown-badge";
 import { ScoreButtons } from "@/components/palpitar/score-buttons";
+import { type LockTier } from "@/lib/palpitar/lock";
 import { type PalpiteStatus } from "@/lib/palpitar/types";
 import { calculatePoints } from "@/lib/scoring/calculate";
+
+export type LockCountdown = { tier: LockTier; mins: number };
 
 type MatchCardProps = {
   match: MatchRow;
@@ -20,6 +24,7 @@ type MatchCardProps = {
   errorMsg?: string;
   isLocked: boolean;
   lockText?: string;
+  lockCountdown?: LockCountdown;
   onChangeScore: (side: "a" | "b", value: number) => void;
   onRetry: () => void;
   onEdit: () => void;
@@ -35,6 +40,7 @@ export function MatchCard({
   errorMsg,
   isLocked,
   lockText,
+  lockCountdown,
   onChangeScore,
   onRetry,
   onEdit,
@@ -74,6 +80,7 @@ export function MatchCard({
         placarB={placarB}
         isBrasil={match.is_brasil}
         isLocked={isLocked}
+        lockCountdown={lockCountdown}
         onEdit={onEdit}
       />
     );
@@ -97,7 +104,9 @@ export function MatchCard({
             2x PONTOS
           </span>
         )}
-        {isLocked && <span aria-hidden="true">🔒</span>}
+        {lockCountdown && (
+          <LockCountdownBadge tier={lockCountdown.tier} mins={lockCountdown.mins} />
+        )}
         <span className="ml-auto text-slate-400">{match.estadio}</span>
       </div>
 
@@ -141,6 +150,7 @@ function CompactCard({
   placarB,
   isBrasil,
   isLocked,
+  lockCountdown,
   onEdit,
 }: {
   nomeA: string;
@@ -151,6 +161,7 @@ function CompactCard({
   placarB: number | null;
   isBrasil: boolean;
   isLocked: boolean;
+  lockCountdown?: LockCountdown;
   onEdit: () => void;
 }) {
   const conteudo = (
@@ -185,10 +196,13 @@ function CompactCard({
             2x
           </span>
         )}
+        {lockCountdown && (
+          <LockCountdownBadge tier={lockCountdown.tier} mins={lockCountdown.mins} />
+        )}
         <span className="ml-auto font-semibold text-brand-blue">
           {isLocked ? (
             <span aria-label="Travado" className="text-slate-400">
-              🔒 travado
+              Editar bloqueado
             </span>
           ) : (
             "Editar"

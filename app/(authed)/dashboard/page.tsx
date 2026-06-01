@@ -7,6 +7,7 @@ import { ProximoBrasilCard } from "@/components/dashboard/proximo-brasil-card";
 import { ProximoJogoCard } from "@/components/dashboard/proximo-jogo-card";
 import { ProximosJogosList } from "@/components/dashboard/proximos-jogos-list";
 import { RankingLinkCard } from "@/components/dashboard/ranking-link-card";
+import { ComoFuncionaBox } from "@/components/shared/como-funciona-box";
 import {
   diasParaCopa,
   isPreCopa,
@@ -73,6 +74,8 @@ export default async function DashboardPage() {
       <DashboardHeader nome={data.nome} />
 
       {preCopa && <CountdownCard dias={dias} />}
+
+      <ComoFuncionaBox />
 
       <PredictionsProgress
         feitos={data.predictions.length}

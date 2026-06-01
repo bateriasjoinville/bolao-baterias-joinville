@@ -22,3 +22,23 @@ export function lockLabel(
   if (mins <= 0) return "Já começou";
   return `Começa em ${mins} min`;
 }
+
+export type LockTier = "tranquilo" | "perto" | "urgente" | "locked";
+
+export function minsToLock(
+  kickoffAt: string,
+  now: Date = new Date(),
+): number {
+  return minsToKickoff(kickoffAt, now) - LOCK_WINDOW_MINUTES;
+}
+
+export function lockTier(
+  kickoffAt: string,
+  now: Date = new Date(),
+): LockTier {
+  const mins = minsToLock(kickoffAt, now);
+  if (mins <= 0) return "locked";
+  if (mins <= 15) return "urgente";
+  if (mins < 60) return "perto";
+  return "tranquilo";
+}
