@@ -11,17 +11,17 @@ export function ComoFuncionaBox() {
             ℹ️ Como funciona
           </p>
           <p className="mt-1 text-xs text-slate-600">
-            Você pode editar o palpite até 1h antes de cada jogo. Depois trava.
+            Você pode editar o palpite até 1h antes de cada jogo.
           </p>
           <div className="mt-2.5 flex flex-wrap gap-1.5">
             <span className="rounded-full bg-brand-green px-2.5 py-1 text-[11px] font-bold text-white">
-              🎯 Placar exato = 6
+              🎯 Placar exato: 6pts
             </span>
             <span className="rounded-full bg-brand-blue px-2.5 py-1 text-[11px] font-bold text-white">
-              ✔️ Vencedor = 3
+              ✔️ Vencedor 3pts
             </span>
             <span className="rounded-full bg-brand-yellow px-2.5 py-1 text-[11px] font-bold text-brand-blue-dark">
-              🇧🇷 Brasil = 2x
+              🇧🇷 Jogo do Brasil vale o Dobro
             </span>
           </div>
         </div>
