@@ -63,6 +63,12 @@ export default async function AdminPlacaresPage() {
               </Link>
             </div>
             <div className="flex items-start gap-2">
+              <Link
+                href="/admin/cadastrados"
+                className="rounded-lg border border-white/40 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
+              >
+                Cadastrados
+              </Link>
               <RecalcButton />
               <form action="/admin/sair" method="post">
                 <button

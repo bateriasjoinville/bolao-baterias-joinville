@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { BuscaCadastrosLivre } from "@/components/admin/busca-cadastros-livre";
 import { PedidoAjudaRow } from "@/components/admin/pedido-ajuda-row";
 import {
   listHelpRequests,
@@ -54,6 +55,12 @@ export default async function AdminPedidosAjudaPage({
               >
                 Placares
               </Link>
+              <Link
+                href="/admin/cadastrados"
+                className="rounded-lg border border-white/40 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
+              >
+                Cadastrados
+              </Link>
               <form action="/admin/sair" method="post">
                 <button
                   type="submit"
@@ -91,6 +98,8 @@ export default async function AdminPedidosAjudaPage({
             Resolvidos
           </Link>
         </nav>
+
+        <BuscaCadastrosLivre />
 
         <section className="space-y-3 px-3 py-4">
           {pedidos.length === 0 ? (

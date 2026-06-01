@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { requireAdmin } from "@/lib/admin/session";
+import { searchParticipants } from "@/lib/admin/participants";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export type CadastroEncontrado = {
@@ -119,4 +120,34 @@ export async function buscarCadastros(
     ok: true,
     resultados: Array.from(acumulado.values()).slice(0, 20),
   };
+}
+
+const buscarLivreSchema = z.object({
+  termo: z.string().trim().min(2).max(120),
+});
+
+export async function buscarCadastrosLivre(
+  input: z.input<typeof buscarLivreSchema>,
+): Promise<BuscarCadastrosResult> {
+  await requireAdmin();
+
+  const parsed = buscarLivreSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: "Digite ao menos 2 caracteres." };
+  }
+
+  const admin = getSupabaseAdmin();
+
+  try {
+    const { rows } = await searchParticipants(admin, parsed.data.termo, {
+      limit: 50,
+      offset: 0,
+    });
+    return { ok: true, resultados: rows };
+  } catch (e) {
+    return {
+      ok: false,
+      error: e instanceof Error ? e.message : "Erro na busca.",
+    };
+  }
 }
