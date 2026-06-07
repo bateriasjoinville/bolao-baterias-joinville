@@ -4,6 +4,7 @@ import { Download, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { ChamarAmigosBanner } from "@/components/share/chamar-amigos-banner";
+import { ChamarAmigosFab } from "@/components/share/chamar-amigos-fab";
 import { detectarPlataforma, isStandalone } from "@/lib/pwa/detect";
 
 const INSTALL_DISMISS_KEY = "pwa-install-dismiss";
@@ -93,7 +94,7 @@ export function BottomBanner() {
     setMode("none");
   }
 
-  if (mode === "none") return null;
+  if (mode === "none") return <ChamarAmigosFab aboveTabBar />;
 
   return (
     <div className="fixed inset-x-0 bottom-14 z-40 mx-auto max-w-md px-3 pb-2">

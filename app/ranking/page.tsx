@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { ChamarAmigosFab } from "@/components/share/chamar-amigos-fab";
 import { BottomTabBar } from "@/components/shared/bottom-tab-bar";
 import { HeaderRankingPublico } from "@/components/ranking/header-publico";
 import { Lista } from "@/components/ranking/lista";
@@ -77,6 +78,7 @@ export default async function RankingPage({ searchParams }: PageProps) {
         </section>
       </main>
       {myId ? <BottomTabBar /> : null}
+      <ChamarAmigosFab aboveTabBar={Boolean(myId)} />
     </div>
   );
 }
