@@ -19,7 +19,7 @@ import { type AdminMatchRow } from "@/lib/admin/queries";
 import { brtDateKey } from "@/lib/dashboard/format";
 import { PLACAR_MAX, PLACAR_MIN } from "@/lib/validation/palpite";
 
-type Tab = "hoje" | "pendentes" | "todos";
+type Tab = "hoje" | "pendentes" | "lancados" | "todos";
 
 type Score = { a: string; b: string };
 
@@ -109,11 +109,13 @@ export function PlacaresBoard({ matches, serverNowISO }: PlacaresBoardProps) {
   const counts = useMemo(() => {
     let hoje = 0;
     let pendentes = 0;
+    let lancados = 0;
     for (const m of matches) {
       if (brtDateKey(new Date(m.kickoff_at)) === todayKey) hoje += 1;
-      if (!isEncerrado(m)) pendentes += 1;
+      if (isEncerrado(m)) lancados += 1;
+      else pendentes += 1;
     }
-    return { hoje, pendentes, todos: matches.length };
+    return { hoje, pendentes, lancados, todos: matches.length };
   }, [matches, todayKey]);
 
   const buscaNorm = normalize(busca.trim());
@@ -123,6 +125,7 @@ export function PlacaresBoard({ matches, serverNowISO }: PlacaresBoardProps) {
       return false;
     }
     if (tab === "pendentes" && isEncerrado(m)) return false;
+    if (tab === "lancados" && !isEncerrado(m)) return false;
     if (buscaNorm) {
       const alvo = `${normalize(m.selecao_a.nome)} ${normalize(
         m.selecao_b.nome,
@@ -227,6 +230,7 @@ export function PlacaresBoard({ matches, serverNowISO }: PlacaresBoardProps) {
   const tabs: { key: Tab; label: string; count: number }[] = [
     { key: "hoje", label: "Hoje", count: counts.hoje },
     { key: "pendentes", label: "Pendentes", count: counts.pendentes },
+    { key: "lancados", label: "Lançados", count: counts.lancados },
     { key: "todos", label: "Todos", count: counts.todos },
   ];
 
