@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { entrarPorCodigo, parseConvite } from "@/lib/leagues/entrar";
 import { createSession } from "@/lib/session";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import { verifyTurnstileToken } from "@/lib/turnstile";
+import { verifyTurnstile } from "@/lib/turnstile";
 import { loginSchema, type LoginFieldErrors } from "@/lib/validation/login";
 
 export type LoginState = {
@@ -60,13 +60,10 @@ export async function entrar(
     reqHeaders.get("x-real-ip") ??
     undefined;
 
-  const captchaOk = await verifyTurnstileToken(
-    parsed.data.turnstileToken,
-    remoteIp,
-  );
-  if (!captchaOk) {
+  const captcha = await verifyTurnstile(parsed.data.turnstileToken, remoteIp);
+  if (captcha.outcome === "rejected") {
     return {
-      formError: "Captcha falhou. Recarrega a página e tenta de novo.",
+      formError: "Não consegui confirmar a segurança. Toca de novo no botão.",
       values,
     };
   }

@@ -30,6 +30,7 @@ export function HelpRequestForm({ turnstileSiteKey }: HelpRequestFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const turnstileRef = useRef<TurnstileInstance | null>(null);
   const tokenInputRef = useRef<HTMLInputElement>(null);
+  const prewarmRef = useRef(false);
 
   const [captchaError, setCaptchaError] = useState<string | null>(null);
   const [cpf, setCpf] = useState(state.values?.cpf ?? "");
@@ -48,6 +49,27 @@ export function HelpRequestForm({ turnstileSiteKey }: HelpRequestFormProps) {
     }
   }, [state]);
 
+  useEffect(() => {
+    if (!state.formError) return;
+    if (tokenInputRef.current) tokenInputRef.current.value = "";
+    prewarmRef.current = false;
+    const widget = turnstileRef.current;
+    if (widget) {
+      widget.reset();
+      prewarmRef.current = true;
+      widget.execute();
+    }
+  }, [state.formError]);
+
+  const prewarmTurnstile = () => {
+    if (prewarmRef.current) return;
+    const widget = turnstileRef.current;
+    if (!widget) return;
+    if (tokenInputRef.current?.value) return;
+    prewarmRef.current = true;
+    widget.execute();
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     if (!turnstileSiteKey) return;
 
@@ -59,20 +81,22 @@ export function HelpRequestForm({ turnstileSiteKey }: HelpRequestFormProps) {
 
     const widget = turnstileRef.current;
     if (!widget) {
-      setCaptchaError("Captcha indisponível. Recarrega a página.");
+      setCaptchaError("Segurança ainda carregando. Toca de novo no botão.");
       return;
     }
 
     const form = e.currentTarget;
 
     try {
+      widget.reset();
       widget.execute();
-      const token = await widget.getResponsePromise(10000);
+      const token = await widget.getResponsePromise(25000);
       if (tokenInputRef.current) tokenInputRef.current.value = token;
       form.requestSubmit();
     } catch {
-      setCaptchaError("Captcha demorou. Toca de novo no botão.");
+      setCaptchaError("Conexão instável. Toca de novo no botão.");
       widget.reset();
+      if (tokenInputRef.current) tokenInputRef.current.value = "";
     }
   };
 
@@ -81,6 +105,7 @@ export function HelpRequestForm({ turnstileSiteKey }: HelpRequestFormProps) {
       ref={formRef}
       action={formAction}
       onSubmit={handleSubmit}
+      onFocus={prewarmTurnstile}
       noValidate
       className="space-y-4 px-4 py-5"
     >
@@ -186,6 +211,14 @@ export function HelpRequestForm({ turnstileSiteKey }: HelpRequestFormProps) {
             instanceRef={turnstileRef}
             onToken={(token) => {
               if (tokenInputRef.current) tokenInputRef.current.value = token;
+            }}
+            onExpire={() => {
+              if (tokenInputRef.current) tokenInputRef.current.value = "";
+              prewarmRef.current = false;
+            }}
+            onError={() => {
+              if (tokenInputRef.current) tokenInputRef.current.value = "";
+              prewarmRef.current = false;
             }}
           />
         </>
