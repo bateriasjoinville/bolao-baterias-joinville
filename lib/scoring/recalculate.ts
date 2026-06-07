@@ -2,28 +2,13 @@ import "server-only";
 
 import { type SupabaseClient } from "@supabase/supabase-js";
 
-import { calculatePoints } from "@/lib/scoring/calculate";
+import {
+  computeScoreRows,
+  planPrune,
+  weeklyKey,
+} from "@/lib/scoring/recalculate-core";
 import { toDisplayName } from "@/lib/scoring/display-name";
-import { weekOfMatch } from "@/lib/scoring/weeks";
 import { type Database } from "@/lib/supabase/database.types";
-
-type Aggregated = {
-  pontos: number;
-  exatos: number;
-  vencedores: number;
-  diffTotal: number;
-  validos: number;
-};
-
-function emptyAgg(): Aggregated {
-  return {
-    pontos: 0,
-    exatos: 0,
-    vencedores: 0,
-    diffTotal: 0,
-    validos: 0,
-  };
-}
 
 export type RecalculateResult = {
   participantsUpdated: number;
@@ -31,8 +16,8 @@ export type RecalculateResult = {
   finalizedMatches: number;
 };
 
-const DUMMY_UUID = "00000000-0000-0000-0000-000000000000";
-
+// Recalcula pontos SEM janela de ranking vazio: regrava por cima (upsert) e
+// remove só quem deixou de pontuar. Nunca apaga as tabelas inteiras.
 export async function recalculateAllPoints(
   admin: SupabaseClient<Database>,
 ): Promise<RecalculateResult> {
@@ -42,55 +27,17 @@ export async function recalculateAllPoints(
     .not("placar_a", "is", null)
     .not("placar_b", "is", null);
   if (matchesErr) throw matchesErr;
-
-  const finishedById = new Map<number, NonNullable<typeof matchesData>[number]>();
-  for (const m of matchesData ?? []) finishedById.set(m.id, m);
+  const matches = matchesData ?? [];
 
   const { data: predictionsData, error: predErr } = await admin
     .from("predictions")
     .select("participant_id, match_id, placar_a, placar_b");
   if (predErr) throw predErr;
-
-  const totals = new Map<string, Aggregated>();
-  const weekly = new Map<string, Aggregated>();
-
-  for (const p of predictionsData ?? []) {
-    const m = finishedById.get(p.match_id);
-    if (!m || m.placar_a == null || m.placar_b == null) continue;
-
-    const pts = calculatePoints(
-      { a: p.placar_a, b: p.placar_b },
-      { a: m.placar_a, b: m.placar_b },
-      m.is_brasil,
-    );
-
-    const t = totals.get(p.participant_id) ?? emptyAgg();
-    t.pontos += pts.pontos;
-    if (pts.exato) t.exatos += 1;
-    if (pts.vencedor) t.vencedores += 1;
-    t.diffTotal += pts.diffGols;
-    t.validos += 1;
-    totals.set(p.participant_id, t);
-
-    const semana = weekOfMatch(m.kickoff_at);
-    if (semana != null) {
-      const key = `${p.participant_id}|${semana}`;
-      const w = weekly.get(key) ?? emptyAgg();
-      w.pontos += pts.pontos;
-      if (pts.exato) w.exatos += 1;
-      if (pts.vencedor) w.vencedores += 1;
-      w.diffTotal += pts.diffGols;
-      w.validos += 1;
-      weekly.set(key, w);
-    }
-  }
+  const predictions = predictionsData ?? [];
 
   const participantIds = Array.from(
-    new Set<string>([
-      ...totals.keys(),
-      ...Array.from(weekly.keys()).map((k) => k.split("|")[0] ?? ""),
-    ]),
-  ).filter((id) => id.length > 0);
+    new Set(predictions.map((p) => p.participant_id)),
+  );
 
   const displayNames = new Map<string, string>();
   if (participantIds.length > 0) {
@@ -104,58 +51,74 @@ export async function recalculateAllPoints(
     }
   }
 
-  const participantRows = Array.from(totals.entries()).map(([id, a]) => ({
-    participant_id: id,
-    display_name: displayNames.get(id) ?? "Participante",
-    pontos_total: a.pontos,
-    placares_exatos: a.exatos,
-    vencedores_acertados: a.vencedores,
-    diff_gols_total: a.diffTotal,
-    palpites_validos: a.validos,
-  }));
+  const { participantRows, weeklyRows } = computeScoreRows(
+    matches,
+    predictions,
+    displayNames,
+  );
 
-  const weeklyRows = Array.from(weekly.entries()).map(([key, a]) => {
-    const [id, sStr] = key.split("|");
-    const participantId = id ?? "";
-    return {
-      participant_id: participantId,
-      display_name: displayNames.get(participantId) ?? "Participante",
-      semana: Number(sStr),
-      pontos: a.pontos,
-      placares_exatos: a.exatos,
-      vencedores_acertados: a.vencedores,
-      diff_gols_total: a.diffTotal,
-      palpites_validos: a.validos,
-    };
-  });
-
-  const { error: delTotalErr } = await admin
+  // Estado atual das tabelas de score, pra saber o que sobrou de fora do novo
+  // conjunto (e só esses serão removidos).
+  const { data: existingTotalData, error: exTotalErr } = await admin
     .from("participant_scores")
-    .delete()
-    .neq("participant_id", DUMMY_UUID);
-  if (delTotalErr) throw delTotalErr;
+    .select("participant_id");
+  if (exTotalErr) throw exTotalErr;
+  const existingTotalIds = (existingTotalData ?? []).map(
+    (r) => r.participant_id,
+  );
 
+  const { data: existingWeeklyData, error: exWeeklyErr } = await admin
+    .from("weekly_scores")
+    .select("participant_id, semana");
+  if (exWeeklyErr) throw exWeeklyErr;
+  const existingWeeklyKeys = (existingWeeklyData ?? []).map((r) =>
+    weeklyKey(r.participant_id, r.semana),
+  );
+
+  const { totalDeleteIds, weeklyDeleteKeys } = planPrune(
+    existingTotalIds,
+    existingWeeklyKeys,
+    participantRows,
+    weeklyRows,
+  );
+
+  // 1) Regrava por cima (upsert atômico por linha). Quem está no ranking nunca
+  // some durante essa etapa.
   if (participantRows.length > 0) {
     const { error } = await admin
       .from("participant_scores")
-      .insert(participantRows);
+      .upsert(participantRows, { onConflict: "participant_id" });
     if (error) throw error;
   }
 
-  const { error: delWeeklyErr } = await admin
-    .from("weekly_scores")
-    .delete()
-    .neq("participant_id", DUMMY_UUID);
-  if (delWeeklyErr) throw delWeeklyErr;
-
   if (weeklyRows.length > 0) {
-    const { error } = await admin.from("weekly_scores").insert(weeklyRows);
+    const { error } = await admin
+      .from("weekly_scores")
+      .upsert(weeklyRows, { onConflict: "participant_id,semana" });
+    if (error) throw error;
+  }
+
+  // 2) Remove só os que deixaram de pontuar (ex.: placar foi limpo).
+  if (totalDeleteIds.length > 0) {
+    const { error } = await admin
+      .from("participant_scores")
+      .delete()
+      .in("participant_id", totalDeleteIds);
+    if (error) throw error;
+  }
+
+  for (const k of weeklyDeleteKeys) {
+    const { error } = await admin
+      .from("weekly_scores")
+      .delete()
+      .eq("participant_id", k.participant_id)
+      .eq("semana", k.semana);
     if (error) throw error;
   }
 
   return {
     participantsUpdated: participantRows.length,
     weeklyEntriesUpdated: weeklyRows.length,
-    finalizedMatches: finishedById.size,
+    finalizedMatches: matches.length,
   };
 }

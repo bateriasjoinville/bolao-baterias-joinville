@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { PlacarRow } from "@/components/admin/placar-row";
+import { PlacaresBoard } from "@/components/admin/placares-board";
 import { RecalcButton } from "@/components/admin/recalc-button";
 import { countPendentes } from "@/lib/admin/help-requests";
 import { countConfrontosPendentes } from "@/lib/admin/mata-mata";
@@ -82,35 +82,16 @@ export default async function AdminPlacaresPage() {
           </div>
         </header>
 
-        <section className="space-y-2 px-3 py-4">
-          {matches.length === 0 ? (
-            <p className="text-center text-sm text-slate-500">
-              Nenhum jogo cadastrado.
-            </p>
-          ) : (
-            matches.map((m) => (
-              <PlacarRow
-                key={m.id}
-                matchId={m.id}
-                kickoffAt={m.kickoff_at}
-                fase={m.fase}
-                grupo={m.grupo}
-                estadio={m.estadio}
-                isBrasil={m.is_brasil}
-                selecaoA={{
-                  nome: m.selecao_a.nome,
-                  codigoIso: m.selecao_a.codigo_iso,
-                }}
-                selecaoB={{
-                  nome: m.selecao_b.nome,
-                  codigoIso: m.selecao_b.codigo_iso,
-                }}
-                initialPlacarA={m.placar_a}
-                initialPlacarB={m.placar_b}
-              />
-            ))
-          )}
-        </section>
+        {matches.length === 0 ? (
+          <p className="px-3 py-4 text-center text-sm text-slate-500">
+            Nenhum jogo cadastrado.
+          </p>
+        ) : (
+          <PlacaresBoard
+            matches={matches}
+            serverNowISO={new Date().toISOString()}
+          />
+        )}
       </main>
     </div>
   );

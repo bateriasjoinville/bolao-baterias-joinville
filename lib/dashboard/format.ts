@@ -70,7 +70,7 @@ export function palpitesAbertos(now: Date = new Date()): boolean {
   return now >= PALPITES_OPEN_AT;
 }
 
-function brtDateKey(d: Date): string {
+export function brtDateKey(d: Date): string {
   return new Date(d.getTime() - 3 * 60 * 60 * 1000).toISOString().slice(0, 10);
 }
 
