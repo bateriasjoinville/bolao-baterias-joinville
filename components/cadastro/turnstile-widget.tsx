@@ -7,12 +7,16 @@ type TurnstileWidgetProps = {
   siteKey: string;
   instanceRef: RefObject<TurnstileInstance | null>;
   onToken: (token: string) => void;
+  onError?: () => void;
+  onExpire?: () => void;
 };
 
 export function TurnstileWidget({
   siteKey,
   instanceRef,
   onToken,
+  onError,
+  onExpire,
 }: TurnstileWidgetProps) {
   return (
     <Turnstile
@@ -20,6 +24,8 @@ export function TurnstileWidget({
       siteKey={siteKey}
       options={{ size: "invisible", execution: "execute", theme: "light" }}
       onSuccess={onToken}
+      onError={onError}
+      onExpire={onExpire}
     />
   );
 }

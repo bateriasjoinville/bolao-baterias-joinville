@@ -95,6 +95,7 @@ export function CadastroForm({ turnstileSiteKey, convite }: CadastroFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const turnstileRef = useRef<TurnstileInstance | null>(null);
   const tokenInputRef = useRef<HTMLInputElement>(null);
+  const prewarmRef = useRef(false);
 
   const [cpf, setCpf] = useState(state.values?.cpf ?? "");
   const [whatsapp, setWhatsapp] = useState(state.values?.whatsapp ?? "");
@@ -120,6 +121,15 @@ export function CadastroForm({ turnstileSiteKey, convite }: CadastroFormProps) {
     );
   };
 
+  const prewarmTurnstile = () => {
+    if (prewarmRef.current) return;
+    const widget = turnstileRef.current;
+    if (!widget) return;
+    if (tokenInputRef.current?.value) return;
+    prewarmRef.current = true;
+    widget.execute();
+  };
+
   const handleFieldFocus = (e: FocusEvent<HTMLFormElement>) => {
     const target = e.target;
     if (
@@ -128,6 +138,7 @@ export function CadastroForm({ turnstileSiteKey, convite }: CadastroFormProps) {
     ) {
       return;
     }
+    prewarmTurnstile();
     const name = target.name;
     if (!isCampoValidavel(name) || !clientErrors[name]) return;
     setClientErrors((prev) => {
@@ -150,6 +161,18 @@ export function CadastroForm({ turnstileSiteKey, convite }: CadastroFormProps) {
     }
   }, [state]);
 
+  useEffect(() => {
+    if (!state.formError) return;
+    if (tokenInputRef.current) tokenInputRef.current.value = "";
+    prewarmRef.current = false;
+    const widget = turnstileRef.current;
+    if (widget) {
+      widget.reset();
+      prewarmRef.current = true;
+      widget.execute();
+    }
+  }, [state.formError]);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     if (!turnstileSiteKey) return;
 
@@ -161,20 +184,22 @@ export function CadastroForm({ turnstileSiteKey, convite }: CadastroFormProps) {
 
     const widget = turnstileRef.current;
     if (!widget) {
-      setCaptchaError("Captcha indisponível. Recarrega a página.");
+      setCaptchaError("Segurança ainda carregando. Toca de novo no botão.");
       return;
     }
 
     const form = e.currentTarget;
 
     try {
+      widget.reset();
       widget.execute();
-      const token = await widget.getResponsePromise(10000);
+      const token = await widget.getResponsePromise(25000);
       if (tokenInputRef.current) tokenInputRef.current.value = token;
       form.requestSubmit();
     } catch {
-      setCaptchaError("Captcha demorou. Toca de novo no botão.");
+      setCaptchaError("Conexão instável. Toca de novo no botão.");
       widget.reset();
+      if (tokenInputRef.current) tokenInputRef.current.value = "";
     }
   };
 
@@ -362,6 +387,14 @@ export function CadastroForm({ turnstileSiteKey, convite }: CadastroFormProps) {
           instanceRef={turnstileRef}
           onToken={(token) => {
             if (tokenInputRef.current) tokenInputRef.current.value = token;
+          }}
+          onExpire={() => {
+            if (tokenInputRef.current) tokenInputRef.current.value = "";
+            prewarmRef.current = false;
+          }}
+          onError={() => {
+            if (tokenInputRef.current) tokenInputRef.current.value = "";
+            prewarmRef.current = false;
           }}
         />
       ) : (

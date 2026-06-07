@@ -35,4 +35,4 @@ export const whatsappSchema = z
 
 export const turnstileTokenSchema = z
   .string()
-  .min(1, "Falha no captcha. Recarrega a página.");
+  .min(1, "Não consegui confirmar a segurança. Toca de novo.");
