@@ -28,6 +28,7 @@ type PalpitarBoardProps = {
   predictions: PredictionMin[];
   serverNowISO: string;
   banner?: ReactNode;
+  mostrarAvisoMataMata?: boolean;
 };
 
 const CLOCK_TICK_MS = 30_000;
@@ -60,6 +61,7 @@ export function PalpitarBoard({
   predictions,
   serverNowISO,
   banner,
+  mostrarAvisoMataMata,
 }: PalpitarBoardProps) {
   const [tab, setTab] = useState<StatusTab>("pendentes");
   // Relógio leve: inicia do tempo do servidor (sem mismatch de hidratação) e
@@ -220,7 +222,12 @@ export function PalpitarBoard({
 
   return (
     <>
-      <PalpitarHeader nome={nome} feitos={counts.palpitados} total={total} />
+      <PalpitarHeader
+        nome={nome}
+        feitos={counts.palpitados}
+        total={total}
+        mostrarAviso={mostrarAvisoMataMata}
+      />
       {banner}
       <ComoFuncionaBox />
       <StatusFilter active={tab} counts={counts} onChange={handleTab} />
@@ -235,7 +242,7 @@ export function PalpitarBoard({
                 : "Nenhum jogo encontrado."}
         </p>
       ) : (
-        <ul className="bg-white">
+        <ul className="bg-white pb-28">
           {visiveis.map((match) => {
             const s = scores.get(match.id);
             const status = statuses.get(match.id) ?? "idle";

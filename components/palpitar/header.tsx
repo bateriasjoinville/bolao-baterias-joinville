@@ -4,9 +4,15 @@ type PalpitarHeaderProps = {
   nome: string;
   feitos: number;
   total: number;
+  mostrarAviso?: boolean;
 };
 
-export function PalpitarHeader({ nome, feitos, total }: PalpitarHeaderProps) {
+export function PalpitarHeader({
+  nome,
+  feitos,
+  total,
+  mostrarAviso = false,
+}: PalpitarHeaderProps) {
   return (
     <header className="sticky top-0 z-20 bg-brand-blue px-4 py-3 text-white">
       <div className="flex items-center justify-between">
@@ -21,8 +27,14 @@ export function PalpitarHeader({ nome, feitos, total }: PalpitarHeaderProps) {
         </form>
       </div>
       <p className="mt-1 text-xs opacity-85">
-        {feitos} de {total} palpitados
+        {feitos} de {total} disponíveis
       </p>
+      {mostrarAviso ? (
+        <p className="mt-1 text-[11px] leading-snug opacity-75">
+          Os jogos do mata-mata abrem para palpite conforme os times se
+          classificam.
+        </p>
+      ) : null}
     </header>
   );
 }

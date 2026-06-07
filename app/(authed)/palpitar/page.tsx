@@ -25,12 +25,13 @@ export default async function PalpitarPage() {
     <>
       <PalpitarBoard
         nome={data.nome}
-        total={data.totalMatches}
+        total={defined.length}
         aberto={aberto}
         matches={defined}
         predictions={data.predictions}
         serverNowISO={new Date().toISOString()}
         banner={!aberto ? <BannerPreCopa /> : undefined}
+        mostrarAvisoMataMata={placeholders.length > 0}
       />
       <PlaceholderSection matches={placeholders} />
     </>
