@@ -90,7 +90,7 @@ function Button({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`flex min-h-11 items-center justify-center rounded-md text-sm font-semibold transition-colors ${
+      className={`flex min-h-10 items-center justify-center rounded-md text-sm font-semibold transition-colors ${
         disabled
           ? "cursor-not-allowed bg-slate-100 text-slate-400"
           : active

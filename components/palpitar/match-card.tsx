@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  formatMatchDate,
-  formatMatchTime,
-} from "@/lib/dashboard/format";
+import { formatMatchTime } from "@/lib/dashboard/format";
 import { getMatchSide } from "@/lib/dashboard/match-helpers";
 import { type MatchRow } from "@/lib/dashboard/queries";
 import { LockCountdownBadge } from "@/components/palpitar/lock-countdown-badge";
@@ -48,6 +45,11 @@ export function MatchCard({
   const ladoA = getMatchSide(match, "a");
   const ladoB = getMatchSide(match, "b");
   const hasPalpite = placarA != null && placarB != null;
+  // Madrugada: 00:00–05:59 no horário BRT (UTC-3).
+  const brtHour = new Date(
+    new Date(match.kickoff_at).getTime() - 3 * 60 * 60 * 1000,
+  ).getUTCHours();
+  const madrugada = brtHour < 6;
 
   if (
     mode === "encerrado" &&
@@ -88,48 +90,84 @@ export function MatchCard({
 
   return (
     <article
-      className={`border-b px-4 py-4 last:border-b-0 ${
-        isSaved
-          ? "border-emerald-100 bg-emerald-50/60"
-          : "border-slate-100 bg-white"
-      }`}
+      className={`mx-3 my-2 rounded-xl border-[0.5px] px-2.5 py-2.5 shadow-sm ${
+        match.is_brasil ? "border-brand-yellow" : "border-slate-200"
+      } ${isSaved ? "bg-emerald-50/60" : "bg-white"}`}
     >
-      <div className="mb-3 flex items-center gap-2 text-xs">
-        <span className="text-slate-500">
-          {formatMatchDate(match.kickoff_at)} ·{" "}
+      <div className="flex items-center gap-1.5 text-xs">
+        <span className="shrink-0 font-medium text-slate-500">
           {formatMatchTime(match.kickoff_at)}
         </span>
-        {match.is_brasil && (
-          <span className="rounded bg-brand-yellow px-1.5 py-0.5 text-[10px] font-bold text-brand-blue-dark">
-            2x PONTOS
+        {madrugada && (
+          <span className="shrink-0 rounded bg-slate-100 px-1 py-0.5 text-[10px] font-medium text-slate-500">
+            🌙 madrugada
           </span>
         )}
-        {lockCountdown && (
-          <LockCountdownBadge tier={lockCountdown.tier} mins={lockCountdown.mins} />
-        )}
-        <span className="ml-auto text-slate-400">{match.estadio}</span>
+        <span className="min-w-0 truncate text-slate-400">
+          · {match.estadio}
+        </span>
+        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+          {match.is_brasil && (
+            <span className="rounded bg-brand-yellow px-1.5 py-0.5 text-[10px] font-bold text-[#13136e]">
+              vale o dobro
+            </span>
+          )}
+          {lockCountdown && (
+            <LockCountdownBadge
+              tier={lockCountdown.tier}
+              mins={lockCountdown.mins}
+            />
+          )}
+        </div>
       </div>
 
-      <SidePicker
-        nome={ladoA.nome}
-        bandeira={ladoA.bandeira}
-        value={placarA}
-        disabled={isLocked}
-        onChange={(v) => onChangeScore("a", v)}
-      />
+      <div className="mt-2 flex items-center gap-2">
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-1.5">
+          <p className="truncate text-right text-sm font-semibold text-slate-900">
+            {ladoA.nome}
+          </p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={ladoA.bandeira}
+            alt=""
+            className="h-4 w-6 shrink-0 rounded-[2px] object-cover shadow-sm"
+          />
+        </div>
+        <div className="flex shrink-0 items-center gap-1">
+          <ScoreBox value={placarA} />
+          <span className="text-sm font-bold text-slate-400">×</span>
+          <ScoreBox value={placarB} />
+        </div>
+        <div className="flex min-w-0 flex-1 items-center gap-1.5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={ladoB.bandeira}
+            alt=""
+            className="h-4 w-6 shrink-0 rounded-[2px] object-cover shadow-sm"
+          />
+          <p className="truncate text-sm font-semibold text-slate-900">
+            {ladoB.nome}
+          </p>
+        </div>
+      </div>
 
-      <div className="mt-4" />
-
-      <SidePicker
-        nome={ladoB.nome}
-        bandeira={ladoB.bandeira}
-        value={placarB}
-        disabled={isLocked}
-        onChange={(v) => onChangeScore("b", v)}
-      />
+      <div className="mt-2.5 space-y-2">
+        <GolsBlock
+          nome={ladoA.nome}
+          value={placarA}
+          disabled={isLocked}
+          onChange={(v) => onChangeScore("a", v)}
+        />
+        <GolsBlock
+          nome={ladoB.nome}
+          value={placarB}
+          disabled={isLocked}
+          onChange={(v) => onChangeScore("b", v)}
+        />
+      </div>
 
       {isLocked ? (
-        <p className="mt-4 text-xs font-semibold text-slate-600">
+        <p className="mt-2.5 text-xs font-semibold text-slate-600">
           {hasPalpite
             ? `🔒 Palpite travado${lockText ? ` · ${lockText}` : ""}`
             : `🔒 Sem palpite${lockText ? ` · ${lockText}` : ""}`}
@@ -138,6 +176,42 @@ export function MatchCard({
         <StatusLine status={status} errorMsg={errorMsg} onRetry={onRetry} />
       )}
     </article>
+  );
+}
+
+function ScoreBox({ value }: { value: number | null }) {
+  const filled = value != null;
+  return (
+    <div
+      className={`flex h-9 w-9 items-center justify-center rounded-md text-lg font-extrabold tabular-nums ${
+        filled
+          ? "bg-brand-blue text-white"
+          : "border border-dashed border-slate-300 bg-slate-100 text-slate-300"
+      }`}
+    >
+      {filled ? value : "–"}
+    </div>
+  );
+}
+
+function GolsBlock({
+  nome,
+  value,
+  disabled,
+  onChange,
+}: {
+  nome: string;
+  value: number | null;
+  disabled: boolean;
+  onChange: (n: number) => void;
+}) {
+  return (
+    <div className="rounded-lg bg-slate-50 px-2 py-2">
+      <p className="mb-1.5 text-xs font-semibold text-slate-600">
+        Gols do {nome}
+      </p>
+      <ScoreButtons value={value} onChange={onChange} disabled={disabled} />
+    </div>
   );
 }
 
@@ -413,31 +487,3 @@ function StatusLine({
   );
 }
 
-function SidePicker({
-  nome,
-  bandeira,
-  value,
-  disabled,
-  onChange,
-}: {
-  nome: string;
-  bandeira: string;
-  value: number | null;
-  disabled: boolean;
-  onChange: (n: number) => void;
-}) {
-  return (
-    <div>
-      <div className="mb-2 flex items-center gap-2">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={bandeira}
-          alt=""
-          className="h-9 w-12 shrink-0 rounded-sm object-cover shadow-sm"
-        />
-        <p className="text-sm font-semibold text-slate-900">{nome}</p>
-      </div>
-      <ScoreButtons value={value} onChange={onChange} disabled={disabled} />
-    </div>
-  );
-}

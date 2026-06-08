@@ -53,6 +53,53 @@ function initialScores(
   return m;
 }
 
+type DiaGrupo = { key: string; label: string; matches: MatchRow[] };
+
+// Chave do dia com a regra da madrugada: jogos 00:00–05:59 BRT contam no dia
+// anterior. BRT = UTC-3; deslocar -9h (3 do fuso + 6 da regra) e ler a data UTC.
+function dayKeyOf(kickoffISO: string): string {
+  const t = new Date(kickoffISO).getTime();
+  return new Date(t - 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+function dayLabel(dayKey: string): string {
+  const d = new Date(`${dayKey}T12:00:00Z`);
+  const wd = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "UTC",
+    weekday: "long",
+  }).format(d);
+  const dia = wd.split("-")[0] ?? wd;
+  const semana = dia.charAt(0).toUpperCase() + dia.slice(1);
+  const dm = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "long",
+  }).format(d);
+  return `${semana} · ${dm}`;
+}
+
+function agrupaPorDia(matches: MatchRow[]): DiaGrupo[] {
+  const map = new Map<string, MatchRow[]>();
+  for (const m of matches) {
+    const k = dayKeyOf(m.kickoff_at);
+    const arr = map.get(k);
+    if (arr) arr.push(m);
+    else map.set(k, [m]);
+  }
+  return Array.from(map.keys())
+    .sort()
+    .map((key) => {
+      const ms = (map.get(key) ?? [])
+        .slice()
+        .sort(
+          (a, b) =>
+            new Date(a.kickoff_at).getTime() -
+            new Date(b.kickoff_at).getTime(),
+        );
+      return { key, label: dayLabel(key), matches: ms };
+    });
+}
+
 export function PalpitarBoard({
   nome,
   total,
@@ -220,6 +267,53 @@ export function PalpitarBoard({
     return true;
   });
 
+  const renderCard = (match: MatchRow) => {
+    const s = scores.get(match.id);
+    const status = statuses.get(match.id) ?? "idle";
+    const matchLocked = isMatchLocked(match.kickoff_at, now);
+    const locked = !aberto || matchLocked;
+    const lockText = !aberto
+      ? "Palpites ainda não abriram"
+      : matchLocked
+        ? lockLabel(match.kickoff_at, now)
+        : undefined;
+    const encerrado = isEncerrado(match);
+    const lockCountdown =
+      aberto && !encerrado
+        ? {
+            tier: lockTier(match.kickoff_at, now),
+            mins: minsToLock(match.kickoff_at, now),
+          }
+        : undefined;
+    const saved = savedIds.has(match.id);
+    const editing = editingIds.has(match.id) || keepVisible.has(match.id);
+    const mode: "edit" | "compact" | "encerrado" = encerrado
+      ? "encerrado"
+      : saved && !editing
+        ? "compact"
+        : "edit";
+    return (
+      <MatchCard
+        key={match.id}
+        match={match}
+        placarA={s?.a ?? null}
+        placarB={s?.b ?? null}
+        mode={mode}
+        isSaved={saved}
+        status={status}
+        errorMsg={errors.get(match.id)}
+        isLocked={locked}
+        lockText={lockText}
+        lockCountdown={lockCountdown}
+        onChangeScore={(side, value) =>
+          handleChangeScore(match.id, side, value)
+        }
+        onRetry={() => handleRetry(match.id)}
+        onEdit={() => handleEdit(match.id)}
+      />
+    );
+  };
+
   return (
     <>
       <PalpitarHeader
@@ -242,55 +336,28 @@ export function PalpitarBoard({
                 : "Nenhum jogo encontrado."}
         </p>
       ) : (
-        <ul className="bg-white pb-28">
-          {visiveis.map((match) => {
-            const s = scores.get(match.id);
-            const status = statuses.get(match.id) ?? "idle";
-            const matchLocked = isMatchLocked(match.kickoff_at, now);
-            const locked = !aberto || matchLocked;
-            const lockText = !aberto
-              ? "Palpites ainda não abriram"
-              : matchLocked
-                ? lockLabel(match.kickoff_at, now)
-                : undefined;
-            const encerrado = isEncerrado(match);
-            const lockCountdown =
-              aberto && !encerrado
-                ? {
-                    tier: lockTier(match.kickoff_at, now),
-                    mins: minsToLock(match.kickoff_at, now),
-                  }
-                : undefined;
-            const saved = savedIds.has(match.id);
-            const editing = editingIds.has(match.id) || keepVisible.has(match.id);
-            const mode: "edit" | "compact" | "encerrado" = encerrado
-              ? "encerrado"
-              : saved && !editing
-                ? "compact"
-                : "edit";
+        <div className="bg-white pb-28">
+          {agrupaPorDia(visiveis).map((grupo) => {
+            const palpitadosDia = grupo.matches.filter((m) =>
+              savedIds.has(m.id),
+            ).length;
+            const n = grupo.matches.length;
             return (
-              <li key={match.id}>
-                <MatchCard
-                  match={match}
-                  placarA={s?.a ?? null}
-                  placarB={s?.b ?? null}
-                  mode={mode}
-                  isSaved={saved}
-                  status={status}
-                  errorMsg={errors.get(match.id)}
-                  isLocked={locked}
-                  lockText={lockText}
-                  lockCountdown={lockCountdown}
-                  onChangeScore={(side, value) =>
-                    handleChangeScore(match.id, side, value)
-                  }
-                  onRetry={() => handleRetry(match.id)}
-                  onEdit={() => handleEdit(match.id)}
-                />
-              </li>
+              <section key={grupo.key}>
+                <div className="flex items-baseline justify-between gap-2 px-4 pt-4 pb-1">
+                  <h2 className="text-sm font-bold text-slate-700">
+                    {grupo.label}
+                  </h2>
+                  <span className="shrink-0 text-xs text-slate-500">
+                    {n} jogo{n !== 1 ? "s" : ""} · {palpitadosDia} palpitado
+                    {palpitadosDia !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                {grupo.matches.map(renderCard)}
+              </section>
             );
           })}
-        </ul>
+        </div>
       )}
     </>
   );
