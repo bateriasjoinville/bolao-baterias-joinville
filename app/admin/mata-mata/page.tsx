@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import { AdminNav } from "@/components/admin/admin-nav";
 import { ConfrontoRow } from "@/components/admin/confronto-row";
 import { getConfrontosPendentes } from "@/lib/admin/mata-mata";
 import { requireAdmin } from "@/lib/admin/session";
@@ -39,26 +38,15 @@ export default async function AdminMataMataPage() {
   return (
     <div className="min-h-screen bg-slate-200">
       <main className="mx-auto min-h-screen max-w-2xl bg-slate-50">
-        <header className="sticky top-0 z-10 bg-brand-blue px-4 py-4 text-white shadow">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/admin/placares"
-              aria-label="Voltar pros placares"
-              className="text-sm font-semibold opacity-90"
-            >
-              ←
-            </Link>
-            <div>
-              <h1 className="text-lg font-extrabold">Admin · Mata-mata</h1>
-              <p className="text-xs opacity-90">
-                {confrontos.length}{" "}
-                {confrontos.length === 1
-                  ? "confronto a definir"
-                  : "confrontos a definir"}
-              </p>
-            </div>
-          </div>
-        </header>
+        <AdminNav
+          current="mata-mata"
+          title="Admin · Mata-mata"
+          subtitle={`${confrontos.length} ${
+            confrontos.length === 1
+              ? "confronto a definir"
+              : "confrontos a definir"
+          }`}
+        />
 
         <div className="px-3 py-4">
           {confrontos.length === 0 ? (

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AdminNav } from "@/components/admin/admin-nav";
 import { PlacaresBoard } from "@/components/admin/placares-board";
 import { RecalcButton } from "@/components/admin/recalc-button";
 import { countPendentes } from "@/lib/admin/help-requests";
@@ -32,61 +33,32 @@ export default async function AdminPlacaresPage() {
   return (
     <div className="min-h-screen bg-slate-200">
       <main className="mx-auto min-h-screen max-w-2xl bg-slate-50">
-        <header className="sticky top-0 z-10 bg-brand-blue px-4 py-4 text-white shadow">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h1 className="text-lg font-extrabold">Admin · Placares</h1>
-              <p className="text-xs opacity-90">
-                {finalizados} de {matches.length} jogos finalizados
-              </p>
-              {pedidosPendentes > 0 ? (
-                <Link
-                  href="/admin/pedidos-ajuda"
-                  className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-brand-yellow px-2.5 py-0.5 text-[11px] font-bold text-brand-blue-dark hover:bg-brand-yellow-hover"
-                >
-                  <span
-                    aria-hidden
-                    className="h-1.5 w-1.5 rounded-full bg-red-600"
-                  />
-                  {pedidosPendentes} pedido
-                  {pedidosPendentes === 1 ? "" : "s"} pendente
-                  {pedidosPendentes === 1 ? "" : "s"} →
-                </Link>
-              ) : null}
-              <Link
-                href="/admin/mata-mata"
-                className="mt-1.5 block text-[11px] font-semibold text-white underline underline-offset-2 opacity-90 hover:opacity-100"
-              >
-                {confrontosPendentes > 0
-                  ? `${confrontosPendentes} confronto${confrontosPendentes === 1 ? "" : "s"} de mata-mata a definir →`
-                  : "Definir confrontos do mata-mata →"}
-              </Link>
-            </div>
-            <div className="flex items-start gap-2">
-              <Link
-                href="/admin/cadastrados"
-                className="rounded-lg border border-white/40 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
-              >
-                Cadastrados
-              </Link>
-              <Link
-                href="/admin/instagram"
-                className="rounded-lg border border-white/40 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
-              >
-                Top 10
-              </Link>
-              <RecalcButton />
-              <form action="/admin/sair" method="post">
-                <button
-                  type="submit"
-                  className="rounded-lg border border-white/40 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
-                >
-                  Sair
-                </button>
-              </form>
-            </div>
-          </div>
-        </header>
+        <AdminNav
+          current="placares"
+          title="Admin · Placares"
+          subtitle={`${finalizados} de ${matches.length} jogos finalizados`}
+        />
+        <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 bg-white px-3 py-3">
+          <RecalcButton />
+          <Link
+            href="/admin/mata-mata"
+            className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200"
+          >
+            {confrontosPendentes > 0
+              ? `${confrontosPendentes} confronto${confrontosPendentes === 1 ? "" : "s"} de mata-mata →`
+              : "Mata-mata"}
+          </Link>
+          {pedidosPendentes > 0 ? (
+            <Link
+              href="/admin/pedidos-ajuda"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-bold text-red-700 hover:bg-red-100"
+            >
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-red-600" />
+              {pedidosPendentes} pedido{pedidosPendentes === 1 ? "" : "s"} pendente
+              {pedidosPendentes === 1 ? "" : "s"}
+            </Link>
+          ) : null}
+        </div>
 
         {matches.length === 0 ? (
           <p className="px-3 py-4 text-center text-sm text-slate-500">

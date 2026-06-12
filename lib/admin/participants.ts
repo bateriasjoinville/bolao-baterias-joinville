@@ -43,6 +43,14 @@ function buildOrFilter(termo: string): string | null {
   return parts.length > 0 ? parts.join(",") : null;
 }
 
+export async function countParticipants(admin: Admin): Promise<number> {
+  const { count, error } = await admin
+    .from("participants")
+    .select("id", { count: "exact", head: true });
+  if (error) throw error;
+  return count ?? 0;
+}
+
 export async function listParticipants(
   admin: Admin,
   opts: { limit: number; offset: number },

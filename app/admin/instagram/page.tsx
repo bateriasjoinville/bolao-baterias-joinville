@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import { AdminNav } from "@/components/admin/admin-nav";
 import { InstagramTools } from "@/components/admin/instagram-tools";
 import {
   atsLine,
@@ -26,32 +25,11 @@ export default async function AdminInstagramPage() {
   return (
     <div className="min-h-screen bg-slate-200">
       <main className="mx-auto min-h-screen max-w-2xl bg-slate-50">
-        <header className="sticky top-0 z-10 bg-brand-blue px-4 py-4 text-white shadow">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h1 className="text-lg font-extrabold">Admin · Top 10 / Instagram</h1>
-              <p className="text-xs opacity-90">
-                Prévia ao vivo do ranking geral · {comArroba} com @
-              </p>
-            </div>
-            <div className="flex items-start gap-2">
-              <Link
-                href="/admin/placares"
-                className="rounded-lg border border-white/40 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
-              >
-                Placares
-              </Link>
-              <form action="/admin/sair" method="post">
-                <button
-                  type="submit"
-                  className="rounded-lg border border-white/40 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
-                >
-                  Sair
-                </button>
-              </form>
-            </div>
-          </div>
-        </header>
+        <AdminNav
+          current="instagram"
+          title="Admin · Top 10 / Instagram"
+          subtitle={`Prévia ao vivo do ranking geral · ${comArroba} com @`}
+        />
 
         <div className="px-4 py-4">
           <InstagramTools ats={ats} />
