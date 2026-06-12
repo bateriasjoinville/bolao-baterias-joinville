@@ -7,6 +7,7 @@ const ROOT = process.cwd();
 const FONT_DIR = path.join(ROOT, "lib/og/fonts");
 const FLAG_DIR = path.join(ROOT, "public/flags");
 const EMOJI_DIR = path.join(ROOT, "lib/og/emoji");
+const PUBLIC_DIR = path.join(ROOT, "public");
 
 // Pesos da Inter esperados em lib/og/fonts/. Enquanto não existirem, as rotas
 // não passam `fonts` e o ImageResponse usa a fonte default (Geist) embutida no
@@ -55,6 +56,15 @@ export function flagDataUri(iso: string): string {
     : path.join(FLAG_DIR, "unknown.svg");
   const svg = fs.readFileSync(file).toString("base64");
   return `data:image/svg+xml;base64,${svg}`;
+}
+
+// PNG de public/ embutido como data URI (Satori não busca arquivo local).
+// A logo oficial tem fundo transparente — vai sobre o gradiente azul.
+export function publicPngDataUri(fileName: string): string {
+  const safe = /^[a-z0-9._-]+\.png$/i.test(fileName) ? fileName : "";
+  const file = path.join(PUBLIC_DIR, safe);
+  const png = fs.readFileSync(file).toString("base64");
+  return `data:image/png;base64,${png}`;
 }
 
 // Emoji do Twemoji embutido localmente (SVG → data URI). Renderizado como

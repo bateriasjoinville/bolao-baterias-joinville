@@ -69,6 +69,12 @@ export default async function AdminPlacaresPage() {
               >
                 Cadastrados
               </Link>
+              <Link
+                href="/admin/instagram"
+                className="rounded-lg border border-white/40 px-3 py-1.5 text-xs font-semibold hover:bg-white/10"
+              >
+                Top 10
+              </Link>
               <RecalcButton />
               <form action="/admin/sair" method="post">
                 <button
