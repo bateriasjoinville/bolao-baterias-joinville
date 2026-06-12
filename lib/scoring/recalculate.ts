@@ -3,9 +3,11 @@ import "server-only";
 import { type SupabaseClient } from "@supabase/supabase-js";
 
 import {
+  collectPaged,
   computeScoreRows,
   planPrune,
   weeklyKey,
+  type PredictionLite,
 } from "@/lib/scoring/recalculate-core";
 import { toDisplayName } from "@/lib/scoring/display-name";
 import { type Database } from "@/lib/supabase/database.types";
@@ -29,11 +31,19 @@ export async function recalculateAllPoints(
   if (matchesErr) throw matchesErr;
   const matches = matchesData ?? [];
 
-  const { data: predictionsData, error: predErr } = await admin
-    .from("predictions")
-    .select("participant_id, match_id, placar_a, placar_b");
-  if (predErr) throw predErr;
-  const predictions = predictionsData ?? [];
+  // Lê TODAS as predictions paginando: sem .range() o Supabase trunca em 1000
+  // linhas e participantes somem silenciosamente do ranking.
+  const predictions = await collectPaged<PredictionLite>(
+    async (offset, pageSize) => {
+      const { data, error: predErr } = await admin
+        .from("predictions")
+        .select("participant_id, match_id, placar_a, placar_b")
+        .order("participant_id", { ascending: true })
+        .range(offset, offset + pageSize - 1);
+      if (predErr) throw predErr;
+      return data ?? [];
+    },
+  );
 
   const participantIds = Array.from(
     new Set(predictions.map((p) => p.participant_id)),

@@ -53,6 +53,24 @@ export function weeklyKey(participantId: string, semana: number): string {
   return `${participantId}|${semana}`;
 }
 
+// Lê TODAS as linhas de uma fonte paginada. Sem isso, o Supabase trunca em 1000
+// linhas e participantes somem do ranking silenciosamente. `loadPage` devolve no
+// máximo `pageSize` linhas; paramos quando vier uma página incompleta.
+export async function collectPaged<T>(
+  loadPage: (offset: number, pageSize: number) => Promise<T[]>,
+  pageSize = 1000,
+): Promise<T[]> {
+  const all: T[] = [];
+  let offset = 0;
+  for (;;) {
+    const rows = await loadPage(offset, pageSize);
+    all.push(...rows);
+    if (rows.length < pageSize) break;
+    offset += pageSize;
+  }
+  return all;
+}
+
 // Agregação pura de pontos. Idêntica à lógica anterior — só extraída pra ser
 // testável sem banco. `displayNames` já vem formatado ("Primeiro I.").
 export function computeScoreRows(
