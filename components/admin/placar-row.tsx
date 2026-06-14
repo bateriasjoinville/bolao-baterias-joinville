@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { PLACAR_MAX, PLACAR_MIN } from "@/lib/validation/palpite";
 
 type Side = {
@@ -20,6 +22,7 @@ type PlacarRowProps = {
   encerrado: boolean;
   changed: boolean;
   invalid: boolean;
+  palpitesHref: string | null;
   onChange: (side: "a" | "b", value: string) => void;
 };
 
@@ -36,6 +39,7 @@ export function PlacarRow({
   encerrado,
   changed,
   invalid,
+  palpitesHref,
   onChange,
 }: PlacarRowProps) {
   const dateStr = new Intl.DateTimeFormat("pt-BR", {
@@ -127,6 +131,17 @@ export function PlacarRow({
           />
         </div>
       </div>
+
+      {palpitesHref ? (
+        <div className="mt-2 border-t border-slate-100 pt-2">
+          <Link
+            href={palpitesHref}
+            className="text-xs font-semibold text-brand-blue hover:underline"
+          >
+            🔒 Ver palpites →
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

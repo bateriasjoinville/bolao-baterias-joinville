@@ -29,6 +29,9 @@ export default async function AdminCadastradosPage() {
           subtitle={`${total} inscrito${total === 1 ? "" : "s"}`}
         />
         <div className="border-b border-slate-200 bg-white px-3 py-3">
+          {/* Route handler de download (CSV), não uma página — <a> é intencional.
+              O segmento [id] faz a regra de pages disparar falso-positivo aqui. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/admin/cadastrados/export"
             className="inline-flex items-center gap-1.5 rounded-lg bg-brand-yellow px-3 py-1.5 text-xs font-bold text-brand-blue-dark hover:bg-brand-yellow-hover"

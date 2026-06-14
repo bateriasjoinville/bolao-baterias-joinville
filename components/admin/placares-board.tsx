@@ -17,6 +17,7 @@ import {
 } from "@/app/admin/placares/actions";
 import { type AdminMatchRow } from "@/lib/admin/queries";
 import { brtDateKey } from "@/lib/dashboard/format";
+import { isMatchLocked } from "@/lib/palpitar/lock";
 import { PLACAR_MAX, PLACAR_MIN } from "@/lib/validation/palpite";
 
 type Tab = "hoje" | "pendentes" | "lancados" | "todos";
@@ -93,6 +94,7 @@ export function PlacaresBoard({ matches, serverNowISO }: PlacaresBoardProps) {
   );
 
   const todayKey = brtDateKey(new Date(serverNowISO));
+  const serverNow = useMemo(() => new Date(serverNowISO), [serverNowISO]);
 
   const setScore = (id: number, side: "a" | "b", value: string) => {
     setScores((curr) => {
@@ -296,6 +298,11 @@ export function PlacaresBoard({ matches, serverNowISO }: PlacaresBoardProps) {
                 encerrado={isEncerrado(m)}
                 changed={cur.a !== base.a || cur.b !== base.b}
                 invalid={changes.invalidIds.has(m.id)}
+                palpitesHref={
+                  isMatchLocked(m.kickoff_at, serverNow)
+                    ? `/admin/placares/${m.id}/palpites`
+                    : null
+                }
                 onChange={(side, value) => setScore(m.id, side, value)}
               />
             );

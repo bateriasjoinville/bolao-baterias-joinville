@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
+
 import { formatCPF, formatWhatsApp } from "@/lib/format";
 
 export type CadastroCardData = {
+  id: string;
   nome: string;
   cpf: string;
   whatsapp: string;
@@ -31,7 +34,12 @@ export function formatarDataHora(iso: string): string {
 export function CadastroCard({ cadastro }: { cadastro: CadastroCardData }) {
   return (
     <div className="rounded-md border border-slate-200 bg-white p-3 text-xs">
-      <p className="text-sm font-semibold text-slate-900">{cadastro.nome}</p>
+      <Link
+        href={`/admin/cadastrados/${cadastro.id}`}
+        className="text-sm font-semibold text-brand-blue hover:underline"
+      >
+        {cadastro.nome}
+      </Link>
       <dl className="mt-1 grid grid-cols-1 gap-0.5 text-slate-600 sm:grid-cols-2">
         <div>
           <dt className="inline font-medium text-slate-500">CPF: </dt>
@@ -50,14 +58,22 @@ export function CadastroCard({ cadastro }: { cadastro: CadastroCardData }) {
           <dd className="inline">{formatarDataHora(cadastro.created_at)}</dd>
         </div>
       </dl>
-      <a
-        href={`https://wa.me/55${cadastro.whatsapp}`}
-        target="_blank"
-        rel="noreferrer noopener"
-        className="mt-2 inline-flex items-center gap-1 rounded-md bg-emerald-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-emerald-700"
-      >
-        Abrir WhatsApp →
-      </a>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <a
+          href={`https://wa.me/55${cadastro.whatsapp}`}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="inline-flex items-center gap-1 rounded-md bg-emerald-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-emerald-700"
+        >
+          Abrir WhatsApp →
+        </a>
+        <Link
+          href={`/admin/cadastrados/${cadastro.id}`}
+          className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-700 hover:bg-slate-200"
+        >
+          Ver palpites →
+        </Link>
+      </div>
     </div>
   );
 }
