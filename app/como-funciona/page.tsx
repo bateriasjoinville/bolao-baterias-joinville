@@ -56,8 +56,8 @@ export default function ComoFuncionaPage() {
               </tbody>
             </table>
             <p className="mt-3 rounded-md bg-brand-yellow px-3 py-2 text-sm font-bold text-brand-blue-dark">
-              🇧🇷 Jogos do Brasil valem o dobro: placar exato = 12 pts, vencedor =
-              6 pts.
+              🇧🇷 Jogos do Brasil valem o dobro: placar exato = 12 pts, vencedor
+              ou empate = 6 pts.
             </p>
           </Passo>
 

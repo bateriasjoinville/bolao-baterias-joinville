@@ -317,7 +317,7 @@ const CASO_ESTILO: Record<
     pontos: "bg-emerald-600 text-white",
   },
   vencedor: {
-    label: "Acertou o vencedor",
+    label: "Acertou o resultado",
     accent: "border-l-amber-400",
     faixa: "border-amber-200 bg-amber-50",
     selo: "text-amber-800",

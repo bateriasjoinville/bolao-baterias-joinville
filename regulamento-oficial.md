@@ -152,7 +152,7 @@ Em caso de empate em qualquer posição do Ranking Geral, aplicar-se-ão, nesta 
 
 1\. Maior número de placares exatos
 
-2\. Maior número de acertos de vencedor
+2\. Maior número de acertos de vencedor ou empate
 
 3\. Menor diferença média de gols nos palpites
 

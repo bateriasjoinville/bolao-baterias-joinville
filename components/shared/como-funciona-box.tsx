@@ -18,7 +18,7 @@ export function ComoFuncionaBox() {
               🎯 Placar exato: 6pts
             </span>
             <span className="rounded-full bg-brand-blue px-2.5 py-1 text-[11px] font-bold text-white">
-              ✔️ Vencedor 3pts
+              ✔️ Vencedor ou empate 3pts
             </span>
             <span className="rounded-full bg-brand-yellow px-2.5 py-1 text-[11px] font-bold text-brand-blue-dark">
               🇧🇷 Jogo do Brasil vale o Dobro

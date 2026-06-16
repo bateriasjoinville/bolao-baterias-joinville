@@ -16,7 +16,7 @@ export function PontuacaoCard() {
             </p>
           </div>
           <div>
-            <p className="text-xs text-slate-500">Só o vencedor</p>
+            <p className="text-xs text-slate-500">Vencedor ou empate</p>
             <p className="mt-1 text-2xl font-extrabold leading-none text-slate-900">
               3 <span className="text-sm font-medium text-slate-500">pts</span>
             </p>

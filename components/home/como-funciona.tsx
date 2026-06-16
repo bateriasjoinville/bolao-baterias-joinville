@@ -10,7 +10,8 @@ const PASSOS = [
   },
   {
     titulo: "Acerta mais, sobe no ranking",
-    descricao: "Placar exato vale 6, só o vencedor vale 3. Jogo do Brasil dobra.",
+    descricao:
+      "Placar exato vale 6, vencedor ou empate vale 3. Jogo do Brasil dobra.",
   },
 ];
 

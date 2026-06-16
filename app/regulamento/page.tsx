@@ -211,7 +211,7 @@ export default function RegulamentoPage() {
             </p>
             <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-slate-700">
               <li>Maior número de placares exatos</li>
-              <li>Maior número de acertos de vencedor</li>
+              <li>Maior número de acertos de vencedor ou empate</li>
               <li>Menor diferença média de gols nos palpites</li>
               <li>Ordem cronológica de cadastro (cadastrado primeiro leva)</li>
             </ol>

@@ -75,7 +75,7 @@ O brinde é uma cortesia da loja como reconhecimento ao participante mais engaja
 Em caso de empate em qualquer posição do Ranking Geral, aplicar-se-ão, nesta ordem:
 
 1. Maior número de placares exatos
-2. Maior número de acertos de vencedor
+2. Maior número de acertos de vencedor ou empate
 3. Menor diferença média de gols nos palpites
 4. Ordem cronológica de cadastro (cadastrado primeiro leva)
 

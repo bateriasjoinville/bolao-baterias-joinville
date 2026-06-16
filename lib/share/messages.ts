@@ -7,7 +7,7 @@ export const CHAMAR_AMIGOS_TEXT =
   `Palpita os jogos, crie uma liga e chame a galera pra disputar! 👊\n\n` +
   `Como pontua:\n` +
   `🎯 Placar exato = 6 pts\n` +
-  `✔️ Acertou o vencedor = 3 pts\n` +
+  `✔️ Acertou o vencedor ou empate = 3 pts\n` +
   `🇧🇷 Jogo do Brasil = vale 2x!\n\n` +
   `É de graça e rapidinho 👉\n` +
   `${SITE_DOMINIO}`;
@@ -18,7 +18,7 @@ export function mensagemConviteLiga(nomeLiga: string, link: string): string {
     `Entra na liga "${nomeLiga}" e bora disputar quem manda mais nos palpites da Copa! 👊\n\n` +
     `Como pontua:\n` +
     `🎯 Placar exato = 6 pts\n` +
-    `✔️ Acertou o vencedor = 3 pts\n` +
+    `✔️ Acertou o vencedor ou empate = 3 pts\n` +
     `🇧🇷 Jogo do Brasil = vale 2x!\n\n` +
     `Entra aqui 👇\n` +
     `${link}`
