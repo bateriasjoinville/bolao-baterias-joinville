@@ -118,6 +118,11 @@ export default async function AdminHomePage() {
             desc="Responder quem pediu ajuda no cadastro"
             badge={pedidos}
           />
+          <NavCard
+            href="/admin/avisos"
+            title="Avisos"
+            desc="Pop-up de lembrete pra palpitar (liga/desliga)"
+          />
         </section>
       </main>
     </div>

@@ -7,6 +7,7 @@ export type AdminNavKey =
   | "cadastrados"
   | "instagram"
   | "ajuda"
+  | "avisos"
   | "mata-mata";
 
 const LINKS: { key: AdminNavKey; href: string; label: string }[] = [
@@ -15,6 +16,7 @@ const LINKS: { key: AdminNavKey; href: string; label: string }[] = [
   { key: "cadastrados", href: "/admin/cadastrados", label: "Cadastrados" },
   { key: "instagram", href: "/admin/instagram", label: "Top 10" },
   { key: "ajuda", href: "/admin/pedidos-ajuda", label: "Ajuda" },
+  { key: "avisos", href: "/admin/avisos", label: "Avisos" },
 ];
 
 export function AdminNav({
